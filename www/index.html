@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>زاد — السنة الأولى متوسط</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&family=Tajawal:wght@400;500;700;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1B2E28;
+  --ink-soft:#4B5D57;
+  --paper:#FAF7F0;
+  --paper-dim:#F1ECE0;
+  --card:#FFFFFF;
+  --saffron:#E3A857;
+  --saffron-deep:#C98A38;
+  --emerald:#2F6E5C;
+  --emerald-deep:#204F42;
+  --clay:#C1512F;
+  --line:#E4DCC8;
+  --shadow:0 8px 24px rgba(27,46,40,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Tajawal',sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.display{font-family:'Reem Kufi',sans-serif;}
+.mono{font-family:'JetBrains Mono',monospace;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
+input{font-family:inherit;}
+#app{max-width:720px;margin:0 auto;min-height:100vh;background:var(--paper);position:relative;padding-bottom:40px;}
+
+/* ===== Header ===== */
+.topbar{
+  background:linear-gradient(135deg,var(--emerald-deep),var(--emerald));
+  color:#fff;padding:18px 20px 22px;
+  position:relative;overflow:hidden;
+}
+.topbar::after{
+  content:"";position:absolute;inset:auto -20px -40px auto;
+  width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(227,168,87,0.25),transparent 70%);
+}
+.topbar-row{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-mark{
+  width:40px;height:40px;border-radius:12px;
+  background:var(--saffron);display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.brand-text h1{font-size:22px;letter-spacing:0.5px;}
+.brand-text p{font-size:11px;opacity:0.85;margin-top:2px;}
+.icon-btn{
+  width:38px;height:38px;border-radius:10px;
+  background:rgba(255,255,255,0.12);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  transition:background 0.2s;
+}
+.icon-btn:hover{background:rgba(255,255,255,0.22);}
+.trial-banner{
+  margin-top:14px;background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.18);
+  border-radius:12px;padding:9px 14px;
+  font-size:12px;display:flex;align-items:center;justify-content:space-between;
+  position:relative;z-index:1;
+}
+.trial-banner b{color:var(--saffron);}
+.trial-banner .link-btn{color:#fff;text-decoration:underline;font-size:12px;opacity:0.9;}
+
+.crumbs{display:flex;align-items:center;gap:8px;padding:14px 20px 0;font-size:13px;color:var(--ink-soft);}
+.crumbs .back-btn{
+  display:flex;align-items:center;gap:4px;color:var(--emerald-deep);font-weight:700;
+}
+.crumbs .sep{opacity:0.4;}
+
+/* ===== Home grid ===== */
+.section-title{padding:20px 20px 10px;font-size:15px;color:var(--ink-soft);}
+.subject-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:6px 20px 10px;
+}
+.subject-card{
+  background:var(--card);border-radius:16px;padding:16px 14px;
+  box-shadow:var(--shadow);border:1px solid var(--line);
+  text-align:right;position:relative;overflow:hidden;
+  transition:transform 0.15s;
+}
+.subject-card:active{transform:scale(0.97);}
+.subject-card .icon{font-size:26px;margin-bottom:10px;display:block;}
+.subject-card .name{font-weight:700;font-size:14.5px;line-height:1.4;}
+.subject-card .badge{
+  position:absolute;top:12px;left:12px;
+  background:var(--paper-dim);color:var(--ink-soft);
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+  padding:3px 7px;border-radius:7px;
+}
+.subject-card .stalk{
+  position:absolute;bottom:0;right:0;height:3px;width:0%;
+  background:var(--saffron);transition:width 0.3s;
+}
+.subject-card:hover .stalk{width:100%;}
+
+/* ===== Subject view: trimester + tabs ===== */
+.trimester-row{
+  display:flex;gap:8px;padding:14px 20px 4px;overflow-x:auto;
+}
+.tri-pill{
+  flex-shrink:0;padding:8px 16px;border-radius:999px;
+  background:var(--card);border:1px solid var(--line);
+  font-size:13px;font-weight:700;color:var(--ink-soft);
+}
+.tri-pill.active{background:var(--emerald-deep);color:#fff;border-color:var(--emerald-deep);}
+
+.tabs-row{
+  display:flex;gap:6px;padding:14px 16px 0;overflow-x:auto;
+  border-bottom:1px solid var(--line);
+}
+.tab-btn{
+  flex-shrink:0;padding:10px 14px;font-size:13px;font-weight:700;
+  color:var(--ink-soft);border-bottom:3px solid transparent;
+  display:flex;align-items:center;gap:6px;white-space:nowrap;
+}
+.tab-btn.active{color:var(--emerald-deep);border-color:var(--saffron);}
+
+.tab-content{padding:18px 20px 30px;}
+
+/* ===== Lessons ===== */
+.lesson-card{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:14px 16px;margin-bottom:12px;box-shadow:var(--shadow);
+}
+.lesson-card .lt{font-weight:700;font-size:15px;margin-bottom:8px;}
+.lesson-card ul{padding-inline-start:18px;}
+.lesson-card li{font-size:13px;color:var(--ink-soft);line-height:1.9;}
+
+/* ===== Simplified explanation ===== */
+.simplify-trigger{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:14px 16px;margin-bottom:12px;box-shadow:var(--shadow);cursor:pointer;
+}
+.simplify-trigger .lt{font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;}
+.simplify-trigger .chev{transition:transform 0.2s;color:var(--saffron-deep);}
+.simplify-trigger.open .chev{transform:rotate(180deg);}
+.simplify-body{max-height:0;overflow:hidden;transition:max-height 0.3s ease;}
+.simplify-body.open{max-height:1200px;margin-top:12px;}
+.method{
+  background:var(--paper-dim);border-radius:12px;padding:11px 13px;margin-bottom:8px;
+}
+.method .m-title{font-size:12px;font-weight:700;color:var(--emerald-deep);margin-bottom:4px;display:flex;align-items:center;gap:6px;}
+.method .m-text{font-size:13px;color:var(--ink-soft);line-height:1.8;}
+.loading-dots{font-size:13px;color:var(--ink-soft);padding:10px 0;}
+
+/* ===== Exercises ===== */
+.homework-box{
+  background:linear-gradient(135deg,var(--saffron),#F0C589);
+  border-radius:16px;padding:16px;margin-bottom:16px;color:var(--ink);
+}
+.homework-box .hb-title{font-weight:700;font-size:14px;margin-bottom:4px;}
+.homework-box .hb-sub{font-size:12px;color:#5a4626;margin-bottom:12px;}
+.hb-btn{
+  background:var(--ink);color:#fff;border-radius:10px;
+  padding:10px 16px;font-size:13px;font-weight:700;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.exercise-card{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:14px 16px;margin-bottom:12px;box-shadow:var(--shadow);cursor:pointer;
+}
+.exercise-card .ex-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:14px;}
+.exercise-card .ex-badge{
+  font-size:11px;background:var(--paper-dim);color:var(--ink-soft);
+  padding:3px 8px;border-radius:7px;font-weight:700;
+}
+.solution-box{display:none;margin-top:12px;border-top:1px dashed var(--line);padding-top:12px;}
+.solution-box.open{display:block;}
+.solution-step{display:flex;gap:8px;margin-bottom:8px;font-size:13px;color:var(--ink-soft);line-height:1.8;}
+.solution-step .num{
+  flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--emerald);
+  color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;
+}
+.solution-final{
+  margin-top:8px;background:#EAF4F0;color:var(--emerald-deep);
+  padding:8px 10px;border-radius:8px;font-size:13px;font-weight:700;
+}
+
+/* ===== Exams ===== */
+.exam-card{
+  display:flex;align-items:center;gap:12px;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:13px 16px;margin-bottom:10px;box-shadow:var(--shadow);
+}
+.exam-card .ic{
+  width:38px;height:38px;border-radius:10px;background:#FBEDE5;color:var(--clay);
+  display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;
+}
+.exam-card .info b{font-size:13.5px;display:block;}
+.exam-card .info span{font-size:11.5px;color:var(--ink-soft);}
+
+/* ===== Quiz ===== */
+.quiz-intro{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:22px 18px;text-align:center;box-shadow:var(--shadow);
+}
+.quiz-intro .qi-icon{font-size:34px;margin-bottom:10px;}
+.quiz-intro h3{font-size:17px;margin-bottom:6px;}
+.quiz-intro p{font-size:13px;color:var(--ink-soft);margin-bottom:16px;line-height:1.7;}
+.primary-btn{
+  background:var(--emerald-deep);color:#fff;border-radius:12px;
+  padding:12px 22px;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:8px;
+}
+.primary-btn:active{transform:scale(0.97);}
+.quiz-progress{font-size:12px;color:var(--ink-soft);margin-bottom:10px;text-align:center;}
+.quiz-q{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px;margin-bottom:14px;box-shadow:var(--shadow);
+}
+.quiz-q .q-text{font-weight:700;font-size:14.5px;margin-bottom:12px;line-height:1.6;}
+.q-opt{
+  display:block;width:100%;text-align:right;padding:11px 13px;border-radius:10px;
+  background:var(--paper-dim);border:1.5px solid transparent;margin-bottom:8px;
+  font-size:13.5px;transition:all 0.15s;
+}
+.q-opt.selected{border-color:var(--emerald);background:#EAF4F0;}
+.q-opt.correct{border-color:var(--emerald);background:#DFF3E8;color:var(--emerald-deep);font-weight:700;}
+.q-opt.wrong{border-color:var(--clay);background:#FBEAE3;color:var(--clay);font-weight:700;}
+.q-explain{font-size:12.5px;color:var(--ink-soft);margin-top:8px;background:var(--paper-dim);padding:8px 10px;border-radius:8px;display:none;}
+.q-explain.show{display:block;}
+.quiz-result{
+  background:linear-gradient(135deg,var(--emerald-deep),var(--emerald));
+  color:#fff;border-radius:16px;padding:24px 18px;text-align:center;margin-bottom:16px;
+}
+.quiz-result .score{font-size:38px;font-weight:900;font-family:'Reem Kufi',sans-serif;}
+.quiz-result .label{font-size:12.5px;opacity:0.9;margin-top:2px;}
+
+/* ===== Modal / Settings / Activation ===== */
+.overlay{
+  position:fixed;inset:0;background:rgba(27,46,40,0.55);
+  display:flex;align-items:center;justify-content:center;padding:20px;z-index:50;
+}
+.modal{
+  background:var(--card);border-radius:20px;padding:24px 22px;
+  max-width:400px;width:100%;max-height:88vh;overflow-y:auto;
+}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.modal-head h3{font-size:17px;}
+.close-x{font-size:20px;color:var(--ink-soft);width:30px;height:30px;display:flex;align-items:center;justify-content:center;}
+.status-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700;margin-bottom:16px;
+}
+.status-pill.free{background:#FEF3D9;color:#92600E;}
+.status-pill.active{background:#DFF3E8;color:var(--emerald-deep);}
+.fp-box{
+  background:var(--paper-dim);border:1px solid var(--line);border-radius:14px;
+  padding:16px 14px;text-align:center;margin-bottom:16px;
+}
+.fp-box .fp-label{font-size:11.5px;color:var(--ink-soft);margin-bottom:8px;}
+.fp-code{font-family:'JetBrains Mono',monospace;font-size:17px;letter-spacing:1.5px;direction:ltr;font-weight:700;display:block;margin-bottom:10px;}
+.small-btn{color:var(--emerald-deep);font-size:12.5px;font-weight:700;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;}
+.field-label{font-size:12px;color:var(--ink-soft);margin-bottom:6px;display:block;}
+.key-input{
+  width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;
+  font-family:'JetBrains Mono',monospace;font-size:14px;text-align:center;direction:ltr;
+  outline:none;margin-bottom:10px;
+}
+.key-input:focus{border-color:var(--emerald);}
+.confirm-btn{
+  width:100%;background:var(--emerald-deep);color:#fff;border-radius:12px;padding:13px;
+  font-size:14.5px;font-weight:700;display:flex;align-items:center;justify-content:center;
+}
+.confirm-btn:active{transform:scale(0.98);}
+.err-txt{color:var(--clay);font-size:11.5px;min-height:14px;margin-top:4px;}
+.help-note{font-size:11px;color:var(--ink-soft);line-height:1.7;margin-top:14px;background:var(--paper-dim);padding:10px 12px;border-radius:10px;}
+
+/* ===== Lock screen ===== */
+.lock-wrap{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+  background:linear-gradient(180deg,var(--emerald-deep),var(--emerald));
+}
+.lock-card{
+  background:var(--card);border-radius:22px;padding:30px 24px;max-width:380px;width:100%;text-align:center;
+}
+.lock-icon{
+  width:64px;height:64px;border-radius:50%;background:#FEF3D9;
+  display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px;
+}
+.lock-card h2{font-size:19px;margin-bottom:6px;}
+.lock-card p{font-size:13px;color:var(--ink-soft);line-height:1.8;margin-bottom:18px;}
+
+.camera-input{display:none;}
+.hw-preview{width:100%;border-radius:12px;margin-top:10px;max-height:220px;object-fit:cover;}
+.hw-result{
+  background:var(--paper-dim);border-radius:12px;padding:12px 14px;margin-top:10px;font-size:13px;
+  color:var(--ink-soft);line-height:1.8;
+}
+.hw-result b{color:var(--emerald-deep);}
+
+@media(max-width:380px){.subject-grid{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// ===================== بيانات المواد =====================
+const SUBJECTS = [
+  {id:'arabic',   name:'اللغة العربية',      icon:'📖'},
+  {id:'french',   name:'اللغة الفرنسية',    icon:'📘', badge:'FR²'},
+  {id:'english',  name:'اللغة الإنجليزية',  icon:'📗', badge:'EN¹'},
+  {id:'math',     name:'الرياضيات',         icon:'🔢'},
+  {id:'science',  name:'علوم الطبيعة والحياة', icon:'🌱'},
+  {id:'physics',  name:'العلوم الفيزيائية', icon:'⚗️'},
+  {id:'history',  name:'التاريخ',           icon:'🏛️'},
+  {id:'geography',name:'الجغرافيا',         icon:'🗺️'},
+  {id:'islamic',  name:'التربية الإسلامية', icon:'🕌'},
+  {id:'civic',    name:'التربية المدنية',   icon:'⚖️'},
+];
+
+// كل مادة: مصفوفة دروس بها {id, tri (1/2/3), title, points:[...]}
+const LESSONS = {
+  arabic: [
+    {tri:1,title:'النص السردي: عناصر القصة',points:['التعرف على الشخصيات والزمان والمكان في القصة','ترتيب أحداث القصة حسب تسلسلها الزمني']},
+    {tri:1,title:'الجملة الفعلية والجملة الاسمية',points:['التمييز بين الجملة التي تبدأ بفعل والجملة التي تبدأ باسم','التعرف على أركان كل جملة']},
+    {tri:1,title:'الإملاء: التاء المربوطة والمبسوطة',points:['متى تُكتب التاء مربوطة ومتى تُكتب مبسوطة','تمييز التاء في آخر الاسم عن آخر الفعل']},
+    {tri:2,title:'النص الوصفي',points:['التعرف على أسلوب الوصف ووظيفته','استخراج الصفات المستعملة في وصف مكان أو شخص']},
+    {tri:2,title:'تصريف الأفعال: الماضي والمضارع والأمر',points:['التمييز بين الأزمنة الثلاثة للفعل','تصريف فعل صحيح في الأزمنة الثلاثة']},
+    {tri:2,title:'الإملاء: الهمزة المتوسطة',points:['قاعدة كتابة الهمزة المتوسطة حسب حركتها وحركة ما قبلها','تطبيق القاعدة على كلمات شائعة']},
+    {tri:3,title:'النص الحواري',points:['التعرف على علامات الترقيم الخاصة بالحوار','تحويل نص سردي إلى حوار بين شخصيتين']},
+    {tri:3,title:'المفعول به',points:['التعرف على المفعول به وعلامة إعرابه','التمييز بين الفاعل والمفعول به في الجملة']},
+    {tri:3,title:'التعبير الكتابي: كتابة فقرة سردية',points:['بناء فقرة متماسكة بمقدمة وعرض وخاتمة','استعمال أدوات الربط المناسبة بين الجمل']},
+  ],
+  french: [
+    {tri:1,title:'Se présenter',points:['Utiliser "je m’appelle" et "j’ai … ans" pour se présenter','Poser des questions simples sur l’identité']},
+    {tri:1,title:'Les articles définis et indéfinis',points:['Distinguer "le / la / les" et "un / une / des"','Accorder l’article avec le nom (genre et nombre)']},
+    {tri:1,title:'La conjugaison au présent',points:['Conjuguer les verbes du premier groupe au présent','Reconnaître les terminaisons régulières']},
+    {tri:2,title:'Décrire un lieu',points:['Utiliser le vocabulaire de la maison et de la ville','Employer "il y a" pour décrire un lieu']},
+    {tri:2,title:'Les adjectifs qualificatifs',points:['Accorder l’adjectif avec le nom qu’il qualifie','Placer l’adjectif avant ou après le nom']},
+    {tri:2,title:'Le passé composé',points:['Former le passé composé avec "avoir" et "être"','Reconnaître les participes passés réguliers']},
+    {tri:3,title:'Raconter un événement',points:['Utiliser les connecteurs temporels (d’abord, ensuite, enfin)','Organiser un récit court au passé']},
+    {tri:3,title:'Les pronoms personnels',points:['Distinguer les pronoms sujets et compléments','Remplacer un nom par le pronom correspondant']},
+    {tri:3,title:'La lettre amicale',points:['Respecter la structure d’une lettre (formule d’appel, corps, salutation)','Rédiger un court message à un ami']},
+  ],
+  english: [
+    {tri:1,title:'Greetings & Introductions',points:['Use basic greetings and introduce yourself','Ask and answer simple personal questions']},
+    {tri:1,title:'Simple Present Tense',points:['Form affirmative and negative sentences in the simple present','Use the simple present for daily routines']},
+    {tri:1,title:'Days & Months',points:['Name the days of the week and months of the year','Talk about dates using ordinal numbers']},
+    {tri:2,title:'Describing People & Places',points:['Use adjectives to describe appearance and personality','Describe a place using simple descriptive language']},
+    {tri:2,title:'There is / There are',points:['Use "there is" and "there are" correctly','Ask questions with "Is there…?" and "Are there…?"']},
+    {tri:2,title:'Adjectives of Description',points:['Order adjectives correctly before a noun','Compare two things using simple adjectives']},
+    {tri:3,title:'Talking About the Past',points:['Recognise regular and irregular past forms','Use time expressions like "yesterday" and "last week"']},
+    {tri:3,title:'Simple Past Tense',points:['Form affirmative, negative and question forms in the past','Tell a short story about a past event']},
+    {tri:3,title:'Writing a Short Paragraph',points:['Organise a paragraph with a topic sentence and details','Use linking words to connect ideas']},
+  ],
+  math: [
+    {tri:1,title:'الأعداد الطبيعية والعمليات عليها',points:['إجراء العمليات الأربع على الأعداد الطبيعية','ترتيب الأعداد الطبيعية ومقارنتها']},
+    {tri:1,title:'القسمة الإقليدية',points:['إيجاد خارج وباقي القسمة الإقليدية','التحقق من صحة عملية القسمة']},
+    {tri:1,title:'الأعداد العشرية',points:['قراءة وكتابة الأعداد العشرية','إجراء عمليات الجمع والطرح على الأعداد العشرية']},
+    {tri:2,title:'الكسور وعملياتها',points:['تبسيط الكسور ومقارنتها','جمع وطرح كسرين لهما نفس المقام']},
+    {tri:2,title:'الأعداد النسبية',points:['التعرف على الأعداد الموجبة والسالبة','ترتيب الأعداد النسبية على مستقيم مدرج']},
+    {tri:2,title:'الزوايا وقياسها',points:['استعمال المنقلة لقياس زاوية','التمييز بين أنواع الزوايا (حادة، قائمة، منفرجة)']},
+    {tri:3,title:'التناسب والنسبة المئوية',points:['حل مسائل التناسب باستعمال الجدول','حساب النسبة المئوية في وضعية من الحياة اليومية']},
+    {tri:3,title:'المستقيمات المتوازية والمتعامدة',points:['التعرف على المستقيمات المتوازية والمتعامدة وإنشاؤها','استعمال الكوس والمسطرة في الإنشاء']},
+    {tri:3,title:'محيط ومساحة الأشكال الهندسية',points:['حساب محيط ومساحة المربع والمستطيل والمثلث','تطبيق القوانين على مسائل من الواقع']},
+  ],
+  science: [
+    {tri:1,title:'تصنيف الكائنات الحية',points:['تصنيف الكائنات الحية إلى مجموعات حسب صفاتها المشتركة','التمييز بين الأوساط الطبيعية المختلفة']},
+    {tri:1,title:'وحدة بناء الكائن الحي: الخلية',points:['التعرف على الخلية كوحدة بناء الكائنات الحية','ملاحظة خلايا نباتية وحيوانية بالمجهر']},
+    {tri:1,title:'التغذية عند النباتات',points:['التعرف على العناصر الضرورية لتغذية النبات','فهم دور الضوء في عملية التركيب الضوئي']},
+    {tri:2,title:'التنفس عند الكائنات الحية',points:['التعرف على أعضاء التنفس عند الإنسان والحيوان','فهم التبادلات الغازية أثناء التنفس']},
+    {tri:2,title:'الأجهزة الحيوية عند الإنسان',points:['التعرف على جهاز الهضم ووظيفته الأساسية','التعرف على جهاز الدوران ومكوناته']},
+    {tri:2,title:'العلاقات الغذائية في الوسط',points:['بناء سلسلة غذائية بسيطة','فهم مفهوم الشبكة الغذائية']},
+    {tri:3,title:'التكاثر عند الكائنات الحية',points:['التمييز بين التكاثر الجنسي واللاجنسي','ملاحظة مراحل نمو كائن حي']},
+    {tri:3,title:'التوازن الغذائي',points:['تصنيف الأغذية حسب فوائدها للجسم','بناء وجبة غذائية متوازنة']},
+    {tri:3,title:'المحافظة على البيئة',points:['التعرف على مصادر تلوث البيئة','اقتراح سلوكات للمحافظة على البيئة']},
+  ],
+  physics: [
+    {tri:1,title:'المزائج والأجسام النقية',points:['التمييز بين الجسم النقي والمزيج','التعرف على طرق فصل مكونات مزيج']},
+    {tri:1,title:'حالات المادة وتحولاتها',points:['التعرف على الحالات الثلاث للمادة','فهم تحولات المادة (الانصهار، التبخر، التجمد)']},
+    {tri:1,title:'الكتلة والحجم',points:['قياس كتلة جسم باستعمال الميزان','قياس حجم سائل باستعمال المدرجة']},
+    {tri:2,title:'القوى المؤثرة على جسم',points:['التعرف على مفهوم القوة وتمثيلها','التمييز بين أنواع القوى (تلامسية وعن بعد)']},
+    {tri:2,title:'الدارة الكهربائية البسيطة',points:['تركيب دارة كهربائية بسيطة تشتمل على مولد ومصباح','التعرف على شروط اشتغال الدارة']},
+    {tri:2,title:'النواقل والعوازل الكهربائية',points:['التمييز بين المواد الناقلة والعازلة للكهرباء','إجراء تجربة للتحقق من ناقلية مادة']},
+    {tri:3,title:'الضوء وانتشاره المستقيم',points:['التحقق من الانتشار المستقيم للضوء','تفسير تشكل الظل']},
+    {tri:3,title:'الانعكاس والانكسار',points:['ملاحظة ظاهرة انعكاس الضوء على مرآة مستوية','التعرف على ظاهرة انكسار الضوء']},
+    {tri:3,title:'الأمن الكهربائي المنزلي',points:['التعرف على مخاطر الكهرباء في المنزل','تبني سلوكات آمنة عند استعمال الأجهزة الكهربائية']},
+  ],
+  history: [
+    {tri:1,title:'مقدمة في التاريخ ومصادره',points:['التعرف على أهمية دراسة التاريخ','التمييز بين مصادر التاريخ المختلفة']},
+    {tri:1,title:'التوقيت التاريخي',points:['التعرف على وحدات قياس الزمن التاريخي (القرن، الألفية)','قراءة وبناء خط زمني بسيط']},
+    {tri:1,title:'حضارات الشرق القديم',points:['التعرف على أهم حضارات الشرق القديم وموقعها','ذكر أبرز إنجازات هذه الحضارات']},
+    {tri:2,title:'الحضارة الإغريقية',points:['التعرف على أهم مظاهر الحضارة الإغريقية','ذكر إسهاماتها في الفكر والفن']},
+    {tri:2,title:'الحضارة الرومانية',points:['التعرف على تنظيم الدولة الرومانية','ذكر أهم آثارها العمرانية']},
+    {tri:2,title:'الحضارات الإسلامية الأولى',points:['التعرف على ظروف نشأة الدولة الإسلامية','ذكر أهم مراحل التوسع الإسلامي الأولى']},
+    {tri:3,title:'الجزائر القديمة (نوميديا)',points:['التعرف على المملكة النوميدية وأبرز ملوكها','ذكر مظاهر الحضارة النوميدية']},
+    {tri:3,title:'الفتح الإسلامي لبلاد المغرب',points:['التعرف على مراحل الفتح الإسلامي لبلاد المغرب','ذكر أثر الفتح في المنطقة']},
+    {tri:3,title:'أثر الحضارة الإسلامية في الجزائر',points:['التعرف على مظاهر الحضارة الإسلامية في الجزائر','ذكر أهم المعالم التاريخية الإسلامية بالجزائر']},
+  ],
+  geography: [
+    {tri:1,title:'مقدمة في الجغرافيا وأدواتها',points:['التعرف على أهمية دراسة الجغرافيا','التعرف على أدوات الجغرافي (الخريطة، البوصلة)']},
+    {tri:1,title:'قراءة الخرائط والمقاييس',points:['قراءة رموز ومفتاح الخريطة','استعمال مقياس الرسم لحساب مسافة حقيقية']},
+    {tri:1,title:'موقع الجزائر وحدودها',points:['تحديد الموقع الجغرافي للجزائر','التعرف على الدول المجاورة للجزائر']},
+    {tri:2,title:'التضاريس الكبرى في العالم',points:['التمييز بين أنواع التضاريس (جبال، هضاب، سهول)','تحديد أهم التضاريس على خريطة العالم']},
+    {tri:2,title:'المناخ والغطاء النباتي',points:['التعرف على العوامل المؤثرة في المناخ','ربط الغطاء النباتي بنوع المناخ']},
+    {tri:2,title:'التوزيع السكاني في العالم',points:['قراءة خريطة الكثافة السكانية','تفسير أسباب تفاوت التوزيع السكاني']},
+    {tri:3,title:'الموارد الطبيعية',points:['التعرف على أنواع الموارد الطبيعية','فهم أهمية الاستغلال العقلاني للموارد']},
+    {tri:3,title:'النشاط الفلاحي',points:['التعرف على أهم المحاصيل الفلاحية في الجزائر','ذكر العوامل المؤثرة في النشاط الفلاحي']},
+    {tri:3,title:'التنمية المستدامة',points:['فهم مفهوم التنمية المستدامة','اقتراح سلوكات تخدم التنمية المستدامة']},
+  ],
+  islamic: [
+    {tri:1,title:'مبادئ العقيدة الإسلامية',points:['التعرف على أركان الإيمان','فهم معنى التوحيد في الإسلام']},
+    {tri:1,title:'سورة من القرآن الكريم وأحكام التجويد',points:['حفظ وتلاوة سورة قصيرة بأحكام التجويد','فهم المعنى العام للسورة']},
+    {tri:1,title:'السيرة النبوية: المولد والنشأة',points:['التعرف على مولد الرسول صلى الله عليه وسلم ونشأته','استخلاص العبر من هذه المرحلة']},
+    {tri:2,title:'أركان الإسلام: الصلاة والزكاة',points:['التعرف على شروط الصلاة وأركانها','فهم حكمة مشروعية الزكاة']},
+    {tri:2,title:'الأخلاق الإسلامية: الصدق والأمانة',points:['فهم قيمة الصدق والأمانة في الإسلام','تطبيق هذه القيم في المواقف اليومية']},
+    {tri:2,title:'من حياة الصحابة',points:['التعرف على نموذج من الصحابة وصفاته','استخلاص القيم من سيرته']},
+    {tri:3,title:'آداب التعامل في الإسلام',points:['التعرف على آداب الحديث والاستماع','تطبيق آداب التعامل مع الآخرين']},
+    {tri:3,title:'حفظ النعمة والبيئة',points:['فهم مسؤولية الإنسان تجاه النعم والبيئة','اقتراح سلوكات للمحافظة على النعمة']},
+    {tri:3,title:'القيم الإسلامية في المجتمع',points:['فهم دور التكافل والتعاون في المجتمع المسلم','ربط القيم الإسلامية بالسلوك اليومي']},
+  ],
+  civic: [
+    {tri:1,title:'التعريف بالمؤسسة التربوية وحقوق التلميذ',points:['التعرف على النظام الداخلي للمؤسسة','التعرف على حقوق وواجبات التلميذ']},
+    {tri:1,title:'الهوية الوطنية ورموز الدولة',points:['التعرف على رموز الدولة الجزائرية (العلم، النشيد)','فهم أهمية الاعتزاز بالهوية الوطنية']},
+    {tri:1,title:'حقوق الطفل وواجباته',points:['التعرف على أهم حقوق الطفل','ربط الحقوق بالواجبات المقابلة لها']},
+    {tri:2,title:'التنظيم الإداري للجزائر',points:['التعرف على التقسيم الإداري (ولاية، بلدية)','فهم دور كل مستوى إداري']},
+    {tri:2,title:'المرافق العامة وخدماتها',points:['التعرف على أهم المرافق العامة (الصحة، التعليم)','فهم أهمية المحافظة على الممتلكات العامة']},
+    {tri:2,title:'المواطنة والمشاركة المدنية',points:['فهم مفهوم المواطنة الفعالة','ذكر أشكال المشاركة المدنية في المجتمع']},
+    {tri:3,title:'التضامن الاجتماعي',points:['فهم قيمة التضامن بين أفراد المجتمع','ذكر أمثلة على مبادرات تضامنية']},
+    {tri:3,title:'حماية البيئة كواجب مدني',points:['فهم مسؤولية المواطن في حماية البيئة','اقتراح سلوكات مدنية للمحافظة على المحيط']},
+    {tri:3,title:'التعايش واحترام الاختلاف',points:['فهم قيمة احترام الاختلاف بين الأفراد','تطبيق سلوكات التعايش في الحياة اليومية']},
+  ],
+};
+
+// إضافة id فريد لكل درس
+Object.keys(LESSONS).forEach(subId=>{
+  LESSONS[subId].forEach((l,idx)=>{ l.id = subId+'-'+idx; l.subId = subId; });
+});
+
+// امتحانات نموذجية لكل مادة/فصل
+const EXAM_TYPES = ['فرض الفصل','اختبار الفصل'];
+function getExams(subId, tri){
+  const subj = SUBJECTS.find(s=>s.id===subId);
+  return EXAM_TYPES.map((t,i)=>({
+    title: t+' — '+subj.name,
+    meta: 'الفصل '+['الأول','الثاني','الثالث'][tri-1]+' • نموذج تجريبي',
+  }));
+}
+
+// ===================== نظام التفعيل =====================
+const SECRET_SALT = "ZAD-1AM-2026-XYZ"; // سر توليد المفاتيح — يجب أن يطابق أداة المدير
+const TRIAL_DAYS = 15;
+
+function simpleHash(str){
+  let hash=0;
+  for(let i=0;i<str.length;i++){const c=str.charCodeAt(i);hash=(hash<<5)-hash+c;hash&=hash;}
+  return Math.abs(hash);
+}
+function generateDeviceFingerprint(){
+  const comp=[navigator.userAgent,navigator.language,navigator.hardwareConcurrency||0,
+    navigator.platform,screen.width+'x'+screen.height,screen.colorDepth,
+    new Date().getTimezoneOffset(),navigator.deviceMemory||0];
+  try{
+    const c=document.createElement('canvas'),ctx=c.getContext('2d');
+    ctx.textBaseline='top';ctx.font='14px Arial';ctx.fillText('زاد-fingerprint',2,2);
+    comp.push(c.toDataURL());
+  }catch(e){comp.push('no-canvas');}
+  const raw=comp.join('|||');
+  let hash=0;
+  for(let i=0;i<raw.length;i++){const c=raw.charCodeAt(i);hash=(hash<<5)-hash+c;hash&=hash;}
+  let digits=Math.abs(hash).toString();
+  if(digits.length<12){
+    let h2=0;
+    for(let i=0;i<raw.length;i++){h2=(h2*31+raw.charCodeAt(i))%1000000000000;}
+    digits=(digits+Math.abs(h2).toString()).slice(0,12);
+  }
+  return digits.slice(0,12).padStart(12,'0');
+}
+function formatFP(digits){return digits.match(/.{1,4}/g).join('-');}
+function generateActivationKey(fp){
+  const h1=simpleHash(fp+SECRET_SALT);
+  const h2=simpleHash(SECRET_SALT+fp+"v1");
+  let digits=(h1.toString()+h2.toString()).slice(0,16).padStart(16,'0');
+  return digits.match(/.{1,4}/g).join('-');
+}
+function verifyActivationKey(fp,entered){
+  const expected=generateActivationKey(fp).replace(/[\s-]/g,'');
+  return entered.replace(/[\s-]/g,'')===expected;
+}
+function getTrialStart(){
+  let s=localStorage.getItem('zad_trial_start');
+  if(!s){s=new Date().toISOString();localStorage.setItem('zad_trial_start',s);}
+  return new Date(s);
+}
+function getActivation(){
+  const d=localStorage.getItem('zad_activation');
+  return d?JSON.parse(d):null;
+}
+function isActivated(){
+  const a=getActivation();
+  return !!(a && a.activated && new Date(a.expiresAt)>new Date());
+}
+function trialDaysLeft(){
+  const start=getTrialStart();
+  const diffDays=Math.floor((Date.now()-start.getTime())/(1000*60*60*24));
+  return Math.max(0, TRIAL_DAYS-diffDays);
+}
+function activateApp(fp,key){
+  if(!verifyActivationKey(fp,key)) return false;
+  localStorage.setItem('zad_activation', JSON.stringify({
+    activated:true, fingerprint:fp,
+    activatedAt:new Date().toISOString(),
+    expiresAt:new Date(Date.now()+365*24*60*60*1000).toISOString()
+  }));
+  return true;
+}
+
+// ===================== مولدات المحتوى (محاكاة ذكاء اصطناعي) =====================
+const ANALOGIES = [
+  'مثل بناء جدار: كل قاعدة هي طوبة إضافية لا يستقيم البناء بدونها',
+  'مثل خريطة طريق: تحدد لك نقطة البداية والخطوات حتى تصل للهدف',
+  'مثل وصفة طبخ: كل خطوة لها ترتيبها الذي لا يجوز تجاوزه',
+  'مثل صندوق أدوات: كل قاعدة أداة تستعملها في الوضعية المناسبة لها',
+];
+const REAL_EXAMPLES = [
+  'كما تلاحظه يومياً في المدرسة أو البيت دون أن تنتبه لوجود القاعدة خلفه',
+  'كما يحدث عندما تشرح لصديقك أمراً بترتيب منطقي حتى يفهمه',
+  'كما تراه في نشرة الأخبار أو في حديث عائلي عادي',
+  'كما تستعمله بدون وعي عند كتابة رسالة أو حديث مع أحد',
+];
+const PRIOR_LINKS = [
+  'يبني هذا الدرس على ما تعلمته سابقاً في نفس المادة، فقط بخطوة إضافية جديدة',
+  'يشبه كثيراً درساً سابقاً، مع تغيير بسيط في زاوية النظر إلى المسألة',
+  'هو امتداد طبيعي لفكرة بسيطة تعرفها بالفعل من دروس سابقة',
+];
+
+function seedFrom(str){let h=0;for(let i=0;i<str.length;i++){h=(h*31+str.charCodeAt(i))>>>0;}return h;}
+function pick(arr,seed){return arr[seed%arr.length];}
+
+function generateSimplified(lesson){
+  const seed = seedFrom(lesson.id);
+  const p0 = lesson.points[0], p1 = lesson.points[1]||lesson.points[0];
+  return {
+    analogy: `فكّر في "${lesson.title}" ${pick(ANALOGIES,seed)}.`,
+    example: `مثال من واقعك: ${pick(REAL_EXAMPLES,seed+1)}، وهذا بالضبط ما نقصده بـ"${p0}".`,
+    steps: [
+      `افهم أولاً المفهوم الأساسي: ${p0}`,
+      `اربط هذا المفهوم بتطبيق بسيط: ${p1}`,
+      `تدرّب على مثال أو تمرين قصير لترسيخ الفكرة`,
+    ],
+    prior: pick(PRIOR_LINKS,seed+2),
+    check: `سؤال تثبيت: هل تستطيع أن تشرح "${p0}" بأسلوبك الخاص لزميل لك؟`,
+  };
+}
+
+function generateExercises(lesson){
+  return lesson.points.map((p,i)=>({
+    id: lesson.id+'-ex'+i,
+    question: `وضعية تطبيقية: وظّف ما تعلمته حول «${p}» لحل السؤال التالي المرتبط بدرس «${lesson.title}».`,
+    steps: [
+      `اقرأ السؤال جيداً وحدد ما هو مطلوب بالضبط`,
+      `تذكّر القاعدة المتعلقة بـ«${p}» من الدرس`,
+      `طبّق القاعدة خطوة بخطوة على معطيات السؤال`,
+      `راجع الحل وتأكد من منطقيته قبل التسليم`,
+    ],
+    final: `الحل النهائي يعتمد على تطبيق دقيق لـ«${p}» — راجع الدرس إذا واجهت صعوبة.`,
+  }));
+}
+
+function generateQuiz(subId,tri){
+  const lessons = LESSONS[subId].filter(l=>l.tri===tri);
+  const allPoints = [];
+  lessons.forEach(l=>l.points.forEach(p=>allPoints.push({point:p,lesson:l.title})));
+  const questions = [];
+  for(let i=0;i<5;i++){
+    const correct = allPoints[i % allPoints.length];
+    const distractors = allPoints.filter(p=>p.point!==correct.point)
+      .sort(()=>0.5-Math.random()).slice(0,3);
+    const options = [correct, ...distractors].sort(()=>0.5-Math.random());
+    questions.push({
+      text: `في درس «${correct.lesson}»، أي مما يلي يعبّر بشكل صحيح عن المطلوب تعلمه؟`,
+      options: options.map(o=>o.point),
+      correctIndex: options.findIndex(o=>o.point===correct.point),
+      explain: `الإجابة الصحيحة هي «${correct.point}» لأنها الهدف التعليمي الأساسي لدرس «${correct.lesson}».`,
+    });
+  }
+  return questions;
+}
+
+// ===================== الحالة العامة =====================
+const state = {
+  view:'home', subjectId:null, tri:1, tab:'lessons',
+  openLesson:null, simplifiedOpen:{}, openExercise:{},
+  quiz:{}, // key subId-tri => {questions, answers:[], submitted:bool}
+  showSettings:false, hwPreview:null, hwResult:null,
+};
+
+const TAB_DEFS = [
+  {id:'lessons', label:'الدروس', icon:'📚'},
+  {id:'exercises', label:'التمارين', icon:'✏️'},
+  {id:'simplified', label:'الشرح المبسط', icon:'💡'},
+  {id:'exams', label:'الامتحانات السابقة', icon:'📝'},
+  {id:'quiz', label:'كويز', icon:'🧠'},
+];
+
+function el(html){const d=document.createElement('div');d.innerHTML=html.trim();return d.firstElementChild;}
+function render(){
+  const app=document.getElementById('app');
+  if(!isActivated() && trialDaysLeft()<=0){ app.innerHTML=renderLock(); return; }
+  app.innerHTML = renderShell();
+  if(state.showSettings){ document.body.insertAdjacentHTML('beforeend', renderSettingsModal()); }
+}
+
+// ===================== شاشة القفل =====================
+function renderLock(){
+  const fp = generateDeviceFingerprint();
+  window.__fp = fp;
+  return `
+  <div class="lock-wrap">
+    <div class="lock-card">
+      <div class="lock-icon">🔒</div>
+      <h2>فعّل تطبيق زاد</h2>
+      <p>انتهت النسخة المجانية. أرسل "رمز الجهاز" التالي للمدير عبر واتساب للحصول على مفتاح تفعيل صالح لمدة سنة كاملة. لا حاجة للإنترنت بعد التفعيل.</p>
+      <div class="fp-box">
+        <div class="fp-label">رمز الجهاز</div>
+        <span class="fp-code mono">${formatFP(fp)}</span>
+        <button class="small-btn" onclick="copyText('${formatFP(fp)}',this)">📋 نسخ الرمز</button>
+      </div>
+      <input class="key-input" id="lockKeyInput" placeholder="مفتاح الترخيص" maxlength="19">
+      <button class="confirm-btn" onclick="tryActivate('lockKeyInput','lockErr')">تفعيل</button>
+      <div class="err-txt" id="lockErr"></div>
+    </div>
+  </div>`;
+}
+
+function copyText(text, btn){
+  navigator.clipboard.writeText(text).then(()=>{
+    const orig=btn.textContent; btn.textContent='✓ تم النسخ';
+    setTimeout(()=>{btn.textContent=orig;},1800);
+  });
+}
+function tryActivate(inputId, errId){
+  const key = document.getElementById(inputId).value.trim();
+  const err = document.getElementById(errId);
+  if(!key){ err.textContent='الرجاء إدخال مفتاح التفعيل'; return; }
+  const fp = window.__fp || generateDeviceFingerprint();
+  if(activateApp(fp, key)){
+    err.textContent='';
+    state.showSettings=false;
+    render();
+  } else {
+    err.textContent='مفتاح التفعيل غير صحيح، تأكد من الكود وحاول مرة أخرى';
+  }
+}
+
+// ===================== الهيكل العام =====================
+function renderShell(){
+  const daysLeft = trialDaysLeft();
+  const activated = isActivated();
+  let banner='';
+  if(!activated){
+    banner = `<div class="trial-banner">
+      <span>النسخة المجانية: <b>${daysLeft}</b> يوم متبقٍ</span>
+      <button class="link-btn" onclick="openSettings()">فعّل الآن</button>
+    </div>`;
+  }
+  return `
+  <div class="topbar">
+    <div class="topbar-row">
+      <div class="brand">
+        <div class="brand-mark">🌾</div>
+        <div class="brand-text">
+          <h1>زاد</h1>
+          <p>السنة الأولى متوسط</p>
+        </div>
+      </div>
+      <button class="icon-btn" onclick="openSettings()">⚙️</button>
+    </div>
+    ${banner}
+  </div>
+  ${state.view==='home' ? renderHome() : renderSubject()}
+  `;
+}
+
+function openSettings(){ state.showSettings=true; render(); }
+function closeSettings(){
+  state.showSettings=false;
+  const ov=document.getElementById('settingsOverlay');
+  if(ov) ov.remove();
+}
+
+// ===================== الصفحة الرئيسية =====================
+function renderHome(){
+  const cards = SUBJECTS.map(s=>`
+    <button class="subject-card" onclick="openSubject('${s.id}')">
+      ${s.badge?`<span class="badge mono">${s.badge}</span>`:''}
+      <span class="icon">${s.icon}</span>
+      <span class="name">${s.name}</span>
+      <span class="stalk"></span>
+    </button>
+  `).join('');
+  return `
+    <div class="section-title">اختر مادة للبدء</div>
+    <div class="subject-grid">${cards}</div>
+  `;
+}
+function openSubject(id){
+  state.view='subject'; state.subjectId=id; state.tab='lessons'; state.tri=1;
+  render();
+}
+function goHome(){ state.view='home'; render(); }
+
+// ===================== صفحة المادة =====================
+function renderSubject(){
+  const subj = SUBJECTS.find(s=>s.id===state.subjectId);
+  const tris = [1,2,3].map(t=>`
+    <button class="tri-pill ${state.tri===t?'active':''}" onclick="setTri(${t})">الفصل ${['الأول','الثاني','الثالث'][t-1]}</button>
+  `).join('');
+  const tabs = TAB_DEFS.map(t=>`
+    <button class="tab-btn ${state.tab===t.id?'active':''}" onclick="setTab('${t.id}')">${t.icon} ${t.label}</button>
+  `).join('');
+
+  let body='';
+  if(state.tab==='lessons') body=renderLessons(subj);
+  else if(state.tab==='exercises') body=renderExercises(subj);
+  else if(state.tab==='simplified') body=renderSimplified(subj);
+  else if(state.tab==='exams') body=renderExams(subj);
+  else if(state.tab==='quiz') body=renderQuiz(subj);
+
+  return `
+    <div class="crumbs">
+      <button class="back-btn" onclick="goHome()">← المواد</button>
+      <span class="sep">/</span><span>${subj.icon} ${subj.name}</span>
+    </div>
+    <div class="trimester-row">${tris}</div>
+    <div class="tabs-row">${tabs}</div>
+    <div class="tab-content">${body}</div>
+  `;
+}
+function setTri(t){ state.tri=t; render(); }
+function setTab(t){ state.tab=t; render(); }
+
+function currentLessons(subj){
+  return LESSONS[subj.id].filter(l=>l.tri===state.tri);
+}
+
+// ===================== الدروس =====================
+function renderLessons(subj){
+  const lessons = currentLessons(subj);
+  return lessons.map(l=>`
+    <div class="lesson-card">
+      <div class="lt">${l.title}</div>
+      <ul>${l.points.map(p=>`<li>${p}</li>`).join('')}</ul>
+    </div>
+  `).join('');
+}
+
+// ===================== الشرح المبسط =====================
+function renderSimplified(subj){
+  const lessons = currentLessons(subj);
+  return lessons.map(l=>{
+    const open = state.simplifiedOpen[l.id];
+    let bodyHtml='';
+    if(open){
+      const s = generateSimplified(l);
+      bodyHtml = `
+        <div class="method"><div class="m-title">🔗 تشبيه</div><div class="m-text">${s.analogy}</div></div>
+        <div class="method"><div class="m-title">🌍 مثال من الواقع</div><div class="m-text">${s.example}</div></div>
+        <div class="method"><div class="m-title">🪜 خطوة بخطوة</div><div class="m-text">${s.steps.map((st,i)=>(i+1)+'. '+st).join('<br>')}</div></div>
+        <div class="method"><div class="m-title">🧠 ربط بمعرفة سابقة</div><div class="m-text">${s.prior}</div></div>
+        <div class="method"><div class="m-title">❓ سؤال تثبيت</div><div class="m-text">${s.check}</div></div>
+      `;
+    }
+    return `
+      <div class="simplify-trigger ${open?'open':''}" onclick="toggleSimplified('${l.id}')">
+        <div class="lt"><span>${l.title}</span><span class="chev">⌄</span></div>
+        <div class="simplify-body ${open?'open':''}">${bodyHtml}</div>
+      </div>
+    `;
+  }).join('');
+}
+function toggleSimplified(id){
+  state.simplifiedOpen[id] = !state.simplifiedOpen[id];
+  render();
+}
+
+// ===================== التمارين =====================
+function renderExercises(subj){
+  const lessons = currentLessons(subj);
+  let html = `
+    <div class="homework-box">
+      <div class="hb-title">📷 صوّر واجبك المنزلي</div>
+      <div class="hb-sub">التقط صورة لأي تمرين من واجبك في ${subj.name} وسيساعدك زاد على فهم خطوات حله.</div>
+      <input type="file" accept="image/*" capture="environment" class="camera-input" id="hwCamera" onchange="handleHomeworkPhoto(event)">
+      <button class="hb-btn" onclick="document.getElementById('hwCamera').click()">📷 فتح الكاميرا</button>
+      ${state.hwPreview?`<img src="${state.hwPreview}" class="hw-preview">`:''}
+      ${state.hwResult?`<div class="hw-result">${state.hwResult}</div>`:''}
+    </div>
+  `;
+  lessons.forEach(l=>{
+    const exs = generateExercises(l);
+    exs.forEach(ex=>{
+      const open = state.openExercise[ex.id];
+      html += `
+        <div class="exercise-card" onclick="toggleExercise('${ex.id}')">
+          <div class="ex-head"><span>${ex.question}</span></div>
+          <div class="ex-badge" style="margin-top:8px;display:inline-block;">${l.title}</div>
+          <div class="solution-box ${open?'open':''}">
+            ${ex.steps.map((s,i)=>`<div class="solution-step"><span class="num">${i+1}</span><span>${s}</span></div>`).join('')}
+            <div class="solution-final">${ex.final}</div>
+          </div>
+        </div>
+      `;
+    });
+  });
+  return html;
+}
+function toggleExercise(id){
+  state.openExercise[id] = !state.openExercise[id];
+  render();
+}
+function handleHomeworkPhoto(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    state.hwPreview = e.target.result;
+    state.hwResult = 'تم استلام الصورة ✅ — لتحليل دقيق لهذا التمرين بالذات: تأكد من وضوح الصورة وإضاءتها، ثم راجع بطاقات "التمارين" أعلاه المرتبطة بنفس الدرس لمقارنة خطوات حلك بالخطوات النموذجية.';
+    render();
+  };
+  reader.readAsDataURL(file);
+}
+
+// ===================== الامتحانات =====================
+function renderExams(subj){
+  const exams = getExams(subj.id, state.tri);
+  return exams.map(e=>`
+    <div class="exam-card">
+      <div class="ic">📝</div>
+      <div class="info"><b>${e.title}</b><span>${e.meta}</span></div>
+    </div>
+  `).join('') + `<div class="help-note">نماذج تجريبية لتدرّب على شكل الأسئلة. للحصول على نسخة مطابقة تماماً للامتحانات الرسمية لمؤسستك، تواصل مع أستاذك.</div>`;
+}
+
+// ===================== الكويز =====================
+function quizKey(){ return state.subjectId+'-'+state.tri; }
+function renderQuiz(subj){
+  const key = quizKey();
+  const qz = state.quiz[key];
+  if(!qz){
+    return `
+      <div class="quiz-intro">
+        <div class="qi-icon">🧠</div>
+        <h3>اختبر فهمك</h3>
+        <p>كويز من 5 أسئلة اختيار من متعدد حول دروس ${subj.name} — الفصل ${['الأول','الثاني','الثالث'][state.tri-1]}.</p>
+        <button class="primary-btn" onclick="startQuiz()">ابدأ الكويز</button>
+      </div>
+    `;
+  }
+  if(!qz.submitted){
+    const answeredCount = qz.answers.filter(a=>a!==null).length;
+    let html = `<div class="quiz-progress">أجبت عن ${answeredCount} من ${qz.questions.length} أسئلة</div>`;
+    qz.questions.forEach((q,qi)=>{
+      html += `<div class="quiz-q"><div class="q-text">${qi+1}. ${q.text}</div>`;
+      q.options.forEach((opt,oi)=>{
+        const sel = qz.answers[qi]===oi;
+        html += `<button class="q-opt ${sel?'selected':''}" onclick="selectAnswer(${qi},${oi})">${opt}</button>`;
+      });
+      html += `</div>`;
+    });
+    const canSubmit = answeredCount===qz.questions.length;
+    html += `<button class="primary-btn" style="width:100%;justify-content:center;${canSubmit?'':'opacity:0.5;pointer-events:none;'}" onclick="submitQuiz()">تصحيح الإجابات</button>`;
+    return html;
+  }
+  // submitted
+  const score = qz.questions.filter((q,i)=>qz.answers[i]===q.correctIndex).length;
+  let html = `
+    <div class="quiz-result">
+      <div class="score">${score}/${qz.questions.length}</div>
+      <div class="label">نتيجتك في هذا الكويز</div>
+    </div>
+  `;
+  qz.questions.forEach((q,qi)=>{
+    html += `<div class="quiz-q"><div class="q-text">${qi+1}. ${q.text}</div>`;
+    q.options.forEach((opt,oi)=>{
+      let cls='q-opt';
+      if(oi===q.correctIndex) cls+=' correct';
+      else if(oi===qz.answers[qi]) cls+=' wrong';
+      html += `<div class="${cls}">${opt}</div>`;
+    });
+    html += `<div class="q-explain show">💡 ${q.explain}</div></div>`;
+  });
+  html += `<button class="primary-btn" style="width:100%;justify-content:center;" onclick="startQuiz()">كويز جديد</button>`;
+  return html;
+}
+function startQuiz(){
+  const key = quizKey();
+  const questions = generateQuiz(state.subjectId, state.tri);
+  state.quiz[key] = { questions, answers: new Array(questions.length).fill(null), submitted:false };
+  render();
+}
+function selectAnswer(qi,oi){
+  const qz = state.quiz[quizKey()];
+  qz.answers[qi]=oi;
+  render();
+}
+function submitQuiz(){
+  const qz = state.quiz[quizKey()];
+  qz.submitted = true;
+  render();
+}
+
+// ===================== نافذة الإعدادات / التفعيل =====================
+function renderSettingsModal(){
+  const fp = generateDeviceFingerprint();
+  window.__fp = fp;
+  const activated = isActivated();
+  const daysLeft = trialDaysLeft();
+  const act = getActivation();
+  return `
+  <div class="overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettings()">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>⚙️ التفعيل والإعدادات</h3>
+        <button class="close-x" onclick="closeSettings()">✕</button>
+      </div>
+      ${activated
+        ? `<div class="status-pill active">✓ مفعّل حتى ${new Date(act.expiresAt).toLocaleDateString('ar-DZ')}</div>`
+        : `<div class="status-pill free">النسخة المجانية — ${daysLeft} يوم متبقٍ</div>`
+      }
+      <div class="fp-box">
+        <div class="fp-label">رمز الجهاز — أرسله للمدير للحصول على مفتاح</div>
+        <span class="fp-code mono">${formatFP(fp)}</span>
+        <button class="small-btn" onclick="copyText('${formatFP(fp)}',this)">📋 نسخ الرمز</button>
+      </div>
+      ${!activated ? `
+      <input class="key-input" id="modalKeyInput" placeholder="مفتاح الترخيص" maxlength="19">
+      <button class="confirm-btn" onclick="tryActivate('modalKeyInput','modalErr')">تفعيل</button>
+      <div class="err-txt" id="modalErr"></div>
+      ` : ''}
+      <div class="help-note">لا حاجة للإنترنت بعد التفعيل. الترخيص صالح لمدة سنة كاملة من تاريخ التفعيل.</div>
+    </div>
+  </div>`;
+}
+
+// ===================== بدء التشغيل =====================
+render();
+
+</script>
+</body>
+</html>
