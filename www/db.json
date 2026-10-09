@@ -1,0 +1,792 @@
+{
+ "version": "2026.5",
+ "season": "2025/2026",
+ "levels": {
+  "1AM": {
+   "name": "السنة الأولى متوسط",
+   "available": true,
+   "sections": [
+    {
+     "title": "الكتب المدرسية الرسمية",
+     "links": [
+      {
+       "label": "تطبيق EddyDZ",
+       "url": "https://play.google.com/store/apps/details?id=dz.eddy",
+       "icon": "📱",
+       "verified": true
+      },
+      {
+       "label": "منصة أولياء",
+       "url": "https://awlya.education.gov.dz",
+       "icon": "🌐",
+       "verified": true
+      },
+      {
+       "label": "وزارة التربية",
+       "url": "https://www.men.gov.dz",
+       "icon": "🏛️",
+       "verified": true
+      }
+     ],
+     "cat": "books"
+    },
+    {
+     "title": "كتب مدرسية PDF (كل المواد)",
+     "cat": "books",
+     "links": [
+      {
+       "label": "كتب السنة الأولى متوسط (كل المواد PDF)",
+       "url": "https://eddirasa.com/books-1am/",
+       "icon": "📚",
+       "verified": true
+      }
+     ]
+    },
+    {
+     "title": "تمارين ودروس وملخصات",
+     "cat": "exercises",
+     "links": [
+      {
+       "label": "دروس وتمارين وملخصات 1AM",
+       "url": "https://eddirasa.com/ens-cm/1am/",
+       "icon": "✏️",
+       "verified": false
+      }
+     ]
+    },
+    {
+     "title": "مذكرات الأستاذ ووثائقه",
+     "cat": "notes",
+     "links": [
+      {
+       "label": "مذكرات ووثائق أستاذ 1AM (موقع الحسام)",
+       "url": "https://www.h-onec.com/p/1am-modakirat.html",
+       "icon": "📝",
+       "verified": true
+      },
+      {
+       "label": "مذكرات وكتب الأستاذ 1AM (t-onec)",
+       "url": "https://www.t-onec.com/p/1am-professor-documents.html",
+       "icon": "👨‍🏫",
+       "verified": true
+      },
+      {
+       "label": "مذكرات التربية المدنية 1AM",
+       "url": "https://eddirasa.com/%D9%85%D8%B0%D9%83%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D8%AA%D8%B1%D8%A8%D9%8A%D8%A9-%D8%A7%D9%84%D9%85%D8%AF%D9%86%D9%8A%D8%A9-%D8%A7%D9%84%D8%B3%D9%86%D8%A9-%D8%A7%D9%84%D8%A3%D9%88%D9%84%D9%89-%D9%85/",
+       "icon": "📝",
+       "verified": true
+      }
+     ]
+    },
+    {
+     "title": "dzexams — فروض، اختبارات، ملخصات",
+     "links": [
+      {
+       "label": "الرئيسية",
+       "url": "https://www.dzexams.com/fr/1am",
+       "icon": "🏠",
+       "verified": true
+      },
+      {
+       "label": "رياضيات",
+       "url": "https://www.dzexams.com/fr/1am/mathematiques",
+       "icon": "➕",
+       "verified": true
+      },
+      {
+       "label": "فيزياء وتكنولوجيا",
+       "url": "https://www.dzexams.com/fr/1am/physique",
+       "icon": "⚡",
+       "verified": true
+      },
+      {
+       "label": "علوم الطبيعة",
+       "url": "https://www.dzexams.com/fr/1am/sciences-naturelles",
+       "icon": "🌿",
+       "verified": true
+      },
+      {
+       "label": "عربية",
+       "url": "https://www.dzexams.com/fr/1am/arabe",
+       "icon": "📗",
+       "verified": true
+      },
+      {
+       "label": "تاريخ وجغرافيا",
+       "url": "https://www.dzexams.com/fr/1am/histoire-geographie",
+       "icon": "🗺️",
+       "verified": true
+      },
+      {
+       "label": "فرنسية",
+       "url": "https://www.dzexams.com/fr/1am/francais",
+       "icon": "🇫🇷",
+       "verified": true
+      },
+      {
+       "label": "إنجليزية",
+       "url": "https://www.dzexams.com/fr/1am/anglais",
+       "icon": "🇬🇧",
+       "verified": true
+      }
+     ],
+     "cat": "exams"
+    },
+    {
+     "title": "أرشيف الفروض حسب الثلاثي",
+     "links": [
+      {
+       "label": "أرشيف الفروض والاختبارات (1AM) حسب الثلاثي",
+       "url": "https://www.ecoleopiniatre.com/category/examens/cem/1am/",
+       "icon": "🗂️",
+       "verified": true
+      }
+     ],
+     "cat": "exams"
+    },
+    {
+     "title": "موارد الأستاذ",
+     "links": [
+      {
+       "label": "madar-school.com",
+       "url": "https://www.madar-school.com",
+       "icon": "🎯",
+       "verified": true
+      },
+      {
+       "label": "3rosaba.com",
+       "url": "https://www.3rosaba.com",
+       "icon": "📕",
+       "verified": true
+      }
+     ],
+     "cat": "notes"
+    }
+   ]
+  },
+  "2AM": {
+   "name": "السنة الثانية متوسط",
+   "available": true,
+   "sections": [
+    {
+     "title": "الكتب المدرسية الرسمية",
+     "links": [
+      {
+       "label": "تطبيق EddyDZ",
+       "url": "https://play.google.com/store/apps/details?id=dz.eddy",
+       "icon": "📱",
+       "verified": true
+      },
+      {
+       "label": "منصة أولياء",
+       "url": "https://awlya.education.gov.dz",
+       "icon": "🌐",
+       "verified": true
+      },
+      {
+       "label": "وزارة التربية",
+       "url": "https://www.men.gov.dz",
+       "icon": "🏛️",
+       "verified": true
+      }
+     ],
+     "cat": "books"
+    },
+    {
+     "title": "كتب مدرسية PDF (كل المواد)",
+     "cat": "books",
+     "links": [
+      {
+       "label": "كتب السنة الثانية متوسط (كل المواد PDF)",
+       "url": "https://eddirasa.com/books-2am/",
+       "icon": "📚",
+       "verified": true
+      },
+      {
+       "label": "كتاب الرياضيات",
+       "url": "https://eddirasa.com/book-maths-2am-2g-pdf/",
+       "icon": "➕",
+       "verified": true
+      },
+      {
+       "label": "كتاب الفيزياء",
+       "url": "https://eddirasa.com/book-physique-2am-2g/",
+       "icon": "⚡",
+       "verified": true
+      },
+      {
+       "label": "كتاب العلوم الطبيعية",
+       "url": "https://eddirasa.com/book-sciences-2am-2g/",
+       "icon": "🌿",
+       "verified": true
+      },
+      {
+       "label": "كتاب اللغة العربية",
+       "url": "https://eddirasa.com/book-arabic-2am-2g-pdf/",
+       "icon": "📗",
+       "verified": true
+      },
+      {
+       "label": "كتاب اللغة الإنجليزية",
+       "url": "https://eddirasa.com/book-english-2am-2g/",
+       "icon": "🇬🇧",
+       "verified": true
+      },
+      {
+       "label": "كتاب التاريخ",
+       "url": "https://eddirasa.com/book-histoir-2am-pdf/",
+       "icon": "🗺️",
+       "verified": true
+      }
+     ]
+    },
+    {
+     "title": "تمارين ودروس وملخصات",
+     "cat": "exercises",
+     "links": [
+      {
+       "label": "دروس وتمارين وملخصات 2AM",
+       "url": "https://eddirasa.com/ens-cm/2am/",
+       "icon": "✏️",
+       "verified": false
+      }
+     ]
+    },
+    {
+     "title": "مذكرات الأستاذ ووثائقه",
+     "cat": "notes",
+     "links": [
+      {
+       "label": "مذكرات ووثائق أستاذ 2AM (موقع الحسام)",
+       "url": "https://www.h-onec.com/p/2am-modakirat.html",
+       "icon": "📝",
+       "verified": true
+      },
+      {
+       "label": "مذكرات جميع مواد 2AM",
+       "url": "https://www.h-onec.com/p/modakirat-sana2-motawasit.html",
+       "icon": "📝",
+       "verified": true
+      },
+      {
+       "label": "مذكرات الرياضيات 2AM",
+       "url": "https://www.h-onec.com/2020/07/2am-modakirat-math.html",
+       "icon": "➕",
+       "verified": true
+      },
+      {
+       "label": "مذكرات العلوم الطبيعية 2AM",
+       "url": "https://www.h-onec.com/2020/07/2am-modakirat-sciences.html",
+       "icon": "🌿",
+       "verified": true
+      },
+      {
+       "label": "مذكرات اللغة العربية 2AM",
+       "url": "https://www.h-onec.com/2020/07/2am-modakirat-arabic.html",
+       "icon": "📗",
+       "verified": true
+      },
+      {
+       "label": "مذكرات التربية المدنية 2AM",
+       "url": "https://www.h-onec.com/2020/07/2am-modakirat-civic.html",
+       "icon": "📝",
+       "verified": true
+      },
+      {
+       "label": "موقع السنة الثانية متوسط (فروض، واجبات، تقويمات)",
+       "url": "https://www.h-onec.com/p/2am.html",
+       "icon": "🏠",
+       "verified": true
+      }
+     ]
+    },
+    {
+     "title": "dzexams — فروض، اختبارات، ملخصات",
+     "links": [
+      {
+       "label": "الرئيسية 2AM",
+       "url": "https://www.dzexams.com/fr/2am",
+       "icon": "🏠",
+       "verified": true
+      },
+      {
+       "label": "رياضيات",
+       "url": "https://www.dzexams.com/fr/2am/mathematiques",
+       "icon": "➕",
+       "verified": true
+      },
+      {
+       "label": "فيزياء وتكنولوجيا",
+       "url": "https://www.dzexams.com/fr/2am/physique",
+       "icon": "⚡",
+       "verified": true
+      },
+      {
+       "label": "علوم الطبيعة",
+       "url": "https://www.dzexams.com/fr/2am/sciences-naturelles",
+       "icon": "🌿",
+       "verified": true
+      },
+      {
+       "label": "عربية",
+       "url": "https://www.dzexams.com/fr/2am/arabe",
+       "icon": "📗",
+       "verified": true
+      },
+      {
+       "label": "تاريخ وجغرافيا",
+       "url": "https://www.dzexams.com/fr/2am/histoire-geographie",
+       "icon": "🗺️",
+       "verified": true
+      },
+      {
+       "label": "فرنسية",
+       "url": "https://www.dzexams.com/fr/2am/francais",
+       "icon": "🇫🇷",
+       "verified": true
+      },
+      {
+       "label": "إنجليزية",
+       "url": "https://www.dzexams.com/fr/2am/anglais",
+       "icon": "🇬🇧",
+       "verified": true
+      }
+     ],
+     "cat": "exams"
+    },
+    {
+     "title": "أرشيف الفروض والاختبارات حسب الثلاثي",
+     "links": [
+      {
+       "label": "أرشيف الفروض والاختبارات (2AM) حسب الثلاثي",
+       "url": "https://www.ecoleopiniatre.com/category/examens/cem/2am/",
+       "icon": "🗂️",
+       "verified": true
+      }
+     ],
+     "cat": "exams"
+    },
+    {
+     "title": "موارد الأستاذ",
+     "links": [
+      {
+       "label": "madar-school.com",
+       "url": "https://www.madar-school.com",
+       "icon": "🎯",
+       "verified": true
+      },
+      {
+       "label": "3rosaba.com",
+       "url": "https://www.3rosaba.com",
+       "icon": "📕",
+       "verified": true
+      }
+     ],
+     "cat": "notes"
+    }
+   ]
+  },
+  "3AM": {
+   "name": "السنة الثالثة متوسط",
+   "available": true,
+   "sections": [
+    {
+     "title": "الكتب المدرسية الرسمية",
+     "links": [
+      {
+       "label": "تطبيق EddyDZ",
+       "url": "https://play.google.com/store/apps/details?id=dz.eddy",
+       "icon": "📱",
+       "verified": true
+      },
+      {
+       "label": "منصة أولياء",
+       "url": "https://awlya.education.gov.dz",
+       "icon": "🌐",
+       "verified": true
+      },
+      {
+       "label": "وزارة التربية",
+       "url": "https://www.men.gov.dz",
+       "icon": "🏛️",
+       "verified": true
+      }
+     ],
+     "cat": "books"
+    },
+    {
+     "title": "كتب مدرسية PDF (كل المواد)",
+     "cat": "books",
+     "links": [
+      {
+       "label": "كتب السنة الثالثة متوسط (كل المواد PDF)",
+       "url": "https://eddirasa.com/books-3am/",
+       "icon": "📚",
+       "verified": true
+      },
+      {
+       "label": "كتاب الرياضيات",
+       "url": "https://eddirasa.com/book-maths-3am-pdf/",
+       "icon": "➕",
+       "verified": true
+      },
+      {
+       "label": "كتاب العلوم الفيزيائية",
+       "url": "https://eddirasa.com/book-physique-3am-2g/",
+       "icon": "⚡",
+       "verified": true
+      },
+      {
+       "label": "كتاب العلوم الطبيعية",
+       "url": "https://eddirasa.com/book-sciences-3am-2g/",
+       "icon": "🌿",
+       "verified": true
+      },
+      {
+       "label": "كتاب اللغة العربية",
+       "url": "https://eddirasa.com/livre-arabe-3am-2g-pdf/",
+       "icon": "📗",
+       "verified": true
+      },
+      {
+       "label": "كتاب اللغة الإنجليزية",
+       "url": "https://eddirasa.com/book-english-3am-pdf/",
+       "icon": "🇬🇧",
+       "verified": true
+      },
+      {
+       "label": "كتاب التاريخ",
+       "url": "https://eddirasa.com/book-histoir-3am-pdf/",
+       "icon": "🗺️",
+       "verified": true
+      },
+      {
+       "label": "كتاب اللغة الأمازيغية",
+       "url": "https://eddirasa.com/book-tamazigh-3am-pdf/",
+       "icon": "📘",
+       "verified": true
+      }
+     ]
+    },
+    {
+     "title": "تمارين ودروس وملخصات",
+     "cat": "exercises",
+     "links": [
+      {
+       "label": "دروس وفروض وتمارين مع الحل 3AM",
+       "url": "https://eddirasa.com/ens-cm/3am/",
+       "icon": "✏️",
+       "verified": true
+      }
+     ]
+    },
+    {
+     "title": "مذكرات الأستاذ ووثائقه",
+     "cat": "notes",
+     "links": [
+      {
+       "label": "مذكرات ووثائق أستاذ 3AM (موقع الحسام)",
+       "url": "https://www.h-onec.com/p/3am-modakirat.html",
+       "icon": "📝",
+       "verified": false
+      },
+      {
+       "label": "مذكرات وكتب الأستاذ 3AM (t-onec)",
+       "url": "https://www.t-onec.com/p/3am-professor-documents.html",
+       "icon": "👨‍🏫",
+       "verified": false
+      }
+     ]
+    },
+    {
+     "title": "dzexams — فروض، اختبارات، ملخصات",
+     "links": [
+      {
+       "label": "الرئيسية",
+       "url": "https://www.dzexams.com/fr/3am",
+       "icon": "🏠",
+       "verified": true
+      },
+      {
+       "label": "رياضيات",
+       "url": "https://www.dzexams.com/fr/3am/mathematiques",
+       "icon": "➕",
+       "verified": true
+      },
+      {
+       "label": "فيزياء وتكنولوجيا",
+       "url": "https://www.dzexams.com/fr/3am/physique",
+       "icon": "⚡",
+       "verified": true
+      },
+      {
+       "label": "علوم الطبيعة",
+       "url": "https://www.dzexams.com/fr/3am/sciences-naturelles",
+       "icon": "🌿",
+       "verified": true
+      },
+      {
+       "label": "عربية",
+       "url": "https://www.dzexams.com/fr/3am/arabe",
+       "icon": "📗",
+       "verified": true
+      },
+      {
+       "label": "تاريخ وجغرافيا",
+       "url": "https://www.dzexams.com/fr/3am/histoire-geographie",
+       "icon": "🗺️",
+       "verified": true
+      },
+      {
+       "label": "فرنسية",
+       "url": "https://www.dzexams.com/fr/3am/francais",
+       "icon": "🇫🇷",
+       "verified": true
+      },
+      {
+       "label": "إنجليزية",
+       "url": "https://www.dzexams.com/fr/3am/anglais",
+       "icon": "🇬🇧",
+       "verified": true
+      }
+     ],
+     "cat": "exams"
+    },
+    {
+     "title": "أرشيف الفروض حسب الثلاثي",
+     "links": [
+      {
+       "label": "أرشيف الفروض والاختبارات (3AM) حسب الثلاثي",
+       "url": "https://www.ecoleopiniatre.com/category/examens/cem/3am/",
+       "icon": "🗂️",
+       "verified": true
+      }
+     ],
+     "cat": "exams"
+    },
+    {
+     "title": "موارد الأستاذ",
+     "links": [
+      {
+       "label": "madar-school.com",
+       "url": "https://www.madar-school.com",
+       "icon": "🎯",
+       "verified": true
+      },
+      {
+       "label": "3rosaba.com",
+       "url": "https://www.3rosaba.com",
+       "icon": "📕",
+       "verified": true
+      }
+     ],
+     "cat": "notes"
+    }
+   ]
+  },
+  "4AM": {
+   "name": "السنة الرابعة متوسط",
+   "available": true,
+   "sections": [
+    {
+     "title": "الكتب المدرسية الرسمية",
+     "cat": "books",
+     "links": [
+      {
+       "label": "تطبيق EddyDZ",
+       "url": "https://play.google.com/store/apps/details?id=dz.eddy",
+       "icon": "📱",
+       "verified": true
+      },
+      {
+       "label": "منصة أولياء",
+       "url": "https://awlya.education.gov.dz",
+       "icon": "🌐",
+       "verified": true
+      },
+      {
+       "label": "وزارة التربية",
+       "url": "https://www.men.gov.dz",
+       "icon": "🏛️",
+       "verified": true
+      }
+     ]
+    },
+    {
+     "title": "كتب مدرسية PDF (كل المواد)",
+     "cat": "books",
+     "links": [
+      {
+       "label": "كتب السنة الرابعة متوسط (كل المواد PDF)",
+       "url": "https://eddirasa.com/books-4am/",
+       "icon": "📚",
+       "verified": true
+      },
+      {
+       "label": "كتاب الرياضيات",
+       "url": "https://eddirasa.com/book-maths-4am-pdf/",
+       "icon": "➕",
+       "verified": true
+      },
+      {
+       "label": "كتاب العلوم الفيزيائية والتكنولوجيا",
+       "url": "https://eddirasa.com/book-physics-thech-4am-pdf/",
+       "icon": "⚡",
+       "verified": true
+      },
+      {
+       "label": "كتاب اللغة العربية",
+       "url": "https://eddirasa.com/book-arabic-4am-pdf/",
+       "icon": "📗",
+       "verified": true
+      }
+     ]
+    },
+    {
+     "title": "تمارين ودروس وملخصات",
+     "cat": "exercises",
+     "links": [
+      {
+       "label": "دروس وفروض وتمارين مع الحل 4AM",
+       "url": "https://eddirasa.com/ens-cm/4am/",
+       "icon": "✏️",
+       "verified": true
+      },
+      {
+       "label": "🎓 تحضير شهادة التعليم المتوسط (BEM)",
+       "url": "https://eddirasa.com/ens-cm/4am/bem/",
+       "icon": "🎓",
+       "verified": true
+      }
+     ]
+    },
+    {
+     "title": "مذكرات الأستاذ ووثائقه",
+     "cat": "notes",
+     "links": [
+      {
+       "label": "مذكرات ووثائق أستاذ 4AM (موقع الحسام)",
+       "url": "https://www.h-onec.com/p/4am-modakirat.html",
+       "icon": "📝",
+       "verified": true
+      },
+      {
+       "label": "مذكرات وكتب الأستاذ 4AM (t-onec)",
+       "url": "https://www.t-onec.com/p/4am-professor-documents.html",
+       "icon": "👨‍🏫",
+       "verified": true
+      },
+      {
+       "label": "مذكرات العلوم الفيزيائية 4AM",
+       "url": "https://www.h-onec.com/2020/07/4am-modakirat-physics.html",
+       "icon": "⚡",
+       "verified": true
+      },
+      {
+       "label": "مذكرات اللغة العربية 4AM",
+       "url": "https://www.h-onec.com/2020/07/4am-modakirat-arabic.html",
+       "icon": "📗",
+       "verified": true
+      },
+      {
+       "label": "الإعلام الآلي 4AM",
+       "url": "https://www.t-onec.com/p/4am-informatique.html",
+       "icon": "💻",
+       "verified": true
+      },
+      {
+       "label": "التربية الإسلامية 4AM",
+       "url": "https://www.t-onec.com/p/4am-islamic.html",
+       "icon": "🕌",
+       "verified": true
+      }
+     ]
+    },
+    {
+     "title": "dzexams — فروض، اختبارات، ملخصات",
+     "cat": "exams",
+     "links": [
+      {
+       "label": "الرئيسية",
+       "url": "https://www.dzexams.com/fr/4am",
+       "icon": "🏠",
+       "verified": true
+      },
+      {
+       "label": "رياضيات",
+       "url": "https://www.dzexams.com/fr/4am/mathematiques",
+       "icon": "➕",
+       "verified": true
+      },
+      {
+       "label": "فيزياء وتكنولوجيا",
+       "url": "https://www.dzexams.com/fr/4am/physique",
+       "icon": "⚡",
+       "verified": true
+      },
+      {
+       "label": "علوم الطبيعة",
+       "url": "https://www.dzexams.com/fr/4am/sciences-naturelles",
+       "icon": "🌿",
+       "verified": true
+      },
+      {
+       "label": "عربية",
+       "url": "https://www.dzexams.com/fr/4am/arabe",
+       "icon": "📗",
+       "verified": true
+      },
+      {
+       "label": "تاريخ وجغرافيا",
+       "url": "https://www.dzexams.com/fr/4am/histoire-geographie",
+       "icon": "🗺️",
+       "verified": true
+      },
+      {
+       "label": "فرنسية",
+       "url": "https://www.dzexams.com/fr/4am/francais",
+       "icon": "🇫🇷",
+       "verified": true
+      },
+      {
+       "label": "إنجليزية",
+       "url": "https://www.dzexams.com/fr/4am/anglais",
+       "icon": "🇬🇧",
+       "verified": true
+      }
+     ]
+    },
+    {
+     "title": "أرشيف الفروض حسب الثلاثي",
+     "cat": "exams",
+     "links": [
+      {
+       "label": "ecoleopiniatre.com — 4AM",
+       "url": "https://www.ecoleopiniatre.com/category/examens/cem/4am/",
+       "icon": "🗂️",
+       "verified": true
+      }
+     ]
+    },
+    {
+     "title": "موارد الأستاذ",
+     "cat": "notes",
+     "links": [
+      {
+       "label": "madar-school.com",
+       "url": "https://www.madar-school.com",
+       "icon": "🎯",
+       "verified": true
+      },
+      {
+       "label": "3rosaba.com",
+       "url": "https://www.3rosaba.com",
+       "icon": "📕",
+       "verified": true
+      }
+     ]
+    }
+   ]
+  }
+ }
+}
