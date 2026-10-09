@@ -17,14 +17,19 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
 .trialbar.warn{background:rgba(239,68,68,.35)}
 .actbtn{position:absolute;left:0;top:18px;background:var(--acc);color:var(--ink);border:0;border-radius:12px;padding:6px 10px;font-size:18px;cursor:pointer}
 
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:520px;margin:auto}
-.lv{position:relative;border:0;border-radius:22px;padding:0;overflow:hidden;background:none;cursor:pointer;
- box-shadow:0 8px 20px rgba(0,0,0,.35);transition:transform .15s}
-.lv:active{transform:scale(.96)}
-.lv img{width:100%;display:block}
-.lv span{position:absolute;bottom:8px;right:8px;background:var(--acc);color:var(--ink);font-size:12px;font-weight:bold;border-radius:20px;padding:2px 10px}
+.grid{display:flex;flex-direction:column;gap:16px;max-width:560px;margin:auto;min-height:75vh;justify-content:center}
+.lv{position:relative;border:0;border-radius:26px;padding:0;overflow:hidden;background:none;cursor:pointer;
+ width:100%;min-height:18vh;box-shadow:0 10px 26px rgba(0,0,0,.4);transition:transform .15s}
+.lv:active{transform:scale(.97)}
+.lv img{width:100%;height:100%;object-fit:cover;display:block}
+.lv span{position:absolute;bottom:12px;right:14px;background:var(--acc);color:var(--ink);font-size:15px;font-weight:bold;border-radius:20px;padding:4px 14px}
 
-#view,#subjectView,#chat,#actScreen{display:none;max-width:720px;margin:auto}
+#view,#subjectView,#chat,#actScreen,#webview{display:none;max-width:720px;margin:auto}
+#webview.show{display:flex;position:fixed;inset:0;max-width:100%;z-index:40;flex-direction:column;background:#fff}
+#webview .wvTop{display:flex;align-items:center;gap:10px;padding:env(safe-area-inset-top) 10px 8px;background:var(--bg1);color:#fff}
+#webview .wvTop button{background:rgba(255,255,255,.2);color:#fff;border:0;border-radius:10px;padding:8px 12px;font-size:14px}
+#webview .wvTop span{flex:1;font-size:13px;opacity:.9;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#webview iframe{flex:1;border:0;width:100%}
 .top{display:flex;align-items:center;gap:10px;margin:14px 0}
 .top button{background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:12px;padding:10px 14px;font-size:15px;cursor:pointer}
 .top h2{margin:0;font-size:19px;flex:1}
@@ -43,7 +48,27 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
 .subj{background:var(--card);color:var(--ink);border-radius:18px;padding:16px 10px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.25);cursor:pointer;border:0;font-family:inherit}
 .subj .ic{font-size:30px;display:block;margin-bottom:6px}
 .subj .name{font-weight:bold;font-size:14px}
-.subj .askbtn{margin-top:8px;background:var(--bg2);color:#fff;border:0;border-radius:10px;padding:6px 8px;font-size:12px;width:100%}
+.subj .btnrow{display:flex;flex-direction:column;gap:5px;margin-top:8px}
+.subj .btnrow button{background:var(--bg2);color:#fff;border:0;border-radius:10px;padding:6px 8px;font-size:12px;width:100%;font-family:inherit}
+.subj .btnrow button.quizbtn{background:#059669}
+.subj .btnrow button.explainbtn{background:#7c3aed}
+
+#quiz{display:none}
+#quiz.show{display:block;position:fixed;inset:0;z-index:45;background:linear-gradient(160deg,var(--bg1),var(--bg2));
+ padding:env(safe-area-inset-top) 16px 20px;overflow-y:auto}
+.qTop{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.qTop button{background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:12px;padding:8px 12px}
+.qCard{background:var(--card);color:var(--ink);border-radius:16px;padding:16px;margin-bottom:14px}
+.qCard .qtext{font-weight:bold;margin-bottom:10px}
+.qCard label{display:block;background:#f3f4f6;border-radius:10px;padding:10px;margin-bottom:6px;cursor:pointer}
+.qCard label.correct{background:#bbf7d0}
+.qCard label.wrong{background:#fecaca}
+.qSubmit{width:100%;background:var(--acc);color:var(--ink);border:0;border-radius:14px;padding:13px;font-weight:bold;font-size:16px;margin-top:6px}
+.qScore{text-align:center;font-size:18px;font-weight:bold;margin:10px 0}
+.topicBox{max-width:420px;margin:50px auto 0;background:rgba(255,255,255,.14);border-radius:18px;padding:22px;text-align:center}
+.topicBox input{width:100%;padding:12px;border-radius:12px;border:0;font-size:16px;margin:12px 0;font-family:inherit}
+.topicBox button{width:100%;background:var(--acc);color:var(--ink);border:0;border-radius:14px;padding:13px;font-weight:bold}
+.loadingDots{text-align:center;padding:30px;font-size:15px;opacity:.85}
 
 /* chat */
 #chat{display:none;flex-direction:column;height:calc(100vh - 20px)}
@@ -122,6 +147,17 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
     <input id="chatInput" placeholder="اكتبي سؤالك هنا..." onkeydown="if(event.key==='Enter')sendMsg()">
     <button onclick="sendMsg()">إرسال</button>
   </div>
+</div>
+
+<!-- ===================== شاشة الشرح (📖) وشاشة الكويز (📝) ===================== -->
+<div id="quiz">
+  <div class="qTop"><button onclick="closeQuiz()">→ رجوع</button><h2 id="quizTitle" style="margin:0;font-size:17px;flex:1"></h2></div>
+  <div id="quizBody"></div>
+</div>
+
+<div id="webview">
+  <div class="wvTop"><button onclick="closeWebview()">✕ إغلاق</button><span id="wvTitle"></span><button onclick="openExternal()">↗ فتح خارجي</button></div>
+  <iframe id="wvFrame"></iframe>
 </div>
 
 <script src="db.js"></script>
@@ -241,12 +277,30 @@ function renderSecs(){
     const links = s.links.filter(x => !q || (x.label + ' ' + s.title).toLowerCase().includes(q));
     if(!links.length) return '';
     return `<div class="sec"><h3>${s.title}</h3><div class="card">` +
-      links.map(x => `<a href="${x.url}" target="_blank" rel="noopener"><i>${x.icon}</i><span>${x.label}</span></a>`).join('') +
+      links.map(x => `<a href="#" onclick="openWebview('${x.url.replace(/'/g,"\\'")}','${x.label.replace(/'/g,"\\'")}');return false;"><i>${x.icon}</i><span>${x.label}</span></a>`).join('') +
       '</div></div>';
   }).join('');
   $('secs').innerHTML = out || '<div class="empty">لا توجد نتائج مطابقة.</div>';
 }
 $('q').addEventListener('input', renderSecs);
+
+/* ============================================================
+   عارض مدمج داخل التطبيق (بدل فتح متصفح خارجي)
+   ============================================================ */
+let currentExternalUrl = '';
+function openWebview(url, title){
+  currentExternalUrl = url;
+  $('wvTitle').textContent = title;
+  $('wvFrame').src = url;
+  $('webview').classList.add('show');
+}
+function closeWebview(){
+  $('webview').classList.remove('show');
+  $('wvFrame').src = 'about:blank';
+}
+function openExternal(){
+  window.open(currentExternalUrl, '_system');
+}
 
 /* ============================================================
    شبكة المواد + زر "اسأل الأستاذ الذكي"
@@ -256,8 +310,119 @@ function renderSubjects(){
     `<div class="subj">
        <span class="ic">${s.icon}</span>
        <span class="name">${s.name}</span>
-       <button class="askbtn" onclick="openChat('${s.key}')">💬 اسأل الأستاذ الذكي</button>
+       <div class="btnrow">
+         <button onclick="openChat('${s.key}')">💬 اسأل الأستاذ</button>
+         <button class="explainbtn" onclick="openExplain('${s.key}')">📖 الشرح</button>
+         <button class="quizbtn" onclick="openQuiz('${s.key}')">📝 كويز</button>
+       </div>
      </div>`).join('');
+}
+
+/* ============================================================
+   📖 الشرح: الطالب يكتب اسم الدرس، الأستاذ يشرحه بالتفصيل
+   ============================================================ */
+function openExplain(subjectKey){
+  if(isLocked()){ showActivation(); return; }
+  const subject = SUBJECTS.find(s=>s.key===subjectKey);
+  $('quizTitle').textContent = '📖 شرح — ' + subject.name;
+  $('quizBody').innerHTML = `
+    <div class="topicBox">
+      <h3 style="margin:0 0 6px">أي درس تريدين شرحه؟</h3>
+      <p style="opacity:.85;font-size:13px;margin:0">اكتبي اسم الدرس أو الموضوع (مثلاً: المعادلات، الكسور، التناسبية...)</p>
+      <input id="explainTopic" placeholder="اسم الدرس...">
+      <button onclick="runExplain('${subjectKey}')">اشرحي لي 📖</button>
+    </div>`;
+  $('quiz').classList.add('show');
+}
+async function runExplain(subjectKey){
+  const subject = SUBJECTS.find(s=>s.key===subjectKey);
+  const topic = $('explainTopic').value.trim();
+  if(!topic) return;
+  $('quizBody').innerHTML = '<div class="loadingDots">📖 جاري إعداد الشرح...</div>';
+
+  if(!CONFIG.GEMINI_API_KEY){
+    $('quizBody').innerHTML = '<div class="empty">⚠️ لم يُضبط مفتاح الذكاء الاصطناعي بعد.</div>';
+    return;
+  }
+  try{
+    const text = await askGemini(subject, [{role:'user', text:`اشرحي لي درس "${topic}" بالتفصيل، بأسلوب مبسط جداً مناسب لتلميذ، مع مثال واحد على الأقل، وبخطوات مرقمة إن أمكن.`}]);
+    $('quizBody').innerHTML = `<div class="qCard" style="line-height:1.9;white-space:pre-wrap">${escapeHtml(text)}</div>
+      <button class="qSubmit" onclick="openExplain('${subjectKey}')">شرح درس آخر</button>`;
+  }catch(e){
+    $('quizBody').innerHTML = '<div class="empty">⚠️ تعذّر الاتصال بالأستاذ الذكي. حاولي مجدداً.</div>';
+  }
+}
+function closeQuiz(){ $('quiz').classList.remove('show'); }
+function escapeHtml(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+/* ============================================================
+   📝 الكويز: يولّد 5 أسئلة اختيار من متعدد عبر الذكاء الاصطناعي
+   ============================================================ */
+let currentQuizData = null;
+function openQuiz(subjectKey){
+  if(isLocked()){ showActivation(); return; }
+  const subject = SUBJECTS.find(s=>s.key===subjectKey);
+  $('quizTitle').textContent = '📝 كويز — ' + subject.name;
+  $('quizBody').innerHTML = `
+    <div class="topicBox">
+      <h3 style="margin:0 0 6px">كويز في أي درس؟</h3>
+      <input id="quizTopic" placeholder="اسم الدرس...">
+      <button onclick="runQuiz('${subjectKey}')">ابدئي الكويز 📝</button>
+    </div>`;
+  $('quiz').classList.add('show');
+}
+async function runQuiz(subjectKey){
+  const subject = SUBJECTS.find(s=>s.key===subjectKey);
+  const topic = $('quizTopic').value.trim();
+  if(!topic) return;
+  $('quizBody').innerHTML = '<div class="loadingDots">📝 جاري إعداد الأسئلة...</div>';
+
+  if(!CONFIG.GEMINI_API_KEY){
+    $('quizBody').innerHTML = '<div class="empty">⚠️ لم يُضبط مفتاح الذكاء الاصطناعي بعد.</div>';
+    return;
+  }
+  const prompt = `أنشئي 5 أسئلة اختيار من متعدد (4 خيارات لكل سؤال) حول درس "${topic}" في مادة ${subject.name}، مناسبة لمستوى تلميذ متوسط.
+أجيبي بصيغة JSON فقط دون أي نص إضافي قبله أو بعده، بالضبط بهذا الشكل:
+[{"q":"نص السؤال","options":["خيار1","خيار2","خيار3","خيار4"],"correct":0}]
+حيث "correct" هو رقم فهرس الخيار الصحيح (0 إلى 3).`;
+
+  try{
+    const raw = await askGemini(subject, [{role:'user', text: prompt}]);
+    const clean = raw.replace(/```json|```/g,'').trim();
+    currentQuizData = JSON.parse(clean);
+    renderQuiz(subjectKey);
+  }catch(e){
+    $('quizBody').innerHTML = '<div class="empty">⚠️ تعذّر إعداد الكويز، حاولي درساً آخر أو أعيدي المحاولة.</div>';
+  }
+}
+function renderQuiz(subjectKey){
+  $('quizBody').innerHTML = currentQuizData.map((q,i) => `
+    <div class="qCard" data-qi="${i}">
+      <div class="qtext">${i+1}. ${escapeHtml(q.q)}</div>
+      ${q.options.map((opt,oi)=>`<label><input type="radio" name="q${i}" value="${oi}" style="margin-left:8px">${escapeHtml(opt)}</label>`).join('')}
+    </div>`).join('') + `<button class="qSubmit" onclick="gradeQuiz('${subjectKey}')">تصحيح ✅</button>`;
+}
+function gradeQuiz(subjectKey){
+  let score = 0;
+  currentQuizData.forEach((q,i)=>{
+    const card = document.querySelector(`.qCard[data-qi="${i}"]`);
+    const chosen = card.querySelector(`input[name="q${i}"]:checked`);
+    const labels = card.querySelectorAll('label');
+    labels.forEach((lab,oi)=>{
+      if(oi === q.correct) lab.classList.add('correct');
+      else if(chosen && Number(chosen.value) === oi) lab.classList.add('wrong');
+    });
+    if(chosen && Number(chosen.value) === q.correct) score++;
+  });
+  const box = document.createElement('div');
+  box.className = 'qScore';
+  box.textContent = `نتيجتك: ${score} من ${currentQuizData.length} ✅`;
+  $('quizBody').appendChild(box);
+  const again = document.createElement('button');
+  again.className = 'qSubmit'; again.textContent = 'كويز جديد';
+  again.onclick = () => openQuiz(subjectKey);
+  $('quizBody').appendChild(again);
+  document.querySelector('.qSubmit').remove(); // إزالة زر "تصحيح" القديم
 }
 
 /* ============================================================
