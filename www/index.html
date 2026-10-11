@@ -433,7 +433,7 @@ function getSubjectData(subjectKey){
   if(!lv) return null;
   return lv[subjectKey] || null;
 }
-function localSearch(subjectKey, query){
+function localSearch(subjectKey, query, limit){
   const data = getSubjectData(subjectKey);
   if(!data) return [];
   const items = [
@@ -451,7 +451,7 @@ function localSearch(subjectKey, query){
     });
     return {...it, score};
   }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
-  return scored.slice(0,3);
+  return scored.slice(0, limit||3);
 }
 
 /* ============================================================
@@ -510,6 +510,7 @@ function openChat(subjectKey){
   if(isLocked()){ showActivation(); return; }
   curSubject = SUBJECTS.find(s=>s.key===subjectKey);
   chatHistory = [];
+  chatSeen = {};
   $('chatTitle').textContent = '🤖 أستاذ ' + curSubject.name;
   $('msgs').innerHTML = '';
   const hasLocal = !!getSubjectData(subjectKey);
@@ -529,11 +530,9 @@ async function sendMsg(){
   addMsg('user', text); input.value='';
   chatHistory.push({role:'user', text});
 
-  const results = localSearch(curSubject.key, text);
+  const results = localSearch(curSubject.key, text, 6);
   if(results.length){
-    results.forEach(r=>{
-      addMsg('bot', `${r.type==='درس'?'📖':'✏️'} ${r.title}\n\n${r.content}`);
-    });
+    answerLocal(results, text);
     return;
   }
 
@@ -553,6 +552,61 @@ async function sendMsg(){
     addMsg('bot', '⚠️ تعذّر الاتصال بالإنترنت الآن. (' + e.message + ')');
   }
 }
+
+/* ============================================================
+   ردود الأستاذ المحلي: شرح مبسط أولاً، ثم أوسع عند تكرار السؤال، دون تكرار الدروس
+   ============================================================ */
+let chatSeen = {};
+function itemKey(it){ return it.type + '|' + it.title; }
+function simpleSummary(content){
+  const lines = content.split('\n').map(l=>l.trim()).filter(l=>l && !l.startsWith('▸'));
+  let out = [], len = 0;
+  for(const l of lines){
+    out.push(l); len += l.length;
+    if(out.length >= 4 || len >= 320) break;
+  }
+  const truncated = out.length < lines.length;
+  return out.join('\n') + (truncated ? '\n…' : '');
+}
+function relatedExercise(best, query){
+  const data = getSubjectData(curSubject.key);
+  if(!data || !data.exercises || !data.exercises.length) return null;
+  const words = (best.title + ' ' + query).toLowerCase().split(/\s+/).filter(w=>w.length>2);
+  let top = null, topScore = 0;
+  data.exercises.forEach(ex=>{
+    const k = 'تمرين|' + ex.title;
+    if(chatSeen[k]) return;
+    const t = (ex.title + ' ' + ex.content).toLowerCase();
+    let sc = 0; words.forEach(w=>{ if(t.includes(w)) sc++; });
+    if(sc > topScore){ topScore = sc; top = ex; }
+  });
+  return top ? {...top, type:'تمرين'} : null;
+}
+function answerLocal(results, query){
+  const icon = r => r.type==='درس' ? '📖' : '✏️';
+  // أول نتيجة لم تُشرح بالتفصيل بعد
+  const best = results.find(r => chatSeen[itemKey(r)] !== 'full');
+  if(!best){
+    addMsg('bot', '✅ سبق أن شرحت لك كل ما وجدته عن هذا الموضوع بالتفصيل. جربي كلمة أخرى، أو افتحي 📚 الدروس والتمارين لتصفح بقية العناوين.');
+    return;
+  }
+  const state = chatSeen[itemKey(best)];
+  if(!state){
+    // الشرح المبسط
+    chatSeen[itemKey(best)] = 'simple';
+    addMsg('bot', `${icon(best)} ${best.title}\n\n${simpleSummary(best.content)}\n\n💡 إن لم يكفِ هذا، اسألي السؤال نفسه مرة أخرى وسأشرحه بتفصيل أوسع مع تمرين.`);
+  } else {
+    // نفس السؤال/الدرس مرة ثانية: شرح أوسع
+    chatSeen[itemKey(best)] = 'full';
+    let msg = `${icon(best)} ${best.title} — شرح أوسع\n\n${best.content}`;
+    const ex = best.type==='درس' ? relatedExercise(best, query) : null;
+    if(ex){ chatSeen[itemKey(ex)] = 'full'; msg += `\n\n✏️ تمرين للتدرّب: ${ex.title}\n${ex.content}`; }
+    const more = results.filter(r => r!==best && !chatSeen[itemKey(r)]).slice(0,3).map(r=>'• '+r.title);
+    if(more.length) msg += `\n\n🔗 مواضيع قريبة (اكتبي عنوان أحدها لشرحه): \n${more.join('\n')}`;
+    addMsg('bot', msg);
+  }
+}
+
 function escapeHtml(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
 function closeQuiz(){ $('quiz').classList.remove('show'); }
 
