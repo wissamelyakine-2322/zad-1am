@@ -164,15 +164,21 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
   </button>
   <button class="stageBtn as" onclick="openStage('AS')">
     <span class="big">📙 التعليم الثانوي</span>
-    <span class="small">AS1 — AS2 — AS3 (قريباً)</span>
+    <span class="small">الأولى والثانية والثالثة ثانوي — الشعب والروابط</span>
   </button>
 </div>
 
 <div class="grid" id="home"></div>
 
 <div id="asHome" style="display:none;max-width:480px;margin:auto">
-  <div class="asNote">محتوى الثانوي قيد الإعداد حالياً — ستُفتح المواد والدروس تدريجياً لكل شعبة.</div>
+  <div class="asNote">اختاري السنة ثم الشعبة لتصلي إلى الدروس والفروض والاختبارات. تُفتح الروابط في المتصفح.</div>
   <div class="grid" id="asGrid"></div>
+</div>
+
+<div id="asView" style="display:none;max-width:720px;margin:auto">
+  <div class="top"><button onclick="closeAsView()">→ رجوع</button><h2 id="asVt"></h2></div>
+  <div class="chips" id="asChips"></div>
+  <div id="asSecs"></div>
 </div>
 
 <!-- ===================== شاشة المستوى: المواد + الروابط ===================== -->
@@ -338,19 +344,39 @@ function openStage(stage){
     $('asHome').style.display='none';
   } else {
     $('mainTitle').textContent='Zad dz — الثانوي';
-    $('mainSub').textContent='اختاري السنة الدراسية (قريباً)';
+    $('mainSub').textContent='اختاري السنة الدراسية';
     renderAsHome();
     $('asHome').style.display='block';
     $('home').style.display='none';
   }
 }
 function renderAsHome(){
-  $('asGrid').innerHTML = AS_LEVELS.map((l,i) =>
-    `<button class="lv c${i+1}" style="position:relative" onclick="alert('شعب ${l.name}:\\n${l.shu.join(' • ')}\\n\\nالمحتوى قيد الإعداد وسيُضاف قريباً.')">
-       <span class="badge">${l.k}</span>
+  $('asGrid').innerHTML = Object.entries(DB.secondary).map(([k,l],i) =>
+    `<button class="lv c${i+1}" style="position:relative" onclick="openAsLevel('${k}')">
+       <span class="badge">${k}</span>
        <span class="lvName">${l.name}</span>
-       <span class="soon">قريباً</span>
      </button>`).join('');
+}
+let asCur = null, asStream = 0;
+function openAsLevel(k){
+  if(isLocked()){ showActivation(); return; }
+  asCur = k; asStream = 0;
+  $('asHome').style.display='none'; $('stageBack').style.display='none';
+  $('asView').style.display='block';
+  $('asVt').textContent = DB.secondary[k].name;
+  renderAsView(); window.scrollTo(0,0);
+}
+function closeAsView(){
+  $('asView').style.display='none'; $('asHome').style.display='block';
+  $('stageBack').style.display='block';
+}
+function renderAsView(){
+  const lv = DB.secondary[asCur];
+  $('asChips').innerHTML = lv.streams.map((s,i)=>
+    `<button class="${i===asStream?'on':''}" onclick="asStream=${i};renderAsView()">${s.name}</button>`).join('');
+  const secs = [...lv.streams[asStream].sections, lv.general];
+  $('asSecs').innerHTML = secs.map(s =>
+    `<div class="sec"><h3>${s.title}</h3><div class="card">${s.links.map(linkHtml).join('')}</div></div>`).join('');
 }
 
 /* ============================================================
@@ -377,7 +403,15 @@ function goLevelsHome(){
   $('view').style.display='none'; $('home').style.display='flex';
   $('stageBack').style.display='block';
 }
-function renderChips(){ $('chips').innerHTML = CATS.map(([k,n])=>`<button class="${k===cat?'on':''}" onclick="cat='${k}';renderChips();renderSecs()">${n}</button>`).join(''); }
+function renderChips(){
+  const present = new Set(DB.levels[cur].sections.map(s=>s.cat));
+  const list = CATS.filter(([k])=>k==='all' || present.has(k));
+  if(!list.some(([k])=>k===cat)) cat='all';
+  $('chips').innerHTML = list.map(([k,n])=>`<button class="${k===cat?'on':''}" onclick="cat='${k}';renderChips();renderSecs()">${n}</button>`).join('');
+}
+function linkHtml(x){
+  return `<a href="${x.url}" target="_blank" rel="noopener noreferrer"><i>${x.icon}</i><span>${x.label}</span></a>`;
+}
 function renderSecs(){
   const l = DB.levels[cur], q = $('q').value.trim().toLowerCase();
   const out = l.sections.map(s => {
@@ -385,7 +419,7 @@ function renderSecs(){
     const links = s.links.filter(x => !q || (x.label + ' ' + s.title).toLowerCase().includes(q));
     if(!links.length) return '';
     return `<div class="sec"><h3>${s.title}</h3><div class="card">` +
-      links.map(x => `<a href="#" onclick="openWebview('${x.url.replace(/'/g,"\\'")}','${x.label.replace(/'/g,"\\'")}');return false;"><i>${x.icon}</i><span>${x.label}</span></a>`).join('') +
+      links.map(linkHtml).join('') +
       '</div></div>';
   }).join('');
   $('secs').innerHTML = out || '<div class="empty">لا توجد نتائج مطابقة.</div>';
@@ -407,7 +441,7 @@ function closeWebview(){
   $('wvFrame').src = 'about:blank';
 }
 function openExternal(){
-  window.open(currentExternalUrl, '_system');
+  window.open(currentExternalUrl, '_blank');
 }
 
 /* ============================================================
