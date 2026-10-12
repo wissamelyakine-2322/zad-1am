@@ -467,6 +467,34 @@ function getSubjectData(subjectKey){
   if(!lv) return null;
   return lv[subjectKey] || null;
 }
+/* ---- بحث مرن: تطبيع عربي/فرنسي + جذوع بسيطة + حذف كلمات الاستفهام ---- */
+const STOP = new Set(('ما ماذا هو هي هذا هذه هذان كيف لماذا اشرح اشرحي شرح لي لنا في من على عن الى الي هل كل ثم او مع قم اعطني اعطيني اريد اريدين ان انا نحن اين متي كم ما\
+ درس دروس تمرين تمارين سؤال اسال علمني ساعدني ممكن لو سمحت اذكر عرف عرفي ما-هو \
+ le la les un une des de du et est que qui quoi comment pourquoi expliquer explique moi mon ma mes ce cette ces au aux en dans sur pour par avec').split(/\s+/));
+function normText(t){
+  return String(t||'').toLowerCase()
+    .replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/ؤ/g,'و').replace(/ئ/g,'ي')
+    .replace(/[\u064B-\u065F\u0670\u0640]/g,'')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^\u0621-\u064Aa-z0-9\s]/g,' ')
+    .replace(/\s+/g,' ').trim();
+}
+function stemWord(w){
+  if(/^[a-z]+$/.test(w)){
+    return w.length>4 ? w.replace(/(ement|ation|es|s|x|e)$/,'') : w;
+  }
+  w = w.replace(/^(وال|بال|كال|فال|لل|ال)/,'');
+  for(const suf of ['ات','ون','ين','ان','ها','ه','ي']){
+    if(w.endsWith(suf) && w.length-suf.length>=3){ w = w.slice(0,-suf.length); break; }
+  }
+  return w;
+}
+function queryTokens(q){
+  const words = normText(q).split(' ').filter(Boolean);
+  let toks = words.filter(w=>!STOP.has(w) && w.length>1).map(stemWord).filter(w=>w.length>1);
+  if(!toks.length) toks = words.map(stemWord).filter(w=>w.length>1);
+  return [...new Set(toks)];
+}
 function localSearch(subjectKey, query, limit){
   const data = getSubjectData(subjectKey);
   if(!data) return [];
@@ -474,18 +502,26 @@ function localSearch(subjectKey, query, limit){
     ...(data.lessons||[]).map(x=>({...x,type:'درس'})),
     ...(data.exercises||[]).map(x=>({...x,type:'تمرين'}))
   ];
-  const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
-  if(!words.length) return [];
+  const toks = queryTokens(query);
+  if(!toks.length) return [];
   const scored = items.map(it=>{
-    let score = 0;
-    const title = it.title.toLowerCase(), content = it.content.toLowerCase();
-    words.forEach(w=>{
-      if(title.includes(w)) score += 5;
-      if(content.includes(w)) score += 1;
+    const title = normText(it.title), content = normText(it.content);
+    let score = 0, hit = 0;
+    toks.forEach(w=>{
+      let h = false;
+      if(title.includes(w)){ score += 5; h = true; }
+      if(content.includes(w)){ score += 1; h = true; }
+      if(h) hit++;
     });
+    if(hit===toks.length && toks.length>1) score += 3;   // تطابق كل الكلمات
+    if(it.type==='درس') score += 0.5;
     return {...it, score};
-  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+  }).filter(x=>x.score>=1).sort((a,b)=>b.score-a.score);
   return scored.slice(0, limit||3);
+}
+function suggestTitles(subjectKey, n){
+  const data = getSubjectData(subjectKey);
+  return data ? (data.lessons||[]).slice(0, n||6).map(l=>'• '+l.title) : [];
 }
 
 /* ============================================================
@@ -571,7 +607,8 @@ async function sendMsg(){
   }
 
   if(!CONFIG.GEMINI_API_KEY){
-    addMsg('bot', '🔎 لم أجد درساً أو تمريناً مطابقاً لهذه الكلمات في قاعدة البيانات المحلية. جربي صياغة أخرى، أو افتحي 📚 الدروس والتمارين لتصفح كل العناوين المتوفرة.');
+    const sug = suggestTitles(curSubject.key, 6);
+    addMsg('bot', '🔎 لم أجد درساً مطابقاً لسؤالك. جربي كلمة مفتاحية واحدة (مثل: الكسور، المحيط، الفعل الماضي).' + (sug.length ? '\n\nمن دروس هذه المادة:\n' + sug.join('\n') : '') + '\n\nأو افتحي 📚 الدروس والتمارين لتصفح كل العناوين.');
     return;
   }
   const typing = document.createElement('div'); typing.className='typing'; typing.textContent='الأستاذ يكتب...';
