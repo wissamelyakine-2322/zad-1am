@@ -10,6 +10,7 @@
 body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;min-height:100vh;color:#fff;
  background:linear-gradient(160deg,var(--bg1),var(--bg2));padding:env(safe-area-inset-top) 16px 24px}
 header{text-align:center;padding:20px 0 6px;position:relative}
+#appLogo{width:104px;height:104px;display:block;margin:0 auto 6px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
 header img{width:64px;height:64px;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.35)}
 h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
 .sub{opacity:.85;font-size:13px;margin:0 0 6px}
@@ -166,6 +167,7 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
 <header>
   <button class="actbtn" id="actIcon" onclick="showActivation()" title="التفعيل">🔑</button>
   <button class="backbtn" id="stageBack" style="display:none" onclick="goStageHome()">→ رجوع</button>
+  <img id="appLogo" src="img/logo.png" alt="Zad dz">
   <h1 id="mainTitle">Zad dz</h1>
   <p class="sub" id="mainSub">اختاري المرحلة الدراسية</p>
 </header>
