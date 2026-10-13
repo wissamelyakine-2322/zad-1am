@@ -2,6 +2,8 @@ name: Build Windows
 on:
   push:
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: windows-latest
@@ -27,3 +29,12 @@ jobs:
         with:
           name: zad-windows
           path: desktop/dist/*.exe
+      - uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main'
+        with:
+          tag_name: latest
+          name: Zad dz - آخر إصدار
+          files: |
+            desktop/dist/ZadDz-Portable.exe
+            desktop/dist/ZadDz-Setup.exe
+          make_latest: true

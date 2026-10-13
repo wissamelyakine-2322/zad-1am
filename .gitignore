@@ -27,3 +27,8 @@ node_modules/
 desktop/node_modules
 desktop/dist
 desktop/app
+
+site/dist
+desktop/node_modules
+desktop/dist
+desktop/app
