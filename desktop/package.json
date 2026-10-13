@@ -1,0 +1,24 @@
+{
+  "name": "zad-dz",
+  "version": "1.0.0",
+  "description": "Zad dz — تطبيق تعليمي للتعليم المتوسط والثانوي",
+  "author": "Zad dz",
+  "main": "main.js",
+  "scripts": { "start": "electron ." },
+  "devDependencies": {
+    "electron": "31.7.7",
+    "electron-builder": "24.13.3"
+  },
+  "build": {
+    "appId": "com.zad.am1",
+    "productName": "Zad dz",
+    "directories": { "output": "dist" },
+    "files": ["main.js", "app/**/*"],
+    "icon": "build/icon.png",
+    "win": {
+      "target": ["portable", "nsis"],
+      "artifactName": "ZadDz-${version}-${target}.${ext}"
+    },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true }
+  }
+}
