@@ -46,7 +46,7 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
 .asShu span{background:rgba(255,255,255,.15);border-radius:10px;padding:4px 10px;font-size:12px}
 .soon{position:absolute;left:14px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.3);border-radius:10px;padding:3px 9px;font-size:11px}
 
-#view,#subjectView,#chat,#actScreen,#webview,#lessonsScr{display:none;max-width:720px;margin:auto}
+#view,#subjectView,#chat,#actScreen,#webview,#lessonsScr,#hub{display:none;max-width:720px;margin:auto}
 #webview.show{display:flex;position:fixed;inset:0;max-width:100%;z-index:40;flex-direction:column;background:#fff}
 #webview .wvTop{display:flex;align-items:center;gap:10px;padding:env(safe-area-inset-top) 10px 8px;background:var(--bg1);color:#fff}
 #webview .wvTop button{background:rgba(255,255,255,.2);color:#fff;border:0;border-radius:10px;padding:8px 12px;font-size:14px}
@@ -76,7 +76,7 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
 .subj .btnrow button.explainbtn{background:#7c3aed}
 
 /* شاشة الدروس/التمارين المحلية */
-#lessonsScr.show{display:block;position:fixed;inset:0;z-index:45;background:linear-gradient(160deg,var(--bg1),var(--bg2));
+#lessonsScr.show,#hub.show{display:block;position:fixed;inset:0;z-index:45;background:linear-gradient(160deg,var(--bg1),var(--bg2));
  padding:env(safe-area-inset-top) 16px 20px;overflow-y:auto}
 .lsTabs{display:flex;gap:8px;margin:10px 0}
 .lsTabs button{flex:1;border:0;border-radius:12px;padding:10px;background:rgba(255,255,255,.15);color:#fff;font-family:inherit;font-size:14px}
@@ -85,7 +85,18 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
 .lsContent{background:var(--card);color:var(--ink);border-radius:16px;padding:18px;line-height:2;white-space:pre-wrap;font-size:15px}
 .lsContent h4{margin:0 0 10px;font-size:18px}
 
+#hub.show{z-index:40}
 #quiz{display:none}
+.hubGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 4px}
+.hubBtn{background:var(--card);color:var(--ink);border:0;border-radius:16px;padding:16px 8px;font-family:inherit;font-weight:bold;font-size:15px;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,.22)}
+.hubBtn small{display:block;font-weight:normal;color:#6b7280;font-size:12px;margin-top:3px}
+.hubBtn.off{opacity:.5}
+.hubBtn .ic{font-size:26px;display:block;margin-bottom:4px}
+.subj{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:96px}
+.qProg{text-align:center;color:#fff;margin-bottom:8px;font-size:14px}
+.qOpt{display:block;width:100%;text-align:right;background:#f3f4f6;border:0;border-radius:10px;padding:11px;margin-bottom:6px;font-family:inherit;font-size:15px;color:var(--ink)}
+.qOpt.correct{background:#bbf7d0}.qOpt.wrong{background:#fecaca}
+.qAns{background:#ecfdf5;border-radius:10px;padding:10px;margin:8px 0;white-space:pre-wrap;line-height:1.9}
 #quiz.show{display:block;position:fixed;inset:0;z-index:45;background:linear-gradient(160deg,var(--bg1),var(--bg2));
  padding:env(safe-area-inset-top) 16px 20px;overflow-y:auto}
 .qTop{display:flex;align-items:center;gap:10px;margin-bottom:14px}
@@ -104,10 +115,13 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
 
 /* chat */
 #chat{display:none;flex-direction:column;height:calc(100vh - 20px)}
-#chat.show{display:flex}
+#chat.show{display:flex;position:fixed;inset:0;z-index:46;height:auto;max-width:none;background:linear-gradient(160deg,var(--bg1),var(--bg2));padding:env(safe-area-inset-top) 16px 10px}
 .chatTop{display:flex;align-items:center;gap:10px;padding:10px 4px}
 .chatTop button{background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:12px;padding:8px 12px}
 .chatTop h2{margin:0;font-size:16px;flex:1}
+#topicBar{display:flex;gap:6px;overflow-x:auto;padding:6px 2px;flex:none}
+#topicBar button{flex:none;border:0;border-radius:16px;padding:7px 12px;background:rgba(255,255,255,.2);color:#fff;font-family:inherit;font-size:13px;white-space:nowrap}
+#topicBar button.ex{background:rgba(251,191,36,.35)}
 #msgs{flex:1;overflow-y:auto;padding:10px 4px;display:flex;flex-direction:column;gap:10px}
 .msg{max-width:85%;padding:10px 14px;border-radius:16px;font-size:15px;line-height:1.7;white-space:pre-wrap}
 .msg.user{align-self:flex-start;background:var(--acc);color:var(--ink);border-bottom-left-radius:4px}
@@ -164,15 +178,21 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
   </button>
   <button class="stageBtn as" onclick="openStage('AS')">
     <span class="big">📙 التعليم الثانوي</span>
-    <span class="small">AS1 — AS2 — AS3 (قريباً)</span>
+    <span class="small">الأولى والثانية والثالثة ثانوي — الشعب والروابط</span>
   </button>
 </div>
 
 <div class="grid" id="home"></div>
 
 <div id="asHome" style="display:none;max-width:480px;margin:auto">
-  <div class="asNote">محتوى الثانوي قيد الإعداد حالياً — ستُفتح المواد والدروس تدريجياً لكل شعبة.</div>
+  <div class="asNote">اختاري السنة ثم الشعبة لتصلي إلى الدروس والفروض والاختبارات. تُفتح الروابط في المتصفح.</div>
   <div class="grid" id="asGrid"></div>
+</div>
+
+<div id="asView" style="display:none;max-width:720px;margin:auto">
+  <div class="top"><button onclick="closeAsView()">→ رجوع</button><h2 id="asVt"></h2></div>
+  <div class="chips" id="asChips"></div>
+  <div id="asSecs"></div>
 </div>
 
 <!-- ===================== شاشة المستوى: المواد + الروابط ===================== -->
@@ -180,9 +200,6 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
   <div class="top"><button onclick="goLevelsHome()">→ رجوع</button><h2 id="vt"></h2></div>
 
   <div class="subjgrid" id="subjGrid"></div>
-
-  <div class="chips" id="chips"></div>
-  <input id="q" type="search" placeholder="🔍 ابحثي في الروابط (رياضيات، فيزياء...)">
   <div id="secs"></div>
 </div>
 
@@ -192,6 +209,7 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
 <div id="chat">
   <div class="chatTop"><button onclick="closeChat()">→ رجوع</button><h2 id="chatTitle"></h2></div>
   <div id="msgs"></div>
+  <div id="topicBar"></div>
   <div class="chatIn">
     <input id="chatInput" placeholder="اكتبي سؤالك أو اسم الدرس..." onkeydown="if(event.key==='Enter')sendMsg()">
     <button onclick="sendMsg()">إرسال</button>
@@ -207,6 +225,12 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
     <button id="lsTabEx" onclick="lsSwitch('exercises')">✏️ تمارين محلولة</button>
   </div>
   <div id="lsBody"></div>
+</div>
+
+<!-- ===================== شاشة المادة الموحّدة ===================== -->
+<div id="hub">
+  <div class="qTop"><button onclick="closeHub()">→ رجوع</button><h2 id="hubTitle" style="margin:0;font-size:18px;flex:1"></h2></div>
+  <div id="hubBody"></div>
 </div>
 
 <!-- ===================== شاشة الكويز (📝) — تعتمد الذكاء الاصطناعي إن توفر مفتاح ===================== -->
@@ -247,12 +271,19 @@ const SUBJECTS = [
   {key:'islam', name:'التربية الإسلامية',     icon:'🕌', prompt:'أنت أستاذ تربية إسلامية جزائري للتعليم المتوسط.'},
   {key:'civic', name:'التربية المدنية',      icon:'⚖️', prompt:'أنت أستاذ تربية مدنية جزائري للتعليم المتوسط.'},
   {key:'art',   name:'التربية التشكيلية',    icon:'🎨', prompt:'أنت أستاذ تربية تشكيلية جزائري للتعليم المتوسط.'},
-  {key:'info',  name:'الإعلام الآلي',        icon:'💻', prompt:'أنت أستاذ إعلام آلي جزائري للتعليم المتوسط.'}
+  {key:'info',  name:'الإعلام الآلي',        icon:'💻', prompt:'أنت أستاذ إعلام آلي جزائري للتعليم المتوسط.'},
+  {key:'amz',   name:'اللغة الأمازيغية',     icon:'📘', prompt:''},
+  {key:'music', name:'التربية الموسيقية',    icon:'🎵', prompt:''}
 ];
 
 const $ = id => document.getElementById(id);
-let cur = null, cat = 'all', curSubject = null, chatHistory = [];
-const CATS=[['all','الكل'],['books','📚 كتب'],['exercises','✏️ تمارين'],['notes','📝 مذكرات الأستاذ'],['exams','🧪 فروض واختبارات']];
+function findSubject(key){
+  let s = SUBJECTS.find(x=>x.key===key);
+  if(s) return s;
+  for(const lv of Object.values(DB.secondary)) for(const st of lv.streams){ const f = st.subjects.find(x=>x.key===key); if(f) return {key:f.key, name:f.name, icon:f.icon, prompt:''}; }
+  return {key, name:key, icon:'📚', prompt:''};
+}
+let cur = null, curSubject = null, chatHistory = [];
 const AS_LEVELS = [
   {k:'AS1', name:'الأولى ثانوي', shu:['جذع مشترك علوم وتكنولوجيا','جذع مشترك آداب']},
   {k:'AS2', name:'الثانية ثانوي', shu:['علوم تجريبية','رياضيات','تقني رياضي','تسيير واقتصاد','آداب وفلسفة','لغات أجنبية']},
@@ -338,19 +369,41 @@ function openStage(stage){
     $('asHome').style.display='none';
   } else {
     $('mainTitle').textContent='Zad dz — الثانوي';
-    $('mainSub').textContent='اختاري السنة الدراسية (قريباً)';
+    $('mainSub').textContent='اختاري السنة الدراسية';
     renderAsHome();
     $('asHome').style.display='block';
     $('home').style.display='none';
   }
 }
 function renderAsHome(){
-  $('asGrid').innerHTML = AS_LEVELS.map((l,i) =>
-    `<button class="lv c${i+1}" style="position:relative" onclick="alert('شعب ${l.name}:\\n${l.shu.join(' • ')}\\n\\nالمحتوى قيد الإعداد وسيُضاف قريباً.')">
-       <span class="badge">${l.k}</span>
+  $('asGrid').innerHTML = Object.entries(DB.secondary).map(([k,l],i) =>
+    `<button class="lv c${i+1}" style="position:relative" onclick="openAsLevel('${k}')">
+       <span class="badge">${k}</span>
        <span class="lvName">${l.name}</span>
-       <span class="soon">قريباً</span>
      </button>`).join('');
+}
+let asCur = null, asStream = 0;
+function openAsLevel(k){
+  if(isLocked()){ showActivation(); return; }
+  asCur = k; asStream = 0;
+  $('asHome').style.display='none'; $('stageBack').style.display='none';
+  $('asView').style.display='block';
+  $('asVt').textContent = DB.secondary[k].name;
+  renderAsView(); window.scrollTo(0,0);
+}
+function closeAsView(){
+  $('asView').style.display='none'; $('asHome').style.display='block';
+  $('stageBack').style.display='block';
+}
+function renderAsView(){
+  const lv = DB.secondary[asCur], st = lv.streams[asStream];
+  $('asChips').innerHTML = lv.streams.map((s,i)=>
+    `<button class="${i===asStream?'on':''}" onclick="asStream=${i};renderAsView()">${s.name}</button>`).join('');
+  let h = `<div class="subjgrid">` + st.subjects.map((x,i)=>
+    `<button class="subj" onclick="openHubAs(${i})"><span class="ic">${x.icon}</span><span class="name">${x.name}</span></button>`).join('') + `</div>`;
+  const gen = [...(st.extra||[]), ...lv.general.links];
+  h += `<div class="sec"><h3>${(st.extra&&st.extra.length)?'البكالوريا وروابط عامة':lv.general.title}</h3><div class="card">${gen.map(linkHtml).join('')}</div></div>`;
+  $('asSecs').innerHTML = h;
 }
 
 /* ============================================================
@@ -370,27 +423,20 @@ function openLevel(k){
   cur = k; const l = DB.levels[k];
   $('home').style.display='none'; $('stageBack').style.display='none';
   $('view').style.display='block'; $('vt').textContent = k + ' — ' + l.name;
-  renderSubjects(); $('q').value=''; cat='all'; renderChips(); renderSecs();
+  renderSubjects(); renderSecs();
   window.scrollTo(0,0);
 }
 function goLevelsHome(){
   $('view').style.display='none'; $('home').style.display='flex';
   $('stageBack').style.display='block';
 }
-function renderChips(){ $('chips').innerHTML = CATS.map(([k,n])=>`<button class="${k===cat?'on':''}" onclick="cat='${k}';renderChips();renderSecs()">${n}</button>`).join(''); }
-function renderSecs(){
-  const l = DB.levels[cur], q = $('q').value.trim().toLowerCase();
-  const out = l.sections.map(s => {
-    if(cat!=='all' && s.cat!==cat) return '';
-    const links = s.links.filter(x => !q || (x.label + ' ' + s.title).toLowerCase().includes(q));
-    if(!links.length) return '';
-    return `<div class="sec"><h3>${s.title}</h3><div class="card">` +
-      links.map(x => `<a href="#" onclick="openWebview('${x.url.replace(/'/g,"\\'")}','${x.label.replace(/'/g,"\\'")}');return false;"><i>${x.icon}</i><span>${x.label}</span></a>`).join('') +
-      '</div></div>';
-  }).join('');
-  $('secs').innerHTML = out || '<div class="empty">لا توجد نتائج مطابقة.</div>';
+function linkHtml(x){
+  return `<a href="${x.url}" target="_blank" rel="noopener noreferrer"><i>${x.icon}</i><span>${x.label}</span></a>`;
 }
-$('q').addEventListener('input', renderSecs);
+function renderSecs(){
+  const g = DB.levels[cur].general;
+  $('secs').innerHTML = g ? `<div class="sec"><h3>${g.title}</h3><div class="card">${g.links.map(linkHtml).join('')}</div></div>` : '';
+}
 
 /* ============================================================
    عارض مدمج داخل التطبيق (بدل فتح متصفح خارجي)
@@ -407,7 +453,7 @@ function closeWebview(){
   $('wvFrame').src = 'about:blank';
 }
 function openExternal(){
-  window.open(currentExternalUrl, '_system');
+  window.open(currentExternalUrl, '_blank');
 }
 
 /* ============================================================
@@ -415,15 +461,127 @@ function openExternal(){
    ============================================================ */
 function renderSubjects(){
   $('subjGrid').innerHTML = SUBJECTS.map(s =>
-    `<div class="subj">
+    `<button class="subj" onclick="openHub('${s.key}')">
        <span class="ic">${s.icon}</span>
        <span class="name">${s.name}</span>
-       <div class="btnrow">
-         <button onclick="openChat('${s.key}')">💬 اسأل الأستاذ</button>
-         <button class="explainbtn" onclick="openLessons('${s.key}')">📚 الدروس والتمارين</button>
-       </div>
-     </div>`).join('');
+     </button>`).join('');
 }
+
+/* ---------- شاشة المادة الموحّدة: كل شيء في مكان واحد ---------- */
+let hubKey = null, hubAs = null;
+function hubBtn(ic, label, sub, on, fn){
+  return `<button class="hubBtn ${on?'':'off'}" onclick="${on?fn:"alert('هذا القسم قيد الإعداد لهذه المادة')"}"><span class="ic">${ic}</span>${label}<small>${sub}</small></button>`;
+}
+function openHub(key){
+  if(isLocked()){ showActivation(); return; }
+  hubKey = key; hubAs = null;
+  const subj = findSubject(key), data = getSubjectData(key);
+  const nl = data ? (data.lessons||[]).length : 0, ne = data ? (data.exercises||[]).length : 0;
+  const nq = buildQuiz(key, 99).length;
+  const links = ((DB.levels[cur].subjects||{})[key]||{}).links || [];
+  $('hubTitle').textContent = subj.icon + ' ' + subj.name + ' — ' + cur;
+  $('hubBody').innerHTML =
+    `<div class="hubGrid">` +
+      hubBtn('📖','الدروس', nl?nl+' درس':'قيد الإعداد', nl>0, `openLessons('${key}','lessons')`) +
+      hubBtn('✏️','التمارين', ne?ne+' مجموعة':'قيد الإعداد', ne>0, `openLessons('${key}','exercises')`) +
+      hubBtn('💬','اسأل الأستاذ', data?'بدون إنترنت':'قيد الإعداد', !!data, `openChat('${key}')`) +
+      hubBtn('📝','كويز', nq?'اختبري نفسك':'قيد الإعداد', nq>0, `openQuiz('${key}')`) +
+    `</div>` +
+    (links.length ? `<div class="sec"><h3>🔗 روابط المادة</h3><div class="card">${links.map(linkHtml).join('')}</div></div>` : '');
+  $('hub').classList.add('show'); $('hub').scrollTop = 0;
+}
+function openHubAs(si){
+  const sj = DB.secondary[asCur].streams[asStream].subjects[si];
+  hubAs = sj; hubKey = sj.key; cur = asCur;
+  const data = getSubjectData(sj.key);
+  const nl = data ? (data.lessons||[]).length : 0, ne = data ? (data.exercises||[]).length : 0;
+  const nq = buildQuiz(sj.key, 99).length;
+  $('hubTitle').textContent = sj.icon + ' ' + sj.name + ' — ' + DB.secondary[asCur].name;
+  $('hubBody').innerHTML =
+    `<div class="hubGrid">` +
+      hubBtn('📖','الدروس', nl?nl+' درس':'قيد الإعداد', nl>0, `openLessons('${sj.key}','lessons')`) +
+      hubBtn('✏️','التمارين', ne?ne+' مجموعة':'قيد الإعداد', ne>0, `openLessons('${sj.key}','exercises')`) +
+      hubBtn('💬','اسأل الأستاذ', data?'بدون إنترنت':'قيد الإعداد', !!data, `openChat('${sj.key}')`) +
+      hubBtn('📝','كويز', nq?'اختبري نفسك':'قيد الإعداد', nq>0, `openQuiz('${sj.key}')`) +
+    `</div>` +
+    `<div class="sec"><h3>🔗 روابط المادة</h3><div class="card">${sj.links.map(linkHtml).join('')}</div></div>`;
+  $('hub').classList.add('show'); $('hub').scrollTop = 0;
+}
+function closeHub(){ $('hub').classList.remove('show'); }
+
+/* ---------- 📝 كويز محلي: أسئلة تمارين مع إجابة + إكمال فراغ من الدروس ---------- */
+let quizState = null;
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function buildQuiz(key, n){
+  const data = getSubjectData(key); if(!data) return [];
+  const qa = [], cl = [];
+  for(const e of (data.exercises||[])){
+    const ls = e.content.split('\n');
+    for(let i=0;i<ls.length-1;i++){
+      if(/^\s*✅/.test(ls[i+1]) && !/^\s*✅/.test(ls[i]) && ls[i].trim().length>3){
+        let ans = ls[i+1].replace(/^\s*✅\s*/,'').trim(), j=i+2;
+        while(j<ls.length && ls[j].trim() && !/^\s*\d+\)/.test(ls[j]) && !/^\s*✅/.test(ls[j])){ ans += '\n'+ls[j].trim(); j++; }
+        qa.push({t:'qa', q:ls[i].replace(/^\s*\d+\)\s*/,'').trim(), a:ans});
+      }
+    }
+  }
+  const words = {ar:[], lat:[]};
+  const isW = w => w.length>=4 && !/[0-9=]/.test(w) && !STOP.has(normText(w));
+  const lessonsLines = [];
+  for(const l of (data.lessons||[])) for(const raw of l.content.split('\n')){
+    const line = raw.replace(/^\s*[•\-\d)]+\s*/,'').trim();
+    if(line.length<28 || line.length>160 || /=/.test(line)) continue;
+    lessonsLines.push(line);
+    for(const w of line.split(/[\s،؛:؟?.!,;()«»"]+/)) if(isW(w)) (/[A-Za-zÀ-ÿ]/.test(w)?words.lat:words.ar).push(w);
+  }
+  for(const line of lessonsLines){
+    const lat = /[A-Za-zÀ-ÿ]/.test(line.replace(/[^\u0600-\u06FFA-Za-zÀ-ÿ]/g,'').charAt(0)||'');
+    const pool = lat ? words.lat : words.ar;
+    const toks = line.split(/[\s،؛:؟?.!,;()«»"]+/).filter(isW).filter(w => (/[A-Za-zÀ-ÿ]/.test(w))===lat);
+    if(toks.length<1) continue;
+    const ans = toks[Math.floor(toks.length/2)];
+    const cand = [...new Set(pool.filter(w=>w!==ans && Math.abs(w.length-ans.length)<=2))];
+    if(cand.length<3) continue;
+    cl.push({t:'cl', q: line.replace(ans,'_____'), a:ans, opts: shuffle([ans, ...shuffle(cand).slice(0,3)])});
+  }
+  const qaPick = shuffle(qa).slice(0, Math.min(qa.length, Math.ceil(n/2)));
+  const clPick = shuffle(cl).slice(0, n-qaPick.length);
+  return shuffle([...qaPick, ...clPick]);
+}
+function openQuiz(key){
+  const subj = findSubject(key);
+  quizState = {key, items: buildQuiz(key, 8), i:0, score:0, done:false};
+  $('quizTitle').textContent = '📝 كويز ' + subj.name + ' — ' + cur;
+  $('quiz').classList.add('show'); renderQuiz();
+}
+function renderQuiz(){
+  const st = quizState, b = $('quizBody');
+  if(st.i >= st.items.length){
+    const pct = Math.round(100*st.score/st.items.length);
+    b.innerHTML = `<div class="qCard"><div class="qScore">نتيجتك: ${st.score} / ${st.items.length} (${pct}%)<br>${pct>=75?'🌟 ممتاز!':pct>=50?'👍 جيد، راجعي الدروس وأعيدي المحاولة':'💪 راجعي الدروس ثم جرّبي من جديد'}</div></div>
+      <button class="qSubmit" onclick="openQuiz('${st.key}')">🔄 كويز جديد</button>`;
+    return;
+  }
+  const it = st.items[st.i];
+  let h = `<div class="qProg">السؤال ${st.i+1} من ${st.items.length}</div><div class="qCard"><div class="qtext">${it.t==='cl'?'أكملي الفراغ: ':''}${escapeHtml(it.q)}</div><div id="qArea">`;
+  if(it.t==='cl') h += it.opts.map((o,k)=>`<button class="qOpt" onclick="quizPick(${k})">${escapeHtml(o)}</button>`).join('');
+  else h += `<button class="qSubmit" onclick="quizReveal()">👁️ أظهري الإجابة</button>`;
+  b.innerHTML = h + `</div></div>`;
+}
+function quizPick(k){
+  const st = quizState, it = st.items[st.i]; if(st.done) return; st.done = true;
+  document.querySelectorAll('.qOpt').forEach((el,j)=>{
+    if(it.opts[j]===it.a) el.classList.add('correct'); else if(j===k) el.classList.add('wrong');
+  });
+  if(it.opts[k]===it.a) st.score++;
+  $('qArea').insertAdjacentHTML('beforeend', `<button class="qSubmit" onclick="quizNext()">التالي ←</button>`);
+}
+function quizReveal(){
+  const it = quizState.items[quizState.i];
+  $('qArea').innerHTML = `<div class="qAns">✅ ${escapeHtml(it.a)}</div><div style="display:flex;gap:8px"><button class="qSubmit" style="background:#bbf7d0" onclick="quizSelf(true)">أجبتُ صحيحاً</button><button class="qSubmit" style="background:#fecaca" onclick="quizSelf(false)">أخطأت</button></div>`;
+}
+function quizSelf(ok){ if(ok) quizState.score++; quizNext(); }
+function quizNext(){ quizState.i++; quizState.done=false; renderQuiz(); }
 
 /* ============================================================
    الأستاذ المحلي: بحث داخل الدروس والتمارين الحقيقية (بدون مفتاح خارجي)
@@ -433,6 +591,34 @@ function getSubjectData(subjectKey){
   if(!lv) return null;
   return lv[subjectKey] || null;
 }
+/* ---- بحث مرن: تطبيع عربي/فرنسي + جذوع بسيطة + حذف كلمات الاستفهام ---- */
+const STOP = new Set(('ما ماذا هو هي هذا هذه هذان كيف لماذا اشرح اشرحي شرح لي لنا في من على عن الى الي هل كل ثم او مع قم اعطني اعطيني اريد اريدين ان انا نحن اين متي كم ما\
+ درس دروس تمرين تمارين سؤال اسال علمني ساعدني ممكن لو سمحت اذكر عرف عرفي ما-هو \
+ le la les un une des de du et est que qui quoi comment pourquoi expliquer explique moi mon ma mes ce cette ces au aux en dans sur pour par avec').split(/\s+/));
+function normText(t){
+  return String(t||'').toLowerCase()
+    .replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/ؤ/g,'و').replace(/ئ/g,'ي')
+    .replace(/[\u064B-\u065F\u0670\u0640]/g,'')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^\u0621-\u064Aa-z0-9\s]/g,' ')
+    .replace(/\s+/g,' ').trim();
+}
+function stemWord(w){
+  if(/^[a-z]+$/.test(w)){
+    return w.length>4 ? w.replace(/(ement|ation|es|s|x|e)$/,'') : w;
+  }
+  w = w.replace(/^(وال|بال|كال|فال|لل|ال)/,'');
+  for(const suf of ['ات','ون','ين','ان','ها','ه','ي']){
+    if(w.endsWith(suf) && w.length-suf.length>=3){ w = w.slice(0,-suf.length); break; }
+  }
+  return w;
+}
+function queryTokens(q){
+  const words = normText(q).split(' ').filter(Boolean);
+  let toks = words.filter(w=>!STOP.has(w) && w.length>1).map(stemWord).filter(w=>w.length>1);
+  if(!toks.length) toks = words.map(stemWord).filter(w=>w.length>1);
+  return [...new Set(toks)];
+}
 function localSearch(subjectKey, query, limit){
   const data = getSubjectData(subjectKey);
   if(!data) return [];
@@ -440,31 +626,39 @@ function localSearch(subjectKey, query, limit){
     ...(data.lessons||[]).map(x=>({...x,type:'درس'})),
     ...(data.exercises||[]).map(x=>({...x,type:'تمرين'}))
   ];
-  const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
-  if(!words.length) return [];
+  const toks = queryTokens(query);
+  if(!toks.length) return [];
   const scored = items.map(it=>{
-    let score = 0;
-    const title = it.title.toLowerCase(), content = it.content.toLowerCase();
-    words.forEach(w=>{
-      if(title.includes(w)) score += 5;
-      if(content.includes(w)) score += 1;
+    const title = normText(it.title), content = normText(it.content + ' ' + (it.more||''));
+    let score = 0, hit = 0;
+    toks.forEach(w=>{
+      let h = false;
+      if(title.includes(w)){ score += 5; h = true; }
+      if(content.includes(w)){ score += 1; h = true; }
+      if(h) hit++;
     });
+    if(hit===toks.length && toks.length>1) score += 3;   // تطابق كل الكلمات
+    if(it.type==='درس') score += 0.5;
     return {...it, score};
-  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+  }).filter(x=>x.score>=1).sort((a,b)=>b.score-a.score);
   return scored.slice(0, limit||3);
+}
+function suggestTitles(subjectKey, n){
+  const data = getSubjectData(subjectKey);
+  return data ? (data.lessons||[]).slice(0, n||6).map(l=>'• '+l.title) : [];
 }
 
 /* ============================================================
    📚 شاشة الدروس والتمارين (تصفح + بحث محلي)
    ============================================================ */
 let lsSubjectKey = null, lsMode = 'lessons';
-function openLessons(subjectKey){
+function openLessons(subjectKey, mode){
   if(isLocked()){ showActivation(); return; }
-  lsSubjectKey = subjectKey; lsMode = 'lessons';
-  const subject = SUBJECTS.find(s=>s.key===subjectKey);
+  lsSubjectKey = subjectKey; lsMode = mode || 'lessons';
+  const subject = findSubject(subjectKey);
   $('lsTitle').textContent = '📚 ' + subject.name + ' — ' + cur;
   $('lsearch').value = '';
-  lsSwitch('lessons');
+  lsSwitch(lsMode);
   $('lessonsScr').classList.add('show');
 }
 function closeLessons(){ $('lessonsScr').classList.remove('show'); }
@@ -500,7 +694,7 @@ function showLsItem(i, mode, filtered){
   const items = window._lsCurrentItems;
   const it = items[i];
   $('lsBody').innerHTML = `<button class="lsItem" onclick="renderLsList()" style="background:var(--acc)">→ العودة للقائمة</button>
-    <div class="lsContent"><h4>${mode==='lessons'?'📖':'✏️'} ${escapeHtml(it.title)}</h4>${escapeHtml(it.content)}</div>`;
+    <div class="lsContent"><h4>${mode==='lessons'?'📖':'✏️'} ${escapeHtml(it.title)}</h4>${escapeHtml(it.content)}${it.more?'<h4 style="margin-top:16px">🔍 شرح موسّع</h4>'+escapeHtml(it.more):''}</div>`;
 }
 
 /* ============================================================
@@ -508,16 +702,35 @@ function showLsItem(i, mode, filtered){
    ============================================================ */
 function openChat(subjectKey){
   if(isLocked()){ showActivation(); return; }
-  curSubject = SUBJECTS.find(s=>s.key===subjectKey);
+  curSubject = findSubject(subjectKey);
   chatHistory = [];
   chatSeen = {};
   $('chatTitle').textContent = '🤖 أستاذ ' + curSubject.name;
   $('msgs').innerHTML = '';
   const hasLocal = !!getSubjectData(subjectKey);
   addMsg('bot', hasLocal
-    ? `أهلاً بك! اكتبي اسم الدرس أو كلمة مفتاحية من مادة ${curSubject.name} (${cur}) وسأبحث لك في الدروس والتمارين الحقيقية فوراً.`
+    ? `أهلاً بك! اكتبي اسم الدرس أو كلمة مفتاحية من مادة ${curSubject.name} (${cur}) وسأبحث لك في الدروس والتمارين فوراً. تجدين كل الدروس والتمارين في الشريط أسفل الشاشة، واكتبي «الفهرس» لعرضها كلها.`
     : `أهلاً بك! محتوى مادة ${curSubject.name} في مستوى ${cur} لا يزال قيد الإعداد محلياً. جرّبي مادة الرياضيات في السنة الأولى متوسط للتجربة.`);
+  renderTopicBar(subjectKey);
   $('chat').classList.add('show');
+}
+function chatItems(key){
+  const d = getSubjectData(key); if(!d) return [];
+  return [...(d.lessons||[]).map(x=>({...x,type:'درس'})), ...(d.exercises||[]).map(x=>({...x,type:'تمرين'}))];
+}
+function renderTopicBar(key){
+  const items = chatItems(key);
+  $('topicBar').innerHTML = items.map((it,i)=>`<button class="${it.type==='تمرين'?'ex':''}" onclick="askItem(${i})">${it.type==='درس'?'📖':'✏️'} ${escapeHtml(it.title.length>28?it.title.slice(0,28)+'…':it.title)}</button>`).join('');
+}
+function askItem(i){
+  const it = chatItems(curSubject.key)[i]; if(!it) return;
+  addMsg('user', it.title);
+  answerLocal([it], it.title);
+}
+function showIndex(){
+  const items = chatItems(curSubject.key);
+  const ls = items.filter(x=>x.type==='درس').map((x,i)=>`${i+1}. ${x.title}`), ex = items.filter(x=>x.type==='تمرين').map((x,i)=>`${i+1}. ${x.title}`);
+  addMsg('bot', `📚 فهرس مادة ${curSubject.name}:\n\n📖 الدروس:\n${ls.join('\n')||'—'}\n\n✏️ التمارين:\n${ex.join('\n')||'—'}\n\nاضغطي على أي عنوان في الشريط أسفل الشاشة لأشرحه لك، واضغطي مرة ثانية لشرح أوسع مع تمرين.`);
 }
 function closeChat(){ $('chat').classList.remove('show'); }
 function addMsg(who, text){
@@ -529,6 +742,7 @@ async function sendMsg(){
   if(!text) return;
   addMsg('user', text); input.value='';
   chatHistory.push({role:'user', text});
+  if(/^(ال)?(فهرس|قائمة|القائمة|كل الدروس|الدروس|المحتوى)$/.test(text.replace(/[؟?!.\s]+$/,''))){ showIndex(); return; }
 
   const results = localSearch(curSubject.key, text, 6);
   if(results.length){
@@ -537,7 +751,8 @@ async function sendMsg(){
   }
 
   if(!CONFIG.GEMINI_API_KEY){
-    addMsg('bot', '🔎 لم أجد درساً أو تمريناً مطابقاً لهذه الكلمات في قاعدة البيانات المحلية. جربي صياغة أخرى، أو افتحي 📚 الدروس والتمارين لتصفح كل العناوين المتوفرة.');
+    const sug = suggestTitles(curSubject.key, 6);
+    addMsg('bot', '🔎 لم أجد درساً مطابقاً لسؤالك. جربي كلمة مفتاحية واحدة (مثل: الكسور، المحيط، الفعل الماضي).' + (sug.length ? '\n\nمن دروس هذه المادة:\n' + sug.join('\n') : '') + '\n\nأو افتحي 📚 الدروس والتمارين لتصفح كل العناوين.');
     return;
   }
   const typing = document.createElement('div'); typing.className='typing'; typing.textContent='الأستاذ يكتب...';
@@ -598,7 +813,7 @@ function answerLocal(results, query){
   } else {
     // نفس السؤال/الدرس مرة ثانية: شرح أوسع
     chatSeen[itemKey(best)] = 'full';
-    let msg = `${icon(best)} ${best.title} — شرح أوسع\n\n${best.content}`;
+    let msg = `${icon(best)} ${best.title} — شرح أوسع\n\n${best.content}` + (best.more ? `\n\n🔍 شرح موسّع\n${best.more}` : '');
     const ex = best.type==='درس' ? relatedExercise(best, query) : null;
     if(ex){ chatSeen[itemKey(ex)] = 'full'; msg += `\n\n✏️ تمرين للتدرّب: ${ex.title}\n${ex.content}`; }
     const more = results.filter(r => r!==best && !chatSeen[itemKey(r)]).slice(0,3).map(r=>'• '+r.title);
