@@ -512,6 +512,7 @@ function openHubAs(si){
       hubBtn('💬','اسأل الأستاذ', data?'بدون إنترنت':'قيد الإعداد', !!data, `openChat('${sj.key}')`) +
       hubBtn('📝','كويز', nq?'اختبري نفسك':'قيد الإعداد', nq>0, `openQuiz('${sj.key}')`) +
     `</div>` +
+    (data ? `<div class="asNote" style="margin-top:12px">⚠️ دروس هذه المادة ملخصات تعليمية عامة، ولم تُطابَق بعد مع التدرج السنوي الرسمي لموسم 2026/2027. اعتمدي على كتابك وأستاذك أولاً.</div>` : '') +
     `<div class="sec"><h3>🔗 روابط المادة</h3><div class="card">${sj.links.map(linkHtml).join('')}</div></div>`;
   $('hub').classList.add('show'); $('hub').scrollTop = 0;
 }
