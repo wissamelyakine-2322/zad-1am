@@ -37,7 +37,7 @@ jobs:
       - name: Prepare app files
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force desktop/app | Out-Null
+          New-Item -ItemType Directory -Force desktop/app, desktop/build | Out-Null
           Copy-Item -Recurse -Force www/* desktop/app/
           Copy-Item -Force res/icon.png desktop/build/icon.png
       - name: Install
