@@ -1,0 +1,105 @@
+name: Build and Release
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: release
+  cancel-in-progress: true
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 18 }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 17 }
+      - run: npm install -g cordova
+      - run: cordova platform add android
+      - run: cordova build android
+      - run: cp platforms/android/app/build/outputs/apk/debug/app-debug.apk Zad-dz.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zad-apk
+          path: Zad-dz.apk
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 18 }
+      - name: Prepare app files
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force desktop/app | Out-Null
+          Copy-Item -Recurse -Force www/* desktop/app/
+          Copy-Item -Force res/icon.png desktop/build/icon.png
+      - name: Install
+        working-directory: desktop
+        run: npm install
+      - name: Build exe
+        working-directory: desktop
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: npx electron-builder --win --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zad-windows
+          path: |
+            desktop/dist/ZadDz-Portable.exe
+            desktop/dist/ZadDz-Setup.exe
+
+  publish:
+    needs: [android, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: zad-*
+          path: out
+          merge-multiple: true
+      - name: Move the latest tag to this commit
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git tag -f latest
+          git push -f origin latest
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Zad dz - بناء رقم ${{ github.run_number }}
+          make_latest: true
+          files: |
+            out/Zad-dz.apk
+            out/ZadDz-Portable.exe
+            out/ZadDz-Setup.exe
+
+  pages:
+    needs: publish
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.x" }
+      - name: Read release info
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view latest --repo "${{ github.repository }}" --json assets > site/release.json
+          jq --arg n "${{ github.run_number }}" '. + {buildNumber: ($n|tonumber)}' site/release.json > site/release.tmp && mv site/release.tmp site/release.json
+      - run: python3 site/build_site.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: site/dist }
+      - id: deployment
+        uses: actions/deploy-pages@v4

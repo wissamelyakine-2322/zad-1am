@@ -52,6 +52,20 @@ else:
     free_badge = "مجاني"; free_note = ""; faq_free = "التطبيق مجاني."
 
 REPO, SITE = CFG["repo"], CFG["siteUrl"].rstrip("/")
+rel_info = ""
+rj = ROOT / "site" / "release.json"
+if rj.exists():
+    try:
+        R = json.loads(rj.read_text(encoding="utf-8"))
+        parts = []
+        for a in R.get("assets", []):
+            nm = {"Zad-dz.apk": "أندرويد", "ZadDz-Setup.exe": "ويندوز (تثبيت)", "ZadDz-Portable.exe": "ويندوز (بدون تثبيت)"}.get(a["name"])
+            if nm:
+                d = datetime.strptime(a["updatedAt"][:10], "%Y-%m-%d")
+                parts.append(f"{nm}: {a['size']/1048576:.0f} MB — {ar_date(d)}")
+        if parts: rel_info = "آخر بناء — " + " · ".join(parts) + (f" · رقم البناء {R['buildNumber']}" if R.get("buildNumber") else "")
+    except Exception as ex:
+        print("release.json ignored:", ex)
 REL = f"https://github.com/{REPO}/releases/download/latest"
 apk, exe_p, exe_s = f"{REL}/Zad-dz.apk", f"{REL}/ZadDz-Portable.exe", f"{REL}/ZadDz-Setup.exe"
 version, season = DB.get("version", ""), DB.get("season", "")
@@ -121,6 +135,7 @@ th,td{{padding:11px 14px;text-align:right;border-bottom:1px solid #e6ebf5;vertic
 details{{background:#fff;border-radius:12px;padding:12px 16px;margin-bottom:10px}}summary{{cursor:pointer;font-weight:bold}}
 footer{{background:var(--blue);color:#cfd9f5;text-align:center;padding:22px 0;font-size:14px}}
 .note{{font-size:14px;color:#566}}
+.build{{font-size:13px;opacity:.9;margin-top:16px}}
 </style>
 </head>
 <body>
@@ -135,7 +150,9 @@ footer{{background:var(--blue);color:#cfd9f5;text-align:center;padding:22px 0;fo
 <a class="btn" href="{exe_s}">⬇ تثبيت على ويندوز</a>
 <a class="btn" href="{exe_p}">ويندوز بدون تثبيت</a>
 <a class="btn" href="app/">🌐 افتحي من المتصفح</a>
-</div></div></header>
+</div>
+{f'<p class="build">{e(rel_info)}</p>' if rel_info else ''}
+</div></header>
 <main class="wrap">
 <section aria-labelledby="stats"><h2 id="stats">ماذا يحتوي التطبيق الآن؟</h2>
 <div class="stats">
