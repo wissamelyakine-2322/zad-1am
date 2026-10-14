@@ -45,8 +45,8 @@ if free_forever:
     free_note = "بدون اشتراك وبدون مفتاح تفعيل."
     faq_free = "نعم، التطبيق مجاني بالكامل بدون اشتراك."
 elif trial_end:
-    free_badge = f"مجاني — تجربة كاملة حتى {ar_date(trial_end)}"
-    free_note = ("بعد انتهاء الفترة التجريبية يلزم مفتاح تفعيل." if today <= trial_end else "الفترة التجريبية انتهت، ويلزم مفتاح تفعيل.")
+    free_badge = "مجاني"
+    free_note = ""
     faq_free = f"التطبيق مجاني خلال الفترة التجريبية حتى {ar_date(trial_end)}، وبعدها يلزم مفتاح تفعيل."
 else:
     free_badge = "مجاني"; free_note = ""; faq_free = "التطبيق مجاني."
@@ -78,7 +78,6 @@ e = html.escape
 rows = lambda r: "".join(f"<tr><th>{e(a)}</th><td>{e(b)}</td></tr>" for a, b in r)
 
 faq = [
- ("هل التطبيق مجاني؟", faq_free),
  ("هل يعمل بدون إنترنت؟", "نعم، الدروس والتمارين والكويز والأستاذ المحلي تعمل بدون إنترنت. روابط الكتب والفروض تحتاج إنترنت."),
  ("ما المستويات التي يغطيها؟", "السنوات الأربع للتعليم المتوسط والسنوات الثلاث للتعليم الثانوي بكل شعبها، مع محتوى محلي كامل لبعضها وروابط للبقية."),
  ("على أي أجهزة يعمل؟", "هواتف أندرويد، وحواسيب ويندوز، وأي متصفح حديث."),
@@ -121,6 +120,9 @@ header.hero{{background:linear-gradient(160deg,var(--blue),var(--blue2));color:#
 h1{{font-size:clamp(24px,5vw,38px);margin:10px 0 6px;line-height:1.5}}
 .hero p{{max-width:640px;margin:6px auto;font-size:18px;opacity:.95}}
 .badge{{display:inline-block;background:var(--gold);color:#2b1d00;font-weight:bold;border-radius:30px;padding:6px 18px;margin:10px 0}}
+@keyframes blink{{0%,100%{{opacity:1;transform:scale(1)}}50%{{opacity:.25;transform:scale(1.12)}}}}
+.badge{{animation:blink 1.1s ease-in-out infinite}}
+@media (prefers-reduced-motion:reduce){{.badge{{animation:none}}}}
 .btns{{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:20px}}
 .btn{{background:#fff;color:var(--blue);text-decoration:none;font-weight:bold;border-radius:14px;padding:13px 22px;font-size:17px;box-shadow:0 4px 14px rgba(0,0,0,.25)}}
 .btn.alt{{background:var(--gold);color:#2b1d00}}
@@ -144,7 +146,7 @@ footer{{background:var(--blue);color:#cfd9f5;text-align:center;padding:22px 0;fo
 <h1>Zad dz — دراسة {FREE_WORD} لكل مستويات المتوسط والثانوي</h1>
 <p>دروس وتمارين وكويز وأستاذ يشرح لك بدون إنترنت، مع روابط الكتب والفروض والاختبارات والبكالوريا.</p>
 <div class="badge">{e(free_badge)}</div>
-<p style="font-size:15px">{e(free_note)}</p>
+{f'<p style="font-size:15px">{e(free_note)}</p>' if free_note else ''}
 <div class="btns">
 <a class="btn alt" href="{apk}">⬇ تحميل لأندرويد (APK)</a>
 <a class="btn" href="{exe_s}">⬇ تثبيت على ويندوز</a>
