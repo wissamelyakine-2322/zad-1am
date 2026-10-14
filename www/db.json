@@ -3365,7 +3365,7 @@
      "name": "تسيير واقتصاد",
      "subjects": [
       {
-       "key": "economy",
+       "key": "ge_economy",
        "name": "الاقتصاد والمناجمنت",
        "icon": "📊",
        "links": [
@@ -3390,7 +3390,7 @@
        ]
       },
       {
-       "key": "gestion",
+       "key": "ge_gestion",
        "name": "التسيير المحاسبي والمالي",
        "icon": "🧾",
        "links": [
@@ -3415,7 +3415,7 @@
        ]
       },
       {
-       "key": "droit",
+       "key": "ge_droit",
        "name": "القانون",
        "icon": "⚖️",
        "links": [
@@ -3440,7 +3440,7 @@
        ]
       },
       {
-       "key": "maths",
+       "key": "ge_maths",
        "name": "الرياضيات",
        "icon": "➕",
        "links": [
@@ -3465,7 +3465,7 @@
        ]
       },
       {
-       "key": "arabic",
+       "key": "ge_arabic",
        "name": "اللغة العربية",
        "icon": "📗",
        "links": [
@@ -3490,7 +3490,7 @@
        ]
       },
       {
-       "key": "francais",
+       "key": "ge_francais",
        "name": "اللغة الفرنسية",
        "icon": "🇫🇷",
        "links": [
@@ -3515,7 +3515,7 @@
        ]
       },
       {
-       "key": "english",
+       "key": "ge_english",
        "name": "اللغة الإنجليزية",
        "icon": "🇬🇧",
        "links": [
@@ -3540,7 +3540,7 @@
        ]
       },
       {
-       "key": "islamic",
+       "key": "ge_islamic",
        "name": "العلوم الإسلامية",
        "icon": "🕌",
        "links": [
@@ -3565,7 +3565,7 @@
        ]
       },
       {
-       "key": "his-geo",
+       "key": "ge_his-geo",
        "name": "التاريخ والجغرافيا",
        "icon": "🗺️",
        "links": [
@@ -3590,7 +3590,7 @@
        ]
       },
       {
-       "key": "philo",
+       "key": "ge_philo",
        "name": "الفلسفة",
        "icon": "💭",
        "links": [
@@ -4045,5 +4045,58 @@
     }
    ]
   }
+ },
+ "important": {
+  "title": "🔗 روابط مهمة",
+  "links": [
+   {
+    "label": "الموقع الرسمي لوزارة التربية الوطنية",
+    "url": "https://www.education.gov.dz/",
+    "icon": "🏛️",
+    "verified": true
+   },
+   {
+    "label": "الرزنامة المدرسية الرسمية",
+    "url": "https://www.education.gov.dz/%d8%a7%d9%84%d8%b1%d8%b2%d9%86%d8%a7%d9%85%d8%a9/",
+    "icon": "📅",
+    "verified": true
+   },
+   {
+    "label": "التسجيل في الامتحانات",
+    "url": "https://www.education.gov.dz/%d9%81%d8%b6%d8%a7%d8%a1%d8%a7%d8%aa-%d8%a5%d9%84%d9%83%d8%aa%d8%b1%d9%88%d9%86%d9%8a%d8%a9/%d8%a7%d9%84%d8%aa%d8%b3%d8%ac%d9%8a%d9%84-%d9%81%d9%8a-%d8%a5%d9%85%d8%aa%d8%ad%d8%a7%d9%86/",
+    "icon": "📝",
+    "verified": true
+   },
+   {
+    "label": "فضاء الأولياء",
+    "url": "https://awlyaa.education.dz",
+    "icon": "👪",
+    "verified": true
+   },
+   {
+    "label": "شهادة التعليم المتوسط (BEM)",
+    "url": "https://bem.onec.dz/",
+    "icon": "🎓",
+    "verified": true
+   },
+   {
+    "label": "شهادة البكالوريا (BAC)",
+    "url": "https://bac.onec.dz/",
+    "icon": "🎓",
+    "verified": true
+   },
+   {
+    "label": "مواقع الدروس والفروض: eddirasa",
+    "url": "https://eddirasa.com/",
+    "icon": "📖",
+    "verified": true
+   },
+   {
+    "label": "مواقع الدروس والفروض: dzexams",
+    "url": "https://www.dzexams.com/fr",
+    "icon": "🧪",
+    "verified": true
+   }
+  ]
  }
 }

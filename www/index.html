@@ -182,6 +182,7 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
     <span class="big">📙 التعليم الثانوي</span>
     <span class="small">الأولى والثانية والثالثة ثانوي — الشعب والروابط</span>
   </button>
+  <div id="impBox"></div>
 </div>
 
 <div class="grid" id="home"></div>
@@ -348,6 +349,10 @@ function renderTrialBar(){
 /* ============================================================
    شاشة اختيار المرحلة (متوسط / ثانوي)
    ============================================================ */
+function renderImportant(){
+  const im = DB.important; if(!im) return;
+  $('impBox').innerHTML = `<div class="sec"><h3>${im.title}</h3><div class="card">${im.links.map(linkHtml).join('')}</div></div>`;
+}
 function goStageHome(){
   $('stageHome').style.display='flex';
   $('home').style.display='none';
@@ -411,6 +416,7 @@ function renderAsView(){
 /* ============================================================
    الشاشة الرئيسية ومستويات المتوسط
    ============================================================ */
+renderImportant();
 function renderHome(){
   const colors = {'1AM':'c1','2AM':'c2','3AM':'c3','4AM':'c4'};
   $('home').innerHTML = Object.entries(DB.levels).map(([k,l]) =>
