@@ -10,5 +10,7 @@
     <content src="index.html" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="sms:*" />
     <icon src="res/icon.png" />
 </widget>

@@ -156,6 +156,17 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
 .blink{animation:zblink 1s ease-in-out infinite}
 .actTap{font-size:18px;font-weight:bold;margin:8px 0 10px;color:#fde68a}
 .actbox .actReq{background:#22c55e;color:#fff;margin:0 0 10px}
+#shareSheet{display:none;position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.55);align-items:flex-end;justify-content:center}
+#shareSheet.show{display:flex}
+.shBox{width:100%;max-width:520px;background:linear-gradient(160deg,var(--bg1),var(--bg2));border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -8px 30px rgba(0,0,0,.4)}
+.shBox h3{margin:0 0 4px;text-align:center}
+.shBox p{margin:0 0 14px;text-align:center;font-size:13px;opacity:.85}
+.shGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.shGrid button{background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:14px;padding:12px 4px;font-size:13px;font-family:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
+.shGrid button span{font-size:26px;line-height:1}
+.shGrid button:active{transform:scale(.95)}
+.shNote{min-height:18px;margin-top:10px;font-size:13px;text-align:center;color:#bbf7d0}
+.shClose{display:block;width:100%;margin-top:10px;background:rgba(255,255,255,.2);color:#fff;border:0;border-radius:14px;padding:11px;font-size:15px;font-family:inherit;cursor:pointer}
 .lockPanel{background:rgba(255,255,255,.14);border-radius:16px;padding:22px;text-align:center;line-height:1.9;margin-top:14px}
 .lockPanel button{background:var(--acc);color:var(--ink);border:0;border-radius:14px;padding:11px 20px;font-weight:bold;font-size:15px;margin-top:8px}
 .actMsg.err{color:#fecaca}
@@ -166,6 +177,17 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
 </style>
 </head>
 <body>
+
+<!-- ===================== نافذة المشاركة ===================== -->
+<div id="shareSheet" onclick="if(event.target===this)closeShare()">
+  <div class="shBox">
+    <h3>🔗 شارك التطبيق</h3>
+    <p>اختر التطبيق أو الموقع الذي تريد المشاركة عبره</p>
+    <div class="shGrid" id="shGrid"></div>
+    <div class="shNote" id="shNote"></div>
+    <button class="shClose" onclick="closeShare()">إغلاق</button>
+  </div>
+</div>
 
 <!-- ===================== شاشة التفعيل ===================== -->
 <div id="actScreen">
@@ -359,16 +381,40 @@ function waOpen(text, phone){
 }
 function contactSupport(){ waOpen('السلام عليكم، أحتاج دعماً تقنياً في تطبيق Zad dz.', CONFIG.SUPPORT_PHONE); }
 function requestActivation(){
-  waOpen('السلام عليكم، أريد تفعيل تطبيق Zad dz.\n' +
-    'الاشتراك المطلوب: ' + (actScope ? scopeLabel(actScope) : '(اكتبي السنة أو الشعبة)') + '\n' +
-    'رمز الجهاز: ' + formatCode(getDeviceCode()), CONFIG.SUPPORT_PHONE);
+  const need = actScope
+    ? 'الاشتراك المطلوب: ' + scopeLabel(actScope)
+    : 'طلب التفعيل:\n• السنة للمتوسط: ......\n• السنة والشعبة للثانوي: ......\n• أو التفعيل العام للجميع';
+  waOpen('رمز الجهاز: ' + formatCode(getDeviceCode()) + '\n\nتفعيل تطبيق Zad dz\n' + need, CONFIG.SUPPORT_PHONE);
+}
+const SHARE_TEXT = '📚 Zad dz — دروس وتمارين وفروض واختبارات للتعليم المتوسط والثانوي.\nحمّل التطبيق من هنا:';
+function shareTargets(){
+  const u = encodeURIComponent(CONFIG.SHARE_URL), tx = encodeURIComponent(SHARE_TEXT), both = encodeURIComponent(SHARE_TEXT + '\n' + CONFIG.SHARE_URL);
+  return [
+    {i:'💬', n:'واتساب',   url:'https://wa.me/?text=' + both},
+    {i:'📘', n:'فيسبوك',   url:'https://www.facebook.com/sharer/sharer.php?u=' + u + '&quote=' + tx},
+    {i:'✈️', n:'تيليغرام', url:'https://t.me/share/url?url=' + u + '&text=' + tx},
+    {i:'🐦', n:'إكس (تويتر)', url:'https://twitter.com/intent/tweet?text=' + tx + '&url=' + u},
+    {i:'💼', n:'لينكدإن',  url:'https://www.linkedin.com/sharing/share-offsite/?url=' + u},
+    {i:'✉️', n:'بريد إلكتروني', url:'mailto:?subject=' + encodeURIComponent('Zad dz') + '&body=' + both},
+    {i:'📩', n:'رسالة SMS', url:'sms:?body=' + both},
+    {i:'📋', n:'نسخ الرابط', copy:true, hint:'للإنستغرام وتيك توك وسناب وغيرها'},
+  ].concat(navigator.share ? [{i:'📲', n:'المزيد من التطبيقات', native:true}] : []);
 }
 function shareApp(){
-  const text = '📚 Zad dz — دروس وتمارين وفروض واختبارات للتعليم المتوسط والثانوي.\nحمّلي التطبيق من هنا:';
-  const fallback = () => waOpen(text + '\n' + CONFIG.SHARE_URL, '');
-  if(navigator.share){
-    navigator.share({title:'Zad dz', text, url: CONFIG.SHARE_URL}).catch(e => { if(!e || e.name !== 'AbortError') fallback(); });
-  } else fallback();
+  const T = shareTargets();
+  $('shGrid').innerHTML = T.map((x, k) => `<button onclick="doShare(${k})"><span>${x.i}</span>${x.n}</button>`).join('');
+  $('shNote').textContent = ''; $('shareSheet').classList.add('show');
+}
+function closeShare(){ $('shareSheet').classList.remove('show'); }
+function copyText(s, done){
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(s).then(done, ()=>{});
+  else { const ta = document.createElement('textarea'); ta.value = s; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); done(); }catch(e){} ta.remove(); }
+}
+function doShare(k){
+  const x = shareTargets()[k], note = $('shNote');
+  if(x.copy) copyText(SHARE_TEXT + '\n' + CONFIG.SHARE_URL, () => { note.textContent = '✅ تم نسخ الرابط — ألصقه في ' + x.hint; });
+  else if(x.native) navigator.share({title:'Zad dz', text:SHARE_TEXT, url:CONFIG.SHARE_URL}).catch(()=>{});
+  else window.open(x.url, '_blank');
 }
 function showActivation(scope){
   actScope = scope || null;
