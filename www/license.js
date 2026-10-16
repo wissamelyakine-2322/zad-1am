@@ -14,8 +14,9 @@ const LIC = {
     S3: ['SE','MATH','TM','GE','LP','LE']
   }
 };
+/* M1..M4: سنة متوسط • S1/S2/S3-xx: سنة + شعبة ثانوي • ALL: تفعيل عام لكل شيء */
 const LIC_SCOPES = ['M1','M2','M3','M4']
-  .concat(...Object.entries(LIC.STREAMS).map(([lv,arr]) => arr.map(c => lv+'-'+c)));
+  .concat(...Object.entries(LIC.STREAMS).map(([lv,arr]) => arr.map(c => lv+'-'+c)), ['ALL']);
 
 /* ---------- SHA-256 + HMAC بدون مكتبات ---------- */
 const _SHA = (() => {

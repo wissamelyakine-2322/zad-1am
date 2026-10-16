@@ -4,6 +4,7 @@
 أمثلة:
   python3 tools/keygen.py --device 1234-5678-9012 --scope M1
   python3 tools/keygen.py --device 123456789012 --scope S2-TM --scope S3-TM
+  python3 tools/keygen.py --device 123456789012 --scope ALL      # تفعيل عام لكل السنوات والشعب
   python3 tools/keygen.py --list
 
 السر: من المتغير ZAD_SECRET أو من ملف tools/.secret أو من CONFIG.LICENSE_SECRET في www/index.html.
@@ -13,7 +14,7 @@
 import argparse, base64, datetime, hashlib, hmac, os, re, sys
 
 STREAMS = {"S1": ["ST", "LET"], "S2": ["SE", "MATH", "TM", "GE", "LP", "LE"], "S3": ["SE", "MATH", "TM", "GE", "LP", "LE"]}
-SCOPES = ["M1", "M2", "M3", "M4"] + [f"{lv}-{c}" for lv, arr in STREAMS.items() for c in arr]
+SCOPES = ["M1", "M2", "M3", "M4"] + [f"{lv}-{c}" for lv, arr in STREAMS.items() for c in arr] + ["ALL"]
 LABELS = {
     "M1": "الأولى متوسط", "M2": "الثانية متوسط", "M3": "الثالثة متوسط", "M4": "الرابعة متوسط",
     "ST": "جذع مشترك علوم وتكنولوجيا", "LET": "جذع مشترك آداب", "SE": "علوم تجريبية", "MATH": "رياضيات",
@@ -56,6 +57,8 @@ def make_key(secret, device, scope, serial):
 
 
 def scope_label(s):
+    if s == "ALL":
+        return "تفعيل عام — كل السنوات والشعب"
     if s.startswith("M"):
         return LABELS[s]
     lv, c = s.split("-")
@@ -65,7 +68,7 @@ def scope_label(s):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--device", help="رمز الجهاز (12 رقماً، مع أو بدون شرطات)")
-    ap.add_argument("--scope", action="append", help="M1..M4 أو S1/S2/S3-ST|LET|SE|MATH|TM|GE|LP|LE")
+    ap.add_argument("--scope", action="append", help="M1..M4 أو S1/S2/S3-ST|LET|SE|MATH|TM|GE|LP|LE أو ALL (تفعيل عام)")
     ap.add_argument("--serial", type=int, help="الرقم التسلسلي YYYYMM (الافتراضي الشهر الحالي)")
     ap.add_argument("--list", action="store_true", help="عرض الرموز المتاحة")
     a = ap.parse_args()

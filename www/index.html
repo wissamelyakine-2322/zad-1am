@@ -144,10 +144,18 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
 .actMsg{font-size:13px;margin-top:10px;min-height:18px}
 .actbox{position:relative}
 .actbox .actClose{position:absolute;top:10px;left:10px;width:34px;height:34px;padding:0;margin:0;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-size:16px}
-.actbox .actCopy{background:rgba(255,255,255,.18);color:#fff;font-size:13px;padding:8px;margin:0 0 4px}
 .licList{margin-top:16px;text-align:right;font-size:13px;line-height:1.9}
 .licList div{display:flex;justify-content:space-between;gap:8px;background:rgba(0,0,0,.18);border-radius:10px;padding:6px 10px;margin-top:6px}
 .licList .on{color:#bbf7d0}.licList .off{opacity:.75}
+.sideBtn{position:absolute;width:42px;height:42px;padding:0;border:0;border-radius:50%;font-size:20px;line-height:42px;cursor:pointer;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.supbtn{left:0;top:66px;background:#22c55e}
+.sharebtn{right:0;top:18px;background:#a855f7}
+.backbtn[style*="block"] ~ .sharebtn{top:62px}
+.sideBtn:active{transform:scale(.93)}
+@keyframes zblink{0%,100%{opacity:1}50%{opacity:.12}}
+.blink{animation:zblink 1s ease-in-out infinite}
+.actTap{font-size:18px;font-weight:bold;margin:8px 0 10px;color:#fde68a}
+.actbox .actReq{background:#22c55e;color:#fff;margin:0 0 10px}
 .lockPanel{background:rgba(255,255,255,.14);border-radius:16px;padding:22px;text-align:center;line-height:1.9;margin-top:14px}
 .lockPanel button{background:var(--acc);color:var(--ink);border:0;border-radius:14px;padding:11px 20px;font-weight:bold;font-size:15px;margin-top:8px}
 .actMsg.err{color:#fecaca}
@@ -165,8 +173,8 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
     <button class="actClose" onclick="hideActivation()" aria-label="إغلاق">✕</button>
     <h2 id="actTitle">🔑 تفعيل التطبيق</h2>
     <p id="actText"></p>
-    <div class="deviceCode" id="deviceCodeShow">------------</div>
-    <button class="actCopy" onclick="copyDeviceCode()">📋 نسخ رمز الجهاز</button>
+    <div class="actTap blink">للتفعيل اضغط ⬇️</div>
+    <button class="actReq" onclick="requestActivation()">📲 اضغط هنا لطلب التفعيل</button>
     <input id="licenseInput" placeholder="أدخلي مفتاح التفعيل هنا" maxlength="24" autocapitalize="characters" autocomplete="off">
     <button onclick="tryActivate()">تفعيل</button>
     <div class="actMsg" id="actMsg"></div>
@@ -177,7 +185,9 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
 <!-- ===================== شاشة اختيار المرحلة ===================== -->
 <header>
   <button class="actbtn" id="actIcon" onclick="showActivation()" title="التفعيل">🔑</button>
+  <button class="sideBtn supbtn" onclick="contactSupport()" title="الدعم التقني" aria-label="الدعم التقني">🎧</button>
   <button class="backbtn" id="stageBack" style="display:none" onclick="goStageHome()">→ رجوع</button>
+  <button class="sideBtn sharebtn" onclick="shareApp()" title="مشاركة التطبيق" aria-label="مشاركة التطبيق">🔗</button>
   <img id="appLogo" src="img/logo.png" alt="Zad dz">
   <h1 id="mainTitle">Zad dz</h1>
   <p class="sub" id="mainSub">اختاري المرحلة الدراسية</p>
@@ -269,6 +279,8 @@ const CONFIG = {
   TRIAL_END: new Date('2026-12-18T23:59:59'),   // نهاية الفترة المجانية
   GEMINI_API_KEY: '',                            // اختياري: ضعي مفتاح Gemini هنا لتفعيل مساعدة إضافية عبر الإنترنت
   GEMINI_MODEL: 'gemini-2.5-flash',
+  SUPPORT_PHONE: '213670694322',                 // واتساب الدعم التقني وطلب التفعيل (بدون +)
+  SHARE_URL: 'https://wissamelyakine-2322.github.io/zad-1am',   // الرابط الذي تشاركه أيقونة المشاركة
   LICENSE_SECRET: 'ZAD-RT668F2TL99FJHM8H3RT9PKC'   // سر توليد المفاتيح — يقرؤه tools/keygen.py من هنا؛ غيّريه قبل أول بيع واحتفظي بنسخة منه
 };
 
@@ -311,10 +323,11 @@ const AS_LEVELS = [
 /* منطق المفاتيح الكامل في license.js — هنا الواجهة فقط */
 function isTrialActive(){ return new Date() <= CONFIG.TRIAL_END; }
 function isLocked(){ return !isTrialActive() && !hasAnyLicense(); }
-function canAccess(scope){ return isTrialActive() || licStatus(scope).ok; }
+function canAccess(scope){ return isTrialActive() || licStatus(scope).ok || licStatus('ALL').ok; }
 function amScope(k){ return 'M' + k.charAt(0); }
 function asScope(level, i){ return 'S' + level.replace('AS','') + '-' + LIC.STREAMS['S' + level.replace('AS','')][i]; }
 function scopeLabel(sc){
+  if(sc === 'ALL') return 'التفعيل العام — كل السنوات والشعب';
   if(sc.charAt(0)==='M') return 'السنة ' + sc.charAt(1) + ' متوسط';
   const lv = 'AS' + sc.charAt(1), i = LIC.STREAMS[sc.slice(0,2)].indexOf(sc.slice(3));
   return DB.secondary[lv].name + ' — ' + DB.secondary[lv].streams[i].name;
@@ -328,7 +341,7 @@ function tryActivate(){
   const msg = $('actMsg'), r = activateKey($('licenseInput').value);
   if(r.ok){
     const d = new Date(r.end);
-    msg.textContent = '✅ تم تفعيل ' + scopeLabel(r.scope) + ' حتى ' + d.toLocaleDateString('ar-DZ');
+    msg.textContent = '✅ تم تفعيل ' + (r.scope === 'ALL' ? 'كل السنوات والشعب' : scopeLabel(r.scope)) + ' حتى ' + d.toLocaleDateString('ar-DZ');
     msg.className = 'actMsg ok'; $('licenseInput').value = '';
     renderTrialBar(); renderLicList();
     if(asCur) renderAsView();
@@ -340,31 +353,43 @@ function renderLicList(){
     ? '<b>اشتراكاتك:</b>' + rows.map(([s, st]) => `<div class="${st.ok?'on':'off'}"><span>${scopeLabel(s)}</span><span>${st.ok ? 'متبقي ' + st.days + ' يوماً' : 'انتهى'}</span></div>`).join('')
     : '';
 }
+let actScope = null;
+function waOpen(text, phone){
+  window.open('https://wa.me/' + (phone || '') + '?text=' + encodeURIComponent(text), '_blank');
+}
+function contactSupport(){ waOpen('السلام عليكم، أحتاج دعماً تقنياً في تطبيق Zad dz.', CONFIG.SUPPORT_PHONE); }
+function requestActivation(){
+  waOpen('السلام عليكم، أريد تفعيل تطبيق Zad dz.\n' +
+    'الاشتراك المطلوب: ' + (actScope ? scopeLabel(actScope) : '(اكتبي السنة أو الشعبة)') + '\n' +
+    'رمز الجهاز: ' + formatCode(getDeviceCode()), CONFIG.SUPPORT_PHONE);
+}
+function shareApp(){
+  const text = '📚 Zad dz — دروس وتمارين وفروض واختبارات للتعليم المتوسط والثانوي.\nحمّلي التطبيق من هنا:';
+  const fallback = () => waOpen(text + '\n' + CONFIG.SHARE_URL, '');
+  if(navigator.share){
+    navigator.share({title:'Zad dz', text, url: CONFIG.SHARE_URL}).catch(e => { if(!e || e.name !== 'AbortError') fallback(); });
+  } else fallback();
+}
 function showActivation(scope){
-  $('deviceCodeShow').textContent = formatCode(getDeviceCode());
+  actScope = scope || null;
   const need = scope ? `<b>${scopeLabel(scope)}</b> يحتاج مفتاح تفعيل (مفتاح واحد لكل ${scope.charAt(0)==='M' ? 'سنة دراسية' : 'شعبة'}، صالح سنة، على جهاز واحد).<br>` : '';
   $('actTitle').textContent = scope ? '🔒 يلزم مفتاح تفعيل' : (isTrialActive() ? '🔑 تفعيل التطبيق' : '🔒 انتهت الفترة المجانية');
-  $('actText').innerHTML = need + (isTrialActive() ? 'التطبيق مجاني حتى 18 ديسمبر 2026، وبعده يلزم مفتاح لكل سنة أو شعبة.<br>' : 'انتهت الفترة المجانية في 18 ديسمبر 2026.<br>')
-    + 'أرسلي رمز الجهاز التالي إلى البائع للحصول على المفتاح.';
+  $('actText').innerHTML = need + (isTrialActive() ? 'التطبيق مجاني حتى 18 ديسمبر 2026، وبعده يلزم مفتاح لكل سنة أو شعبة.' : 'انتهت الفترة المجانية في 18 ديسمبر 2026.')
   $('actMsg').textContent = ''; renderLicList();
   $('actScreen').classList.add('show');
 }
 function hideActivation(){ $('actScreen').classList.remove('show'); }
-function copyDeviceCode(){
-  const c = formatCode(getDeviceCode()), m = $('actMsg');
-  const done = () => { m.textContent = '📋 تم نسخ الرمز'; m.className = 'actMsg ok'; };
-  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(c).then(done, ()=>{});
-  else { const ta = document.createElement('textarea'); ta.value = c; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); done(); }catch(e){} ta.remove(); }
-}
 function renderTrialBar(){
   const bar = $('trialBar'), n = LIC_SCOPES.filter(s => licStatus(s).ok).length;
-  if(isTrialActive()){
+  if(licStatus('ALL').ok){
+    bar.textContent = `✅ تفعيل عام لكل السنوات والشعب — متبقي ${licStatus('ALL').days} يوماً`; bar.className = 'trialbar';
+  } else if(isTrialActive()){
     const days = Math.ceil((CONFIG.TRIAL_END - new Date())/86400000);
     bar.textContent = `🎁 نسخة مجانية — تبقّى ${days} يوماً (حتى 18 ديسمبر 2026)`; bar.className = 'trialbar';
   } else if(n){
-    bar.textContent = `✅ ${n} اشتراك نشط — اضغطي 🔑 للتفاصيل`; bar.className = 'trialbar';
+    bar.textContent = `✅ ${n} اشتراك نشط — اضغط 🔑 للتفاصيل`; bar.className = 'trialbar';
   } else {
-    bar.textContent = '⛔ انتهت الفترة المجانية — اضغطي 🔑 أعلاه للتفعيل'; bar.className = 'trialbar warn';
+    bar.textContent = '⛔ انتهت الفترة المجانية — اضغط 🔑 أعلاه للتفعيل'; bar.className = 'trialbar warn';
   }
 }
 
