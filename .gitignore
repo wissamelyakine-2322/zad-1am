@@ -33,3 +33,4 @@ desktop/node_modules
 desktop/dist
 desktop/app
 site/release.json
+tools/.secret

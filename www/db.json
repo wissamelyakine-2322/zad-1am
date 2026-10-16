@@ -3046,7 +3046,7 @@
      "name": "تقني رياضي",
      "subjects": [
       {
-       "key": "maths",
+       "key": "tm_maths",
        "name": "الرياضيات",
        "icon": "➕",
        "links": [
@@ -3071,7 +3071,7 @@
        ]
       },
       {
-       "key": "physics",
+       "key": "tm_physics",
        "name": "العلوم الفيزيائية",
        "icon": "⚡",
        "links": [
@@ -3196,7 +3196,7 @@
        ]
       },
       {
-       "key": "arabic",
+       "key": "tm_arabic",
        "name": "اللغة العربية",
        "icon": "📗",
        "links": [
@@ -3221,7 +3221,7 @@
        ]
       },
       {
-       "key": "francais",
+       "key": "tm_francais",
        "name": "اللغة الفرنسية",
        "icon": "🇫🇷",
        "links": [
@@ -3246,7 +3246,7 @@
        ]
       },
       {
-       "key": "english",
+       "key": "tm_english",
        "name": "اللغة الإنجليزية",
        "icon": "🇬🇧",
        "links": [
@@ -3271,7 +3271,7 @@
        ]
       },
       {
-       "key": "islamic",
+       "key": "tm_islamic",
        "name": "العلوم الإسلامية",
        "icon": "🕌",
        "links": [
@@ -3296,7 +3296,7 @@
        ]
       },
       {
-       "key": "his-geo",
+       "key": "tm_his-geo",
        "name": "التاريخ والجغرافيا",
        "icon": "🗺️",
        "links": [
@@ -3321,7 +3321,7 @@
        ]
       },
       {
-       "key": "philo",
+       "key": "tm_philo",
        "name": "الفلسفة",
        "icon": "💭",
        "links": [

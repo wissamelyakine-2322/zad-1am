@@ -142,6 +142,14 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
 .actbox input{width:100%;padding:12px;border-radius:12px;border:0;font-size:16px;margin:10px 0;text-align:center;direction:ltr;font-family:inherit}
 .actbox button{width:100%;background:var(--acc);color:var(--ink);border:0;border-radius:14px;padding:13px;font-weight:bold;font-size:16px;margin-top:6px}
 .actMsg{font-size:13px;margin-top:10px;min-height:18px}
+.actbox{position:relative}
+.actbox .actClose{position:absolute;top:10px;left:10px;width:34px;height:34px;padding:0;margin:0;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-size:16px}
+.actbox .actCopy{background:rgba(255,255,255,.18);color:#fff;font-size:13px;padding:8px;margin:0 0 4px}
+.licList{margin-top:16px;text-align:right;font-size:13px;line-height:1.9}
+.licList div{display:flex;justify-content:space-between;gap:8px;background:rgba(0,0,0,.18);border-radius:10px;padding:6px 10px;margin-top:6px}
+.licList .on{color:#bbf7d0}.licList .off{opacity:.75}
+.lockPanel{background:rgba(255,255,255,.14);border-radius:16px;padding:22px;text-align:center;line-height:1.9;margin-top:14px}
+.lockPanel button{background:var(--acc);color:var(--ink);border:0;border-radius:14px;padding:11px 20px;font-weight:bold;font-size:15px;margin-top:8px}
 .actMsg.err{color:#fecaca}
 .actMsg.ok{color:#bbf7d0}
 
@@ -154,12 +162,15 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
 <!-- ===================== شاشة التفعيل ===================== -->
 <div id="actScreen">
   <div class="actbox">
-    <h2>🔒 انتهت الفترة المجانية</h2>
-    <p>انتهت الفترة المجانية لتطبيق Zad dz في 18 ديسمبر 2026.<br>للمتابعة، أرسلي رمز الجهاز التالي إلى البائع للحصول على مفتاح التفعيل.</p>
+    <button class="actClose" onclick="hideActivation()" aria-label="إغلاق">✕</button>
+    <h2 id="actTitle">🔑 تفعيل التطبيق</h2>
+    <p id="actText"></p>
     <div class="deviceCode" id="deviceCodeShow">------------</div>
-    <input id="licenseInput" placeholder="أدخلي مفتاح التفعيل هنا" maxlength="19">
+    <button class="actCopy" onclick="copyDeviceCode()">📋 نسخ رمز الجهاز</button>
+    <input id="licenseInput" placeholder="أدخلي مفتاح التفعيل هنا" maxlength="24" autocapitalize="characters" autocomplete="off">
     <button onclick="tryActivate()">تفعيل</button>
     <div class="actMsg" id="actMsg"></div>
+    <div class="licList" id="licList"></div>
   </div>
 </div>
 
@@ -248,6 +259,7 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
 </div>
 
 <script src="db.js"></script>
+<script src="license.js"></script>
 <script src="lessons.js"></script>
 <script>
 /* ============================================================
@@ -257,7 +269,7 @@ const CONFIG = {
   TRIAL_END: new Date('2026-12-18T23:59:59'),   // نهاية الفترة المجانية
   GEMINI_API_KEY: '',                            // اختياري: ضعي مفتاح Gemini هنا لتفعيل مساعدة إضافية عبر الإنترنت
   GEMINI_MODEL: 'gemini-2.5-flash',
-  LICENSE_SECRET: 'ZADAM-2026-SECRET'            // سر توليد مفاتيح التفعيل (يجب أن يطابق أداة المدير الخاصة بالبائع)
+  LICENSE_SECRET: 'ZAD-RT668F2TL99FJHM8H3RT9PKC'   // سر توليد المفاتيح — يقرؤه tools/keygen.py من هنا؛ غيّريه قبل أول بيع واحتفظي بنسخة منه
 };
 
 /* ============================================================
@@ -296,53 +308,63 @@ const AS_LEVELS = [
 /* ============================================================
    نظام التفعيل والفترة المجانية
    ============================================================ */
-function getDeviceCode(){
-  let c = localStorage.getItem('zadam_device');
-  if(!c){
-    c = Array.from({length:12},()=>Math.floor(Math.random()*10)).join('');
-    localStorage.setItem('zadam_device', c);
-  }
-  return c;
-}
-function formatCode(c){ return c.match(/.{1,4}/g).join('-'); }
-function expectedLicense(deviceCode){
-  let hash = 0;
-  const s = deviceCode + CONFIG.LICENSE_SECRET;
-  for(let i=0;i<s.length;i++){ hash = (hash*31 + s.charCodeAt(i)) >>> 0; }
-  let key = hash.toString(36).toUpperCase().padStart(10,'0').slice(0,10);
-  return key.match(/.{1,5}/g).join('-');
-}
-function isActivated(){ return localStorage.getItem('zadam_licensed') === 'true'; }
+/* منطق المفاتيح الكامل في license.js — هنا الواجهة فقط */
 function isTrialActive(){ return new Date() <= CONFIG.TRIAL_END; }
-function isLocked(){ return !isTrialActive() && !isActivated(); }
-
-function tryActivate(){
-  const input = $('licenseInput').value.trim().toUpperCase();
-  const expected = expectedLicense(getDeviceCode());
-  const msg = $('actMsg');
-  if(input === expected){
-    localStorage.setItem('zadam_licensed','true');
-    msg.textContent = '✅ تم التفعيل بنجاح!'; msg.className='actMsg ok';
-    setTimeout(()=>{ $('actScreen').classList.remove('show'); renderTrialBar(); },900);
-  } else {
-    msg.textContent = '❌ المفتاح غير صحيح، تأكدي من رمز الجهاز.'; msg.className='actMsg err';
-  }
+function isLocked(){ return !isTrialActive() && !hasAnyLicense(); }
+function canAccess(scope){ return isTrialActive() || licStatus(scope).ok; }
+function amScope(k){ return 'M' + k.charAt(0); }
+function asScope(level, i){ return 'S' + level.replace('AS','') + '-' + LIC.STREAMS['S' + level.replace('AS','')][i]; }
+function scopeLabel(sc){
+  if(sc.charAt(0)==='M') return 'السنة ' + sc.charAt(1) + ' متوسط';
+  const lv = 'AS' + sc.charAt(1), i = LIC.STREAMS[sc.slice(0,2)].indexOf(sc.slice(3));
+  return DB.secondary[lv].name + ' — ' + DB.secondary[lv].streams[i].name;
 }
-function showActivation(){
+const REASONS = {
+  format:'❌ المفتاح غير مكتمل، يتكون من 15 حرفاً.',
+  invalid:'❌ المفتاح غير صحيح، أو لجهاز آخر، أو انتهت مدة تفعيله. تأكدي من رمز الجهاز.',
+  used:'ℹ️ هذا المفتاح مستعمل من قبل. اطلبي مفتاح تجديد جديداً.'
+};
+function tryActivate(){
+  const msg = $('actMsg'), r = activateKey($('licenseInput').value);
+  if(r.ok){
+    const d = new Date(r.end);
+    msg.textContent = '✅ تم تفعيل ' + scopeLabel(r.scope) + ' حتى ' + d.toLocaleDateString('ar-DZ');
+    msg.className = 'actMsg ok'; $('licenseInput').value = '';
+    renderTrialBar(); renderLicList();
+    if(asCur) renderAsView();
+  } else { msg.textContent = REASONS[r.reason] || REASONS.invalid; msg.className = 'actMsg err'; }
+}
+function renderLicList(){
+  const rows = LIC_SCOPES.map(s => [s, licStatus(s)]).filter(([s, st]) => st.ok || st.reason === 'expired');
+  $('licList').innerHTML = rows.length
+    ? '<b>اشتراكاتك:</b>' + rows.map(([s, st]) => `<div class="${st.ok?'on':'off'}"><span>${scopeLabel(s)}</span><span>${st.ok ? 'متبقي ' + st.days + ' يوماً' : 'انتهى'}</span></div>`).join('')
+    : '';
+}
+function showActivation(scope){
   $('deviceCodeShow').textContent = formatCode(getDeviceCode());
+  const need = scope ? `<b>${scopeLabel(scope)}</b> يحتاج مفتاح تفعيل (مفتاح واحد لكل ${scope.charAt(0)==='M' ? 'سنة دراسية' : 'شعبة'}، صالح سنة، على جهاز واحد).<br>` : '';
+  $('actTitle').textContent = scope ? '🔒 يلزم مفتاح تفعيل' : (isTrialActive() ? '🔑 تفعيل التطبيق' : '🔒 انتهت الفترة المجانية');
+  $('actText').innerHTML = need + (isTrialActive() ? 'التطبيق مجاني حتى 18 ديسمبر 2026، وبعده يلزم مفتاح لكل سنة أو شعبة.<br>' : 'انتهت الفترة المجانية في 18 ديسمبر 2026.<br>')
+    + 'أرسلي رمز الجهاز التالي إلى البائع للحصول على المفتاح.';
+  $('actMsg').textContent = ''; renderLicList();
   $('actScreen').classList.add('show');
 }
+function hideActivation(){ $('actScreen').classList.remove('show'); }
+function copyDeviceCode(){
+  const c = formatCode(getDeviceCode()), m = $('actMsg');
+  const done = () => { m.textContent = '📋 تم نسخ الرمز'; m.className = 'actMsg ok'; };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(c).then(done, ()=>{});
+  else { const ta = document.createElement('textarea'); ta.value = c; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); done(); }catch(e){} ta.remove(); }
+}
 function renderTrialBar(){
-  const bar = $('trialBar');
-  if(isActivated()){ bar.textContent = '✅ التطبيق مُفعّل بالكامل'; bar.className='trialbar'; return; }
+  const bar = $('trialBar'), n = LIC_SCOPES.filter(s => licStatus(s).ok).length;
   if(isTrialActive()){
     const days = Math.ceil((CONFIG.TRIAL_END - new Date())/86400000);
-    bar.textContent = `🎁 نسخة مجانية — تبقّى ${days} يوماً (حتى 18 ديسمبر 2026)`;
-    bar.className='trialbar';
+    bar.textContent = `🎁 نسخة مجانية — تبقّى ${days} يوماً (حتى 18 ديسمبر 2026)`; bar.className = 'trialbar';
+  } else if(n){
+    bar.textContent = `✅ ${n} اشتراك نشط — اضغطي 🔑 للتفاصيل`; bar.className = 'trialbar';
   } else {
-    bar.textContent = '⛔ انتهت الفترة المجانية — اضغطي 🔑 أعلاه للتفعيل';
-    bar.className='trialbar warn';
-    showActivation();
+    bar.textContent = '⛔ انتهت الفترة المجانية — اضغطي 🔑 أعلاه للتفعيل'; bar.className = 'trialbar warn';
   }
 }
 
@@ -365,7 +387,6 @@ function goStageHome(){
   $('foot').textContent='';
 }
 function openStage(stage){
-  if(isLocked()){ showActivation(); return; }
   $('stageHome').style.display='none';
   $('stageBack').style.display='block';
   if(stage==='AM'){
@@ -391,7 +412,6 @@ function renderAsHome(){
 }
 let asCur = null, asStream = 0;
 function openAsLevel(k){
-  if(isLocked()){ showActivation(); return; }
   asCur = k; asStream = 0;
   $('asHome').style.display='none'; $('stageBack').style.display='none';
   $('asView').style.display='block';
@@ -403,9 +423,13 @@ function closeAsView(){
   $('stageBack').style.display='block';
 }
 function renderAsView(){
-  const lv = DB.secondary[asCur], st = lv.streams[asStream];
+  const lv = DB.secondary[asCur], st = lv.streams[asStream], sc = asScope(asCur, asStream);
   $('asChips').innerHTML = lv.streams.map((s,i)=>
-    `<button class="${i===asStream?'on':''}" onclick="asStream=${i};renderAsView()">${s.name}</button>`).join('');
+    `<button class="${i===asStream?'on':''}" onclick="asStream=${i};renderAsView()">${s.name}${canAccess(asScope(asCur,i))?'':' 🔒'}</button>`).join('');
+  if(!canAccess(sc)){
+    $('asSecs').innerHTML = `<div class="lockPanel">🔒 شعبة <b>${st.name}</b> تحتاج مفتاح تفعيل.<br>مفتاح واحد لهذه الشعبة، صالح سنة، على جهاز واحد.<br><button onclick="showActivation('${sc}')">🔑 تفعيل هذه الشعبة</button></div>`;
+    return;
+  }
   let h = `<div class="subjgrid">` + st.subjects.map((x,i)=>
     `<button class="subj" onclick="openHubAs(${i})"><span class="ic">${x.icon}</span><span class="name">${x.name}</span></button>`).join('') + `</div>`;
   const gen = [...(st.extra||[]), ...lv.general.links];
@@ -427,7 +451,7 @@ function renderHome(){
   $('foot').textContent = 'قاعدة البيانات: موسم ' + DB.season + ' • الإصدار ' + DB.version;
 }
 function openLevel(k){
-  if(isLocked()){ showActivation(); return; }
+  if(!canAccess(amScope(k))){ showActivation(amScope(k)); return; }
   cur = k; const l = DB.levels[k];
   $('home').style.display='none'; $('stageBack').style.display='none';
   $('view').style.display='block'; $('vt').textContent = k + ' — ' + l.name;
@@ -481,7 +505,7 @@ function hubBtn(ic, label, sub, on, fn){
   return `<button class="hubBtn ${on?'':'off'}" onclick="${on?fn:"alert('هذا القسم قيد الإعداد لهذه المادة')"}"><span class="ic">${ic}</span>${label}<small>${sub}</small></button>`;
 }
 function openHub(key){
-  if(isLocked()){ showActivation(); return; }
+  if(!canAccess(amScope(cur))){ showActivation(amScope(cur)); return; }
   hubKey = key; hubAs = null;
   const subj = findSubject(key), data = getSubjectData(key);
   const nl = data ? (data.lessons||[]).length : 0, ne = data ? (data.exercises||[]).length : 0;
@@ -499,6 +523,7 @@ function openHub(key){
   $('hub').classList.add('show'); $('hub').scrollTop = 0;
 }
 function openHubAs(si){
+  if(!canAccess(asScope(asCur, asStream))){ showActivation(asScope(asCur, asStream)); return; }
   const sj = DB.secondary[asCur].streams[asStream].subjects[si];
   hubAs = sj; hubKey = sj.key; cur = asCur;
   const data = getSubjectData(sj.key);
@@ -595,10 +620,13 @@ function quizNext(){ quizState.i++; quizState.done=false; renderQuiz(); }
 /* ============================================================
    الأستاذ المحلي: بحث داخل الدروس والتمارين الحقيقية (بدون مفتاح خارجي)
    ============================================================ */
+/* مواد مشتركة بين الشعب: نعيد استعمال نفس الدروس بدل تكرارها (توفيراً للحجم) */
+const LESSON_ALIAS = {AS3:{'tm_arabic':'ge_arabic','tm_francais':'ge_francais','tm_english':'ge_english','tm_islamic':'ge_islamic','tm_his-geo':'ge_his-geo','tm_philo':'ge_philo'}};
 function getSubjectData(subjectKey){
   const lv = LESSONS_DB[cur];
   if(!lv) return null;
-  return lv[subjectKey] || null;
+  const al = LESSON_ALIAS[cur];
+  return lv[subjectKey] || (al && lv[al[subjectKey]]) || null;
 }
 /* ---- بحث مرن: تطبيع عربي/فرنسي + جذوع بسيطة + حذف كلمات الاستفهام ---- */
 const STOP = new Set(('ما ماذا هو هي هذا هذه هذان كيف لماذا اشرح اشرحي شرح لي لنا في من على عن الى الي هل كل ثم او مع قم اعطني اعطيني اريد اريدين ان انا نحن اين متي كم ما\
