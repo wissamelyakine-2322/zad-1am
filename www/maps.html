@@ -202,7 +202,7 @@ function draw(){
 }
 addEventListener('resize',draw);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
-const MK={ge_islamic:'isl',ge_economy:'eco'};const H=location.hash.slice(1);let first='isl';if(MK[H]){first=MK[H];tabs.style.display='none';}else try{const s=localStorage.getItem('tab');if(s&&T[s])first=s}catch(e){}
+const MK={ge_islamic:'isl',ge_economy:'eco',isl:'isl',eco:'eco'};const H=location.hash.slice(1);let first='isl';if(MK[H]){first=MK[H];tabs.style.display='none';}else try{const s=localStorage.getItem('tab');if(s&&T[s])first=s}catch(e){}
 show(first);
 </script>
 </body></html>

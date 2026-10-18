@@ -1,3 +1,3 @@
-/* الأيقونة الخامسة: الخرائط الذهنية */
-function hasMaps(k){return ['ge_islamic','ge_economy'].indexOf(k)>-1}
-function openMaps(k){openWebview('maps.html#'+k,'🗺️ الخرائط الذهنية')}
+/* الأيقونة الخامسة: الخرائط الذهنية — تُفعَّل للمواد التي تحمل الحقل maps في بياناتها */
+function hasMaps(k){try{var d=getSubjectData(k);return !!(d&&d.maps)}catch(e){return false}}
+function openMaps(k){var d=getSubjectData(k);if(d&&d.maps)openWebview('maps.html#'+d.maps,'🗺️ الخرائط الذهنية')}
