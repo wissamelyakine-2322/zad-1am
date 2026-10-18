@@ -294,6 +294,7 @@ h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
 <script src="license.js"></script>
 <script src="lessons.js"></script>
 <script src="lessons_3as_ge.js"></script>
+<script src="maps_hook.js"></script>
 <script>
 /* ============================================================
    إعدادات عامة — عدّلي القيم هنا فقط
@@ -590,6 +591,7 @@ function openHub(key){
       hubBtn('✏️','التمارين', ne?ne+' مجموعة':'قيد الإعداد', ne>0, `openLessons('${key}','exercises')`) +
       hubBtn('💬','اسأل الأستاذ', data?'بدون إنترنت':'قيد الإعداد', !!data, `openChat('${key}')`) +
       hubBtn('📝','كويز', nq?'اختبري نفسك':'قيد الإعداد', nq>0, `openQuiz('${key}')`) +
+      hubBtn('🗺️','الخرائط الذهنية', hasMaps(key)?'خريطة لكل درس':'قيد الإعداد', hasMaps(key), `openMaps('${key}')`) +
     `</div>` +
     (links.length ? `<div class="sec"><h3>🔗 روابط المادة</h3><div class="card">${links.map(linkHtml).join('')}</div></div>` : '');
   $('hub').classList.add('show'); $('hub').scrollTop = 0;
@@ -608,6 +610,7 @@ function openHubAs(si){
       hubBtn('✏️','التمارين', ne?ne+' مجموعة':'قيد الإعداد', ne>0, `openLessons('${sj.key}','exercises')`) +
       hubBtn('💬','اسأل الأستاذ', data?'بدون إنترنت':'قيد الإعداد', !!data, `openChat('${sj.key}')`) +
       hubBtn('📝','كويز', nq?'اختبري نفسك':'قيد الإعداد', nq>0, `openQuiz('${sj.key}')`) +
+      hubBtn('🗺️','الخرائط الذهنية', hasMaps(sj.key)?'خريطة لكل درس':'قيد الإعداد', hasMaps(sj.key), `openMaps('${sj.key}')`) +
     `</div>` +
     (data ? `<div class="asNote" style="margin-top:12px">⚠️ دروس هذه المادة ملخصات تعليمية عامة، ولم تُطابَق بعد مع التدرج السنوي الرسمي لموسم 2026/2027. اعتمدي على كتابك وأستاذك أولاً.</div>` : '') +
     `<div class="sec"><h3>🔗 روابط المادة</h3><div class="card">${sj.links.map(linkHtml).join('')}</div></div>`;
