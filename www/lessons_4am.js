@@ -1,4 +1,4 @@
-/* دروس اللغة العربية - الرابعة متوسط (المقاطع 1-7). يُحمَّل بعد lessons.js و ar4_data.js */
+/* دروس اللغة العربية - الرابعة متوسط (المقاطع 1-8). يُحمَّل بعد lessons.js و ar4_data.js */
 (function(){
   if(typeof LESSONS_DB==='undefined'||typeof AR4_DATA==='undefined')return;
   var KEY='arabic';
