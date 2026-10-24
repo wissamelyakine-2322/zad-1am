@@ -89,7 +89,7 @@ function cardFor(l){
   const w=WIN[l.w];
   const ex=l.EX.map((e,j)=>'<div class="ex"><b>تمرين '+(j+1)+':</b> '+esc(e[0])+'<div class="sol"><b>الحل:</b>'+steps(e[1]).map(z=>'<div class="st">'+esc(z)+'</div>').join('')+'</div></div>').join('');
   const x='<div class="extra"><b>طرق وقواعد:</b><ul>'+l.M.map(a=>'<li>'+esc(a)+'</li>').join('')+'</ul><div class="how"><b>شرح مبسط:</b> '+esc(l.X)+'</div></div><div class="extra"><b>تمارين محلولة بالتفصيل:</b>'+ex+'</div>';
-  return card('المقطع '+l.m,w[1],l.i,l.t,l.B,l.K,x,w[0]+' · '+esc(l.pg));
+  return card('المقطع '+l.m,w[1],l.i,l.t,l.B,l.K,x,w[0]+(l.pg?' · '+esc(l.pg):''));
 }
 function tab(m){
   let h='',last=-1;
