@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zad dz</title>
+<style>
+:root{--bg1:#1e3a8a;--bg2:#7c3aed;--card:#ffffff;--ink:#1a2332;--acc:#fbbf24;--ok:#10b981;--danger:#ef4444}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:'Segoe UI',Tahoma,Arial,sans-serif;min-height:100vh;color:#fff;
+ background:linear-gradient(160deg,var(--bg1),var(--bg2));padding:env(safe-area-inset-top) 16px 24px}
+header{text-align:center;padding:20px 0 6px;position:relative}
+#appLogo{width:104px;height:104px;display:block;margin:0 auto 6px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
+header img{width:64px;height:64px;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+h1{margin:10px 0 2px;font-size:25px;letter-spacing:1px}
+.sub{opacity:.85;font-size:13px;margin:0 0 6px}
+.trialbar{max-width:520px;margin:0 auto 14px;background:rgba(255,255,255,.14);border-radius:14px;padding:8px 14px;font-size:13px;text-align:center}
+.trialbar.warn{background:rgba(239,68,68,.35)}
+.actbtn{position:absolute;left:0;top:18px;background:var(--acc);color:var(--ink);border:0;border-radius:12px;padding:6px 10px;font-size:18px;cursor:pointer}
+.backbtn{position:absolute;right:0;top:18px;background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:12px;padding:6px 12px;font-size:14px;cursor:pointer}
+
+/* ===== شاشة اختيار المرحلة (الرئيسية الأولى) ===== */
+.stageGrid{display:flex;flex-direction:column;gap:16px;max-width:480px;margin:40px auto;min-height:50vh;justify-content:center}
+.stageBtn{border:0;border-radius:22px;padding:26px 18px;text-align:center;cursor:pointer;color:#fff;
+ box-shadow:0 10px 24px rgba(0,0,0,.35);transition:transform .15s}
+.stageBtn:active{transform:scale(.97)}
+.stageBtn.am{background:linear-gradient(135deg,#1d4ed8,#0ea5e9)}
+.stageBtn.as{background:linear-gradient(135deg,#7e22ce,#db2777)}
+.stageBtn .big{font-size:22px;font-weight:bold;display:block}
+.stageBtn .small{font-size:13px;opacity:.9;display:block;margin-top:6px}
+
+/* ===== شبكة سنوات المتوسط (صغيرة ومضبوطة) ===== */
+.grid{display:flex;flex-direction:column;gap:12px;max-width:480px;margin:auto}
+.lv{position:relative;border:0;border-radius:18px;padding:14px 16px;overflow:hidden;cursor:pointer;
+ width:100%;display:flex;align-items:center;gap:14px;box-shadow:0 6px 16px rgba(0,0,0,.3);transition:transform .15s;color:#fff}
+.lv:active{transform:scale(.97)}
+.lv .badge{width:50px;height:50px;border-radius:12px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:15px;flex:none}
+.lv .lvName{font-size:18px;font-weight:bold;flex:1;text-align:right}
+.lv.c1{background:linear-gradient(135deg,#1d4ed8,#0ea5e9)}
+.lv.c2{background:linear-gradient(135deg,#047857,#10b981)}
+.lv.c3{background:linear-gradient(135deg,#c2410c,#f59e0b)}
+.lv.c4{background:linear-gradient(135deg,#7e22ce,#ec4899)}
+
+/* ===== شبكة سنوات الثانوي (قريبًا) ===== */
+.asNote{max-width:480px;margin:0 auto 14px;background:rgba(255,255,255,.14);border-radius:14px;padding:10px 14px;font-size:13px;text-align:center}
+.asShu{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px}
+.asShu span{background:rgba(255,255,255,.15);border-radius:10px;padding:4px 10px;font-size:12px}
+.soon{position:absolute;left:14px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.3);border-radius:10px;padding:3px 9px;font-size:11px}
+
+#view,#subjectView,#chat,#actScreen,#webview,#lessonsScr,#hub{display:none;max-width:720px;margin:auto}
+#webview.show{display:flex;position:fixed;inset:0;max-width:100%;z-index:40;flex-direction:column;background:#fff}
+#webview .wvTop{display:flex;align-items:center;gap:10px;padding:env(safe-area-inset-top) 10px 8px;background:var(--bg1);color:#fff}
+#webview .wvTop button{background:rgba(255,255,255,.2);color:#fff;border:0;border-radius:10px;padding:8px 12px;font-size:14px}
+#webview .wvTop span{flex:1;font-size:13px;opacity:.9;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#webview iframe{flex:1;border:0;width:100%}
+.top{display:flex;align-items:center;gap:10px;margin:14px 0}
+.top button{background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:12px;padding:10px 14px;font-size:15px;cursor:pointer}
+.top h2{margin:0;font-size:19px;flex:1}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px}
+.chips button{flex:none;border:0;border-radius:20px;padding:8px 14px;font-size:14px;background:rgba(255,255,255,.18);color:#fff;font-family:inherit;cursor:pointer}
+.chips button.on{background:var(--acc);color:var(--ink);font-weight:bold}
+#q,#lsearch{width:100%;padding:12px 14px;border-radius:14px;border:0;font-size:16px;margin-bottom:6px;font-family:inherit}
+.sec{margin-top:20px}
+.sec h3{margin:0 0 8px;font-size:17px;border-right:5px solid var(--acc);padding-right:10px}
+.card{background:var(--card);border-radius:16px;padding:6px 14px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.card a{display:flex;gap:10px;align-items:center;color:#1a56a0;text-decoration:none;font-weight:bold;font-size:16px;padding:11px 0;border-bottom:1px solid #eef1f6}
+.card a:last-child{border-bottom:0}
+
+/* subjects grid inside a level */
+.subjgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.subj{background:var(--card);color:var(--ink);border-radius:18px;padding:16px 10px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.25);cursor:pointer;border:0;font-family:inherit}
+.subj .ic{font-size:30px;display:block;margin-bottom:6px}
+.subj .name{font-weight:bold;font-size:14px}
+.subj .btnrow{display:flex;flex-direction:column;gap:5px;margin-top:8px}
+.subj .btnrow button{background:var(--bg2);color:#fff;border:0;border-radius:10px;padding:6px 8px;font-size:12px;width:100%;font-family:inherit}
+.subj .btnrow button.quizbtn{background:#059669}
+.subj .btnrow button.explainbtn{background:#7c3aed}
+
+/* شاشة الدروس/التمارين المحلية */
+#lessonsScr.show,#hub.show{display:block;position:fixed;inset:0;z-index:45;background:linear-gradient(160deg,var(--bg1),var(--bg2));
+ padding:env(safe-area-inset-top) 16px 20px;overflow-y:auto}
+.lsTabs{display:flex;gap:8px;margin:10px 0}
+.lsTabs button{flex:1;border:0;border-radius:12px;padding:10px;background:rgba(255,255,255,.15);color:#fff;font-family:inherit;font-size:14px}
+.lsTabs button.on{background:var(--acc);color:var(--ink);font-weight:bold}
+.lsItem{background:var(--card);color:var(--ink);border-radius:14px;padding:13px 16px;margin-bottom:8px;cursor:pointer;font-weight:bold}
+.lsContent{background:var(--card);color:var(--ink);border-radius:16px;padding:18px;line-height:2;white-space:pre-wrap;font-size:15px}
+.lsContent h4{margin:0 0 10px;font-size:18px}
+
+#hub.show{z-index:40}
+#quiz{display:none}
+.hubGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 4px}
+.hubBtn{background:var(--card);color:var(--ink);border:0;border-radius:16px;padding:16px 8px;font-family:inherit;font-weight:bold;font-size:15px;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,.22)}
+.hubBtn small{display:block;font-weight:normal;color:#6b7280;font-size:12px;margin-top:3px}
+.hubBtn.off{opacity:.5}
+.hubBtn .ic{font-size:26px;display:block;margin-bottom:4px}
+.subj{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:96px}
+.qProg{text-align:center;color:#fff;margin-bottom:8px;font-size:14px}
+.qOpt{display:block;width:100%;text-align:right;background:#f3f4f6;border:0;border-radius:10px;padding:11px;margin-bottom:6px;font-family:inherit;font-size:15px;color:var(--ink)}
+.qOpt.correct{background:#bbf7d0}.qOpt.wrong{background:#fecaca}
+.qAns{background:#ecfdf5;border-radius:10px;padding:10px;margin:8px 0;white-space:pre-wrap;line-height:1.9}
+#quiz.show{display:block;position:fixed;inset:0;z-index:45;background:linear-gradient(160deg,var(--bg1),var(--bg2));
+ padding:env(safe-area-inset-top) 16px 20px;overflow-y:auto}
+.qTop{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.qTop button{background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:12px;padding:8px 12px}
+.qCard{background:var(--card);color:var(--ink);border-radius:16px;padding:16px;margin-bottom:14px}
+.qCard .qtext{font-weight:bold;margin-bottom:10px}
+.qCard label{display:block;background:#f3f4f6;border-radius:10px;padding:10px;margin-bottom:6px;cursor:pointer}
+.qCard label.correct{background:#bbf7d0}
+.qCard label.wrong{background:#fecaca}
+.qSubmit{width:100%;background:var(--acc);color:var(--ink);border:0;border-radius:14px;padding:13px;font-weight:bold;font-size:16px;margin-top:6px}
+.qScore{text-align:center;font-size:18px;font-weight:bold;margin:10px 0}
+.topicBox{max-width:420px;margin:50px auto 0;background:rgba(255,255,255,.14);border-radius:18px;padding:22px;text-align:center}
+.topicBox input{width:100%;padding:12px;border-radius:12px;border:0;font-size:16px;margin:12px 0;font-family:inherit}
+.topicBox button{width:100%;background:var(--acc);color:var(--ink);border:0;border-radius:14px;padding:13px;font-weight:bold}
+.loadingDots{text-align:center;padding:30px;font-size:15px;opacity:.85}
+
+/* chat */
+#chat{display:none;flex-direction:column;height:calc(100vh - 20px)}
+#chat.show{display:flex;position:fixed;inset:0;z-index:46;height:auto;max-width:none;background:linear-gradient(160deg,var(--bg1),var(--bg2));padding:env(safe-area-inset-top) 16px 10px}
+.chatTop{display:flex;align-items:center;gap:10px;padding:10px 4px}
+.chatTop button{background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:12px;padding:8px 12px}
+.chatTop h2{margin:0;font-size:16px;flex:1}
+#topicBar{display:flex;gap:6px;overflow-x:auto;padding:6px 2px;flex:none}
+#topicBar button{flex:none;border:0;border-radius:16px;padding:7px 12px;background:rgba(255,255,255,.2);color:#fff;font-family:inherit;font-size:13px;white-space:nowrap}
+#topicBar button.ex{background:rgba(251,191,36,.35)}
+#msgs{flex:1;overflow-y:auto;padding:10px 4px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:85%;padding:10px 14px;border-radius:16px;font-size:15px;line-height:1.7;white-space:pre-wrap}
+.msg.user{align-self:flex-start;background:var(--acc);color:var(--ink);border-bottom-left-radius:4px}
+.msg.bot{align-self:flex-end;background:var(--card);color:var(--ink);border-bottom-right-radius:4px}
+.chatIn{display:flex;gap:8px;padding:8px 0 4px}
+.chatIn input{flex:1;border:0;border-radius:14px;padding:12px 14px;font-size:15px;font-family:inherit}
+.chatIn button{background:var(--acc);color:var(--ink);border:0;border-radius:14px;padding:0 18px;font-weight:bold}
+.typing{align-self:flex-end;font-size:13px;opacity:.8;background:var(--card);color:var(--ink);padding:6px 12px;border-radius:12px}
+
+/* activation overlay */
+#actScreen.show{display:block;position:fixed;inset:0;background:linear-gradient(160deg,var(--bg1),var(--bg2));z-index:50;
+ padding:env(safe-area-inset-top) 20px 24px;overflow-y:auto}
+.actbox{max-width:420px;margin:60px auto 0;background:rgba(255,255,255,.12);border-radius:20px;padding:24px;text-align:center}
+.actbox h2{margin:0 0 6px}
+.actbox p{opacity:.9;line-height:1.8;font-size:14px}
+.deviceCode{background:rgba(0,0,0,.25);border-radius:12px;padding:12px;font-size:20px;letter-spacing:3px;margin:14px 0;direction:ltr}
+.actbox input{width:100%;padding:12px;border-radius:12px;border:0;font-size:16px;margin:10px 0;text-align:center;direction:ltr;font-family:inherit}
+.actbox button{width:100%;background:var(--acc);color:var(--ink);border:0;border-radius:14px;padding:13px;font-weight:bold;font-size:16px;margin-top:6px}
+.actMsg{font-size:13px;margin-top:10px;min-height:18px}
+.actbox{position:relative}
+.actbox .actClose{position:absolute;top:10px;left:10px;width:34px;height:34px;padding:0;margin:0;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;font-size:16px}
+.licList{margin-top:16px;text-align:right;font-size:13px;line-height:1.9}
+.licList div{display:flex;justify-content:space-between;gap:8px;background:rgba(0,0,0,.18);border-radius:10px;padding:6px 10px;margin-top:6px}
+.licList .on{color:#bbf7d0}.licList .off{opacity:.75}
+.sideBtn{position:absolute;width:42px;height:42px;padding:0;border:0;border-radius:50%;font-size:20px;line-height:42px;cursor:pointer;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.supbtn{left:0;top:66px;background:#22c55e}
+.sharebtn{right:0;top:18px;background:#a855f7}
+.backbtn[style*="block"] ~ .sharebtn{top:62px}
+.sideBtn:active{transform:scale(.93)}
+@keyframes zblink{0%,100%{opacity:1}50%{opacity:.12}}
+.blink{animation:zblink 1s ease-in-out infinite}
+.actTap{font-size:18px;font-weight:bold;margin:8px 0 10px;color:#fde68a}
+.actbox .actReq{background:#22c55e;color:#fff;margin:0 0 10px}
+#shareSheet{display:none;position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.55);align-items:flex-end;justify-content:center}
+#shareSheet.show{display:flex}
+.shBox{width:100%;max-width:520px;background:linear-gradient(160deg,var(--bg1),var(--bg2));border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -8px 30px rgba(0,0,0,.4)}
+.shBox h3{margin:0 0 4px;text-align:center}
+.shBox p{margin:0 0 14px;text-align:center;font-size:13px;opacity:.85}
+.shGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.shGrid button{background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:14px;padding:12px 4px;font-size:13px;font-family:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
+.shGrid button span{font-size:26px;line-height:1}
+.shGrid button:active{transform:scale(.95)}
+.shNote{min-height:18px;margin-top:10px;font-size:13px;text-align:center;color:#bbf7d0}
+.shClose{display:block;width:100%;margin-top:10px;background:rgba(255,255,255,.2);color:#fff;border:0;border-radius:14px;padding:11px;font-size:15px;font-family:inherit;cursor:pointer}
+.lockPanel{background:rgba(255,255,255,.14);border-radius:16px;padding:22px;text-align:center;line-height:1.9;margin-top:14px}
+.lockPanel button{background:var(--acc);color:var(--ink);border:0;border-radius:14px;padding:11px 20px;font-weight:bold;font-size:15px;margin-top:8px}
+.actMsg.err{color:#fecaca}
+.actMsg.ok{color:#bbf7d0}
+
+.empty{background:rgba(255,255,255,.14);border-radius:16px;padding:22px;text-align:center;line-height:1.9}
+.note{font-size:12px;opacity:.8;text-align:center;margin-top:22px;line-height:1.7}
+</style>
+</head>
+<body>
+
+<!-- ===================== نافذة المشاركة ===================== -->
+<div id="shareSheet" onclick="if(event.target===this)closeShare()">
+  <div class="shBox">
+    <h3>🔗 شارك التطبيق</h3>
+    <p>اختر التطبيق أو الموقع الذي تريد المشاركة عبره</p>
+    <div class="shGrid" id="shGrid"></div>
+    <div class="shNote" id="shNote"></div>
+    <button class="shClose" onclick="closeShare()">إغلاق</button>
+  </div>
+</div>
+
+<!-- ===================== شاشة التفعيل ===================== -->
+<div id="actScreen">
+  <div class="actbox">
+    <button class="actClose" onclick="hideActivation()" aria-label="إغلاق">✕</button>
+    <h2 id="actTitle">🔑 تفعيل التطبيق</h2>
+    <p id="actText"></p>
+    <div class="actTap blink">للتفعيل اضغط ⬇️</div>
+    <button class="actReq" onclick="requestActivation()">📲 اضغط هنا لطلب التفعيل</button>
+    <input id="licenseInput" placeholder="أدخلي مفتاح التفعيل هنا" maxlength="24" autocapitalize="characters" autocomplete="off">
+    <button onclick="tryActivate()">تفعيل</button>
+    <div class="actMsg" id="actMsg"></div>
+    <div class="licList" id="licList"></div>
+  </div>
+</div>
+
+<!-- ===================== شاشة اختيار المرحلة ===================== -->
+<header>
+  <button class="actbtn" id="actIcon" onclick="showActivation()" title="التفعيل">🔑</button>
+  <button class="sideBtn supbtn" onclick="contactSupport()" title="الدعم التقني" aria-label="الدعم التقني">🎧</button>
+  <button class="backbtn" id="stageBack" style="display:none" onclick="goStageHome()">→ رجوع</button>
+  <button class="sideBtn sharebtn" onclick="shareApp()" title="مشاركة التطبيق" aria-label="مشاركة التطبيق">🔗</button>
+  <img id="appLogo" src="img/logo.png" alt="Zad dz">
+  <h1 id="mainTitle">Zad dz</h1>
+  <p class="sub" id="mainSub">اختاري المرحلة الدراسية</p>
+</header>
+<div class="trialbar" id="trialBar"></div>
+
+<div class="stageGrid" id="stageHome">
+  <button class="stageBtn am" onclick="openStage('AM')">
+    <span class="big">📘 التعليم المتوسط</span>
+    <span class="small">من السنة الأولى إلى الرابعة متوسط — كامل</span>
+  </button>
+  <button class="stageBtn as" onclick="openStage('AS')">
+    <span class="big">📙 التعليم الثانوي</span>
+    <span class="small">الأولى والثانية والثالثة ثانوي — الشعب والروابط</span>
+  </button>
+  <div id="impBox"></div>
+</div>
+
+<div class="grid" id="home"></div>
+
+<div id="asHome" style="display:none;max-width:480px;margin:auto">
+  <div class="asNote">اختاري السنة ثم الشعبة لتصلي إلى الدروس والفروض والاختبارات. تُفتح الروابط في المتصفح.</div>
+  <div class="grid" id="asGrid"></div>
+</div>
+
+<div id="asView" style="display:none;max-width:720px;margin:auto">
+  <div class="top"><button onclick="closeAsView()">→ رجوع</button><h2 id="asVt"></h2></div>
+  <div class="chips" id="asChips"></div>
+  <div id="asSecs"></div>
+</div>
+
+<!-- ===================== شاشة المستوى: المواد + الروابط ===================== -->
+<div id="view">
+  <div class="top"><button onclick="goLevelsHome()">→ رجوع</button><h2 id="vt"></h2></div>
+
+  <div class="subjgrid" id="subjGrid"></div>
+  <div id="secs"></div>
+</div>
+
+<p class="note" id="foot"></p>
+
+<!-- ===================== شاشة الدردشة مع الأستاذ المحلي ===================== -->
+<div id="chat">
+  <div class="chatTop"><button onclick="closeChat()">→ رجوع</button><h2 id="chatTitle"></h2></div>
+  <div id="msgs"></div>
+  <div id="topicBar"></div>
+  <div class="chatIn">
+    <input id="chatInput" placeholder="اكتبي سؤالك أو اسم الدرس..." onkeydown="if(event.key==='Enter')sendMsg()">
+    <button onclick="sendMsg()">إرسال</button>
+  </div>
+</div>
+
+<!-- ===================== شاشة الدروس والتمارين المحلية (📚) ===================== -->
+<div id="lessonsScr">
+  <div class="qTop"><button onclick="closeLessons()">→ رجوع</button><h2 id="lsTitle" style="margin:0;font-size:17px;flex:1"></h2></div>
+  <input id="lsearch" type="search" placeholder="🔍 ابحثي باسم الدرس أو كلمة من الدرس...">
+  <div class="lsTabs">
+    <button id="lsTabLessons" class="on" onclick="lsSwitch('lessons')">📖 الدروس</button>
+    <button id="lsTabEx" onclick="lsSwitch('exercises')">✏️ تمارين محلولة</button>
+  </div>
+  <div id="lsBody"></div>
+</div>
+
+<!-- ===================== شاشة المادة الموحّدة ===================== -->
+<div id="hub">
+  <div class="qTop"><button onclick="closeHub()">→ رجوع</button><h2 id="hubTitle" style="margin:0;font-size:18px;flex:1"></h2></div>
+  <div id="hubBody"></div>
+</div>
+
+<!-- ===================== شاشة الكويز (📝) — تعتمد الذكاء الاصطناعي إن توفر مفتاح ===================== -->
+<div id="quiz">
+  <div class="qTop"><button onclick="closeQuiz()">→ رجوع</button><h2 id="quizTitle" style="margin:0;font-size:17px;flex:1"></h2></div>
+  <div id="quizBody"></div>
+</div>
+
+<div id="webview">
+  <div class="wvTop"><button onclick="closeWebview()">✕ إغلاق</button><span id="wvTitle"></span><button onclick="openExternal()">↗ فتح خارجي</button></div>
+  <iframe id="wvFrame"></iframe>
+</div>
+
+<script src="db.js"></script>
+<script src="license.js"></script>
+<script src="lessons.js"></script>
+<script src="lessons_3as_ge.js"></script>
+<script src="lessons_3as_hgs.js"></script>
+<script src="lessons_3as_hg.js"></script>
+<script src="ar4_data.js"></script>
+<script src="lessons_4am.js"></script>
+<script src="m3_data.js"></script>
+<script src="lessons_as3math.js"></script>
+<script src="maps_hook.js"></script>
+<script src="maps_hgs_hook.js"></script>
+<script src="maps_hg_hook.js"></script>
+<script src="maps_4am_hook.js"></script>
+<script src="maps_m3_hook.js"></script>
+<script>
+/* ============================================================
+   إعدادات عامة — عدّلي القيم هنا فقط
+   ============================================================ */
+const CONFIG = {
+  TRIAL_END: new Date('2026-12-18T23:59:59'),   // نهاية الفترة المجانية
+  GEMINI_API_KEY: '',                            // اختياري: ضعي مفتاح Gemini هنا لتفعيل مساعدة إضافية عبر الإنترنت
+  GEMINI_MODEL: 'gemini-2.5-flash',
+  SUPPORT_PHONE: '213670694322',                 // واتساب الدعم التقني وطلب التفعيل (بدون +)
+  SHARE_URL: 'https://wissamelyakine-2322.github.io/zad-1am',   // الرابط الذي تشاركه أيقونة المشاركة
+  LICENSE_SECRET: 'ZAD-RT668F2TL99FJHM8H3RT9PKC'   // سر توليد المفاتيح — يقرؤه tools/keygen.py من هنا؛ غيّريه قبل أول بيع واحتفظي بنسخة منه
+};
+
+/* ============================================================
+   شخصيات "الأستاذ" لكل مادة — محلي بالدرجة الأولى (بدون مفتاح خارجي)
+   ============================================================ */
+const SUBJECTS = [
+  {key:'math',  name:'الرياضيات',          icon:'➕', prompt:'أنت أستاذ رياضيات جزائري متخصص في مناهج التعليم المتوسط. اشرح بأسلوب مبسط جداً، بخطوات مرقمة.'},
+  {key:'phys',  name:'الفيزياء والتكنولوجيا', icon:'⚡', prompt:'أنت أستاذ فيزياء وتكنولوجيا جزائري للتعليم المتوسط.'},
+  {key:'sci',   name:'علوم الطبيعة والحياة', icon:'🌿', prompt:'أنت أستاذة علوم طبيعة وحياة جزائرية للتعليم المتوسط.'},
+  {key:'ar',    name:'اللغة العربية',        icon:'📗', prompt:'أنت أستاذ لغة عربية جزائري للتعليم المتوسط.'},
+  {key:'hist',  name:'التاريخ والجغرافيا',   icon:'🗺️', prompt:'أنت أستاذ تاريخ وجغرافيا جزائري للتعليم المتوسط.'},
+  {key:'fr',    name:'الفرنسية',             icon:'🇫🇷', prompt:"Tu es un professeur de français algérien pour le cycle moyen."},
+  {key:'en',    name:'الإنجليزية',           icon:'🇬🇧', prompt:'You are an Algerian English teacher for middle school.'},
+  {key:'islam', name:'التربية الإسلامية',     icon:'🕌', prompt:'أنت أستاذ تربية إسلامية جزائري للتعليم المتوسط.'},
+  {key:'civic', name:'التربية المدنية',      icon:'⚖️', prompt:'أنت أستاذ تربية مدنية جزائري للتعليم المتوسط.'},
+  {key:'art',   name:'التربية التشكيلية',    icon:'🎨', prompt:'أنت أستاذ تربية تشكيلية جزائري للتعليم المتوسط.'},
+  {key:'info',  name:'الإعلام الآلي',        icon:'💻', prompt:'أنت أستاذ إعلام آلي جزائري للتعليم المتوسط.'},
+  {key:'amz',   name:'اللغة الأمازيغية',     icon:'📘', prompt:''},
+  {key:'music', name:'التربية الموسيقية',    icon:'🎵', prompt:''}
+];
+
+const $ = id => document.getElementById(id);
+function findSubject(key){
+  let s = SUBJECTS.find(x=>x.key===key);
+  if(s) return s;
+  for(const lv of Object.values(DB.secondary)) for(const st of lv.streams){ const f = st.subjects.find(x=>x.key===key); if(f) return {key:f.key, name:f.name, icon:f.icon, prompt:''}; }
+  return {key, name:key, icon:'📚', prompt:''};
+}
+let cur = null, curSubject = null, chatHistory = [];
+const AS_LEVELS = [
+  {k:'AS1', name:'الأولى ثانوي', shu:['جذع مشترك علوم وتكنولوجيا','جذع مشترك آداب']},
+  {k:'AS2', name:'الثانية ثانوي', shu:['علوم تجريبية','رياضيات','تقني رياضي','تسيير واقتصاد','آداب وفلسفة','لغات أجنبية']},
+  {k:'AS3', name:'الثالثة ثانوي', shu:['علوم تجريبية','رياضيات','تقني رياضي','تسيير واقتصاد','آداب وفلسفة','لغات أجنبية']}
+];
+
+/* ============================================================
+   نظام التفعيل والفترة المجانية
+   ============================================================ */
+/* منطق المفاتيح الكامل في license.js — هنا الواجهة فقط */
+function isTrialActive(){ return new Date() <= CONFIG.TRIAL_END; }
+function isLocked(){ return !isTrialActive() && !hasAnyLicense(); }
+function canAccess(scope){ return isTrialActive() || licStatus(scope).ok || licStatus('ALL').ok; }
+function amScope(k){ return 'M' + k.charAt(0); }
+function asScope(level, i){ return 'S' + level.replace('AS','') + '-' + LIC.STREAMS['S' + level.replace('AS','')][i]; }
+function scopeLabel(sc){
+  if(sc === 'ALL') return 'التفعيل العام — كل السنوات والشعب';
+  if(sc.charAt(0)==='M') return 'السنة ' + sc.charAt(1) + ' متوسط';
+  const lv = 'AS' + sc.charAt(1), i = LIC.STREAMS[sc.slice(0,2)].indexOf(sc.slice(3));
+  return DB.secondary[lv].name + ' — ' + DB.secondary[lv].streams[i].name;
+}
+const REASONS = {
+  format:'❌ المفتاح غير مكتمل، يتكون من 15 حرفاً.',
+  invalid:'❌ المفتاح غير صحيح، أو لجهاز آخر، أو انتهت مدة تفعيله. تأكدي من رمز الجهاز.',
+  used:'ℹ️ هذا المفتاح مستعمل من قبل. اطلبي مفتاح تجديد جديداً.'
+};
+function tryActivate(){
+  const msg = $('actMsg'), r = activateKey($('licenseInput').value);
+  if(r.ok){
+    const d = new Date(r.end);
+    msg.textContent = '✅ تم تفعيل ' + (r.scope === 'ALL' ? 'كل السنوات والشعب' : scopeLabel(r.scope)) + ' حتى ' + d.toLocaleDateString('ar-DZ');
+    msg.className = 'actMsg ok'; $('licenseInput').value = '';
+    renderTrialBar(); renderLicList();
+    if(asCur) renderAsView();
+  } else { msg.textContent = REASONS[r.reason] || REASONS.invalid; msg.className = 'actMsg err'; }
+}
+function renderLicList(){
+  const rows = LIC_SCOPES.map(s => [s, licStatus(s)]).filter(([s, st]) => st.ok || st.reason === 'expired');
+  $('licList').innerHTML = rows.length
+    ? '<b>اشتراكاتك:</b>' + rows.map(([s, st]) => `<div class="${st.ok?'on':'off'}"><span>${scopeLabel(s)}</span><span>${st.ok ? 'متبقي ' + st.days + ' يوماً' : 'انتهى'}</span></div>`).join('')
+    : '';
+}
+let actScope = null;
+function waOpen(text, phone){
+  window.open('https://wa.me/' + (phone || '') + '?text=' + encodeURIComponent(text), '_blank');
+}
+function contactSupport(){ waOpen('السلام عليكم، أحتاج دعماً تقنياً في تطبيق Zad dz.', CONFIG.SUPPORT_PHONE); }
+function requestActivation(){
+  const need = actScope
+    ? 'الاشتراك المطلوب: ' + scopeLabel(actScope)
+    : 'طلب التفعيل:\n• السنة للمتوسط: ......\n• السنة والشعبة للثانوي: ......\n• أو التفعيل العام للجميع';
+  waOpen('رمز الجهاز: ' + formatCode(getDeviceCode()) + '\n\nتفعيل تطبيق Zad dz\n' + need, CONFIG.SUPPORT_PHONE);
+}
+const SHARE_TEXT = '📚 Zad dz — دروس وتمارين وفروض واختبارات للتعليم المتوسط والثانوي.\nحمّل التطبيق من هنا:';
+function shareTargets(){
+  const u = encodeURIComponent(CONFIG.SHARE_URL), tx = encodeURIComponent(SHARE_TEXT), both = encodeURIComponent(SHARE_TEXT + '\n' + CONFIG.SHARE_URL);
+  return [
+    {i:'💬', n:'واتساب',   url:'https://wa.me/?text=' + both},
+    {i:'📘', n:'فيسبوك',   url:'https://www.facebook.com/sharer/sharer.php?u=' + u + '&quote=' + tx},
+    {i:'✈️', n:'تيليغرام', url:'https://t.me/share/url?url=' + u + '&text=' + tx},
+    {i:'🐦', n:'إكس (تويتر)', url:'https://twitter.com/intent/tweet?text=' + tx + '&url=' + u},
+    {i:'💼', n:'لينكدإن',  url:'https://www.linkedin.com/sharing/share-offsite/?url=' + u},
+    {i:'✉️', n:'بريد إلكتروني', url:'mailto:?subject=' + encodeURIComponent('Zad dz') + '&body=' + both},
+    {i:'📩', n:'رسالة SMS', url:'sms:?body=' + both},
+    {i:'📋', n:'نسخ الرابط', copy:true, hint:'للإنستغرام وتيك توك وسناب وغيرها'},
+  ].concat(navigator.share ? [{i:'📲', n:'المزيد من التطبيقات', native:true}] : []);
+}
+function shareApp(){
+  const T = shareTargets();
+  $('shGrid').innerHTML = T.map((x, k) => `<button onclick="doShare(${k})"><span>${x.i}</span>${x.n}</button>`).join('');
+  $('shNote').textContent = ''; $('shareSheet').classList.add('show');
+}
+function closeShare(){ $('shareSheet').classList.remove('show'); }
+function copyText(s, done){
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(s).then(done, ()=>{});
+  else { const ta = document.createElement('textarea'); ta.value = s; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); done(); }catch(e){} ta.remove(); }
+}
+function doShare(k){
+  const x = shareTargets()[k], note = $('shNote');
+  if(x.copy) copyText(SHARE_TEXT + '\n' + CONFIG.SHARE_URL, () => { note.textContent = '✅ تم نسخ الرابط — ألصقه في ' + x.hint; });
+  else if(x.native) navigator.share({title:'Zad dz', text:SHARE_TEXT, url:CONFIG.SHARE_URL}).catch(()=>{});
+  else window.open(x.url, '_blank');
+}
+function showActivation(scope){
+  actScope = scope || null;
+  const need = scope ? `<b>${scopeLabel(scope)}</b> يحتاج مفتاح تفعيل (مفتاح واحد لكل ${scope.charAt(0)==='M' ? 'سنة دراسية' : 'شعبة'}، صالح سنة، على جهاز واحد).<br>` : '';
+  $('actTitle').textContent = scope ? '🔒 يلزم مفتاح تفعيل' : (isTrialActive() ? '🔑 تفعيل التطبيق' : '🔒 انتهت الفترة المجانية');
+  $('actText').innerHTML = need + (isTrialActive() ? 'التطبيق مجاني حتى 18 ديسمبر 2026، وبعده يلزم مفتاح لكل سنة أو شعبة.' : 'انتهت الفترة المجانية في 18 ديسمبر 2026.')
+  $('actMsg').textContent = ''; renderLicList();
+  $('actScreen').classList.add('show');
+}
+function hideActivation(){ $('actScreen').classList.remove('show'); }
+function renderTrialBar(){
+  const bar = $('trialBar'), n = LIC_SCOPES.filter(s => licStatus(s).ok).length;
+  if(licStatus('ALL').ok){
+    bar.textContent = `✅ تفعيل عام لكل السنوات والشعب — متبقي ${licStatus('ALL').days} يوماً`; bar.className = 'trialbar';
+  } else if(isTrialActive()){
+    const days = Math.ceil((CONFIG.TRIAL_END - new Date())/86400000);
+    bar.textContent = `🎁 نسخة مجانية — تبقّى ${days} يوماً (حتى 18 ديسمبر 2026)`; bar.className = 'trialbar';
+  } else if(n){
+    bar.textContent = `✅ ${n} اشتراك نشط — اضغط 🔑 للتفاصيل`; bar.className = 'trialbar';
+  } else {
+    bar.textContent = '⛔ انتهت الفترة المجانية — اضغط 🔑 أعلاه للتفعيل'; bar.className = 'trialbar warn';
+  }
+}
+
+/* ============================================================
+   شاشة اختيار المرحلة (متوسط / ثانوي)
+   ============================================================ */
+function renderImportant(){
+  const im = DB.important; if(!im) return;
+  $('impBox').innerHTML = `<div class="sec"><h3>${im.title}</h3><div class="card">${im.links.map(linkHtml).join('')}</div></div>`;
+}
+function goStageHome(){
+  $('stageHome').style.display='flex';
+  $('home').style.display='none';
+  $('asHome').style.display='none';
+  $('view').style.display='none';
+  $('stageBack').style.display='none';
+  $('mainTitle').textContent='Zad dz';
+  $('mainSub').textContent='اختاري المرحلة الدراسية';
+  $('trialBar').style.display='block';
+  $('foot').textContent='';
+}
+function openStage(stage){
+  $('stageHome').style.display='none';
+  $('stageBack').style.display='block';
+  if(stage==='AM'){
+    $('mainTitle').textContent='Zad dz — المتوسط';
+    $('mainSub').textContent='اختاري السنة الدراسية';
+    renderHome();
+    $('home').style.display='flex';
+    $('asHome').style.display='none';
+  } else {
+    $('mainTitle').textContent='Zad dz — الثانوي';
+    $('mainSub').textContent='اختاري السنة الدراسية';
+    renderAsHome();
+    $('asHome').style.display='block';
+    $('home').style.display='none';
+  }
+}
+function renderAsHome(){
+  $('asGrid').innerHTML = Object.entries(DB.secondary).map(([k,l],i) =>
+    `<button class="lv c${i+1}" style="position:relative" onclick="openAsLevel('${k}')">
+       <span class="badge">${k}</span>
+       <span class="lvName">${l.name}</span>
+     </button>`).join('');
+}
+let asCur = null, asStream = 0;
+function openAsLevel(k){
+  asCur = k; asStream = 0;
+  $('asHome').style.display='none'; $('stageBack').style.display='none';
+  $('asView').style.display='block';
+  $('asVt').textContent = DB.secondary[k].name;
+  renderAsView(); window.scrollTo(0,0);
+}
+function closeAsView(){
+  $('asView').style.display='none'; $('asHome').style.display='block';
+  $('stageBack').style.display='block';
+}
+function renderAsView(){
+  const lv = DB.secondary[asCur], st = lv.streams[asStream], sc = asScope(asCur, asStream);
+  $('asChips').innerHTML = lv.streams.map((s,i)=>
+    `<button class="${i===asStream?'on':''}" onclick="asStream=${i};renderAsView()">${s.name}${canAccess(asScope(asCur,i))?'':' 🔒'}</button>`).join('');
+  if(!canAccess(sc)){
+    $('asSecs').innerHTML = `<div class="lockPanel">🔒 شعبة <b>${st.name}</b> تحتاج مفتاح تفعيل.<br>مفتاح واحد لهذه الشعبة، صالح سنة، على جهاز واحد.<br><button onclick="showActivation('${sc}')">🔑 تفعيل هذه الشعبة</button></div>`;
+    return;
+  }
+  let h = `<div class="subjgrid">` + st.subjects.map((x,i)=>
+    `<button class="subj" onclick="openHubAs(${i})"><span class="ic">${x.icon}</span><span class="name">${x.name}</span></button>`).join('') + `</div>`;
+  const gen = [...(st.extra||[]), ...lv.general.links];
+  h += `<div class="sec"><h3>${(st.extra&&st.extra.length)?'البكالوريا وروابط عامة':lv.general.title}</h3><div class="card">${gen.map(linkHtml).join('')}</div></div>`;
+  $('asSecs').innerHTML = h;
+}
+
+/* ============================================================
+   الشاشة الرئيسية ومستويات المتوسط
+   ============================================================ */
+renderImportant();
+function renderHome(){
+  const colors = {'1AM':'c1','2AM':'c2','3AM':'c3','4AM':'c4'};
+  $('home').innerHTML = Object.entries(DB.levels).map(([k,l]) =>
+    `<button class="lv ${colors[k]||'c1'}" onclick="openLevel('${k}')">
+       <span class="badge">${k}</span>
+       <span class="lvName">السنة ${k.replace('AM','')} متوسط</span>
+     </button>`).join('');
+  $('foot').textContent = 'قاعدة البيانات: موسم ' + DB.season + ' • الإصدار ' + DB.version;
+}
+function openLevel(k){
+  if(!canAccess(amScope(k))){ showActivation(amScope(k)); return; }
+  cur = k; const l = DB.levels[k];
+  $('home').style.display='none'; $('stageBack').style.display='none';
+  $('view').style.display='block'; $('vt').textContent = k + ' — ' + l.name;
+  renderSubjects(); renderSecs();
+  window.scrollTo(0,0);
+}
+function goLevelsHome(){
+  $('view').style.display='none'; $('home').style.display='flex';
+  $('stageBack').style.display='block';
+}
+function linkHtml(x){
+  return `<a href="${x.url}" target="_blank" rel="noopener noreferrer"><i>${x.icon}</i><span>${x.label}</span></a>`;
+}
+function renderSecs(){
+  const g = DB.levels[cur].general;
+  $('secs').innerHTML = g ? `<div class="sec"><h3>${g.title}</h3><div class="card">${g.links.map(linkHtml).join('')}</div></div>` : '';
+}
+
+/* ============================================================
+   عارض مدمج داخل التطبيق (بدل فتح متصفح خارجي)
+   ============================================================ */
+let currentExternalUrl = '';
+function openWebview(url, title){
+  currentExternalUrl = url;
+  $('wvTitle').textContent = title;
+  $('wvFrame').src = url;
+  $('webview').classList.add('show');
+}
+function closeWebview(){
+  $('webview').classList.remove('show');
+  $('wvFrame').src = 'about:blank';
+}
+function openExternal(){
+  window.open(currentExternalUrl, '_blank');
+}
+
+/* ============================================================
+   شبكة المواد + أزرار الأستاذ المحلي
+   ============================================================ */
+function renderSubjects(){
+  $('subjGrid').innerHTML = SUBJECTS.map(s =>
+    `<button class="subj" onclick="openHub('${s.key}')">
+       <span class="ic">${s.icon}</span>
+       <span class="name">${s.name}</span>
+     </button>`).join('');
+}
+
+/* ---------- شاشة المادة الموحّدة: كل شيء في مكان واحد ---------- */
+let hubKey = null, hubAs = null;
+function hubBtn(ic, label, sub, on, fn){
+  return `<button class="hubBtn ${on?'':'off'}" onclick="${on?fn:"alert('هذا القسم قيد الإعداد لهذه المادة')"}"><span class="ic">${ic}</span>${label}<small>${sub}</small></button>`;
+}
+function openHub(key){
+  if(!canAccess(amScope(cur))){ showActivation(amScope(cur)); return; }
+  hubKey = key; hubAs = null;
+  const subj = findSubject(key), data = getSubjectData(key);
+  const nl = data ? (data.lessons||[]).length : 0, ne = data ? (data.exercises||[]).length : 0;
+  const nq = buildQuiz(key, 99).length;
+  const links = ((DB.levels[cur].subjects||{})[key]||{}).links || [];
+  $('hubTitle').textContent = subj.icon + ' ' + subj.name + ' — ' + cur;
+  $('hubBody').innerHTML =
+    `<div class="hubGrid">` +
+      hubBtn('📖','الدروس', nl?nl+' درس':'قيد الإعداد', nl>0, `openLessons('${key}','lessons')`) +
+      hubBtn('✏️','التمارين', ne?ne+' مجموعة':'قيد الإعداد', ne>0, `openLessons('${key}','exercises')`) +
+      hubBtn('💬','اسأل الأستاذ', data?'بدون إنترنت':'قيد الإعداد', !!data, `openChat('${key}')`) +
+      hubBtn('📝','كويز', nq?'اختبري نفسك':'قيد الإعداد', nq>0, `openQuiz('${key}')`) +
+      hubBtn('🗺️','الخرائط الذهنية', hasMaps(key)?'خريطة لكل درس':'قيد الإعداد', hasMaps(key), `openMaps('${key}')`) +
+    `</div>` +
+    (links.length ? `<div class="sec"><h3>🔗 روابط المادة</h3><div class="card">${links.map(linkHtml).join('')}</div></div>` : '');
+  $('hub').classList.add('show'); $('hub').scrollTop = 0;
+}
+function openHubAs(si){
+  if(!canAccess(asScope(asCur, asStream))){ showActivation(asScope(asCur, asStream)); return; }
+  const sj = DB.secondary[asCur].streams[asStream].subjects[si];
+  hubAs = sj; hubKey = sj.key; cur = asCur;
+  const data = getSubjectData(sj.key);
+  const nl = data ? (data.lessons||[]).length : 0, ne = data ? (data.exercises||[]).length : 0;
+  const nq = buildQuiz(sj.key, 99).length;
+  $('hubTitle').textContent = sj.icon + ' ' + sj.name + ' — ' + DB.secondary[asCur].name;
+  $('hubBody').innerHTML =
+    `<div class="hubGrid">` +
+      hubBtn('📖','الدروس', nl?nl+' درس':'قيد الإعداد', nl>0, `openLessons('${sj.key}','lessons')`) +
+      hubBtn('✏️','التمارين', ne?ne+' مجموعة':'قيد الإعداد', ne>0, `openLessons('${sj.key}','exercises')`) +
+      hubBtn('💬','اسأل الأستاذ', data?'بدون إنترنت':'قيد الإعداد', !!data, `openChat('${sj.key}')`) +
+      hubBtn('📝','كويز', nq?'اختبري نفسك':'قيد الإعداد', nq>0, `openQuiz('${sj.key}')`) +
+      hubBtn('🗺️','الخرائط الذهنية', hasMaps(sj.key)?'خريطة لكل درس':'قيد الإعداد', hasMaps(sj.key), `openMaps('${sj.key}')`) +
+    `</div>` +
+    (data ? `<div class="asNote" style="margin-top:12px">⚠️ دروس هذه المادة ملخصات تعليمية عامة، ولم تُطابَق بعد مع التدرج السنوي الرسمي لموسم 2026/2027. اعتمدي على كتابك وأستاذك أولاً.</div>` : '') +
+    `<div class="sec"><h3>🔗 روابط المادة</h3><div class="card">${sj.links.map(linkHtml).join('')}</div></div>`;
+  $('hub').classList.add('show'); $('hub').scrollTop = 0;
+}
+function closeHub(){ $('hub').classList.remove('show'); }
+
+/* ---------- 📝 كويز محلي: أسئلة تمارين مع إجابة + إكمال فراغ من الدروس ---------- */
+let quizState = null;
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function buildQuiz(key, n){
+  const data = getSubjectData(key); if(!data) return [];
+  const qa = [], cl = [];
+  for(const e of (data.exercises||[])){
+    const ls = e.content.split('\n');
+    for(let i=0;i<ls.length-1;i++){
+      if(/^\s*✅/.test(ls[i+1]) && !/^\s*✅/.test(ls[i]) && ls[i].trim().length>3){
+        let ans = ls[i+1].replace(/^\s*✅\s*/,'').trim(), j=i+2;
+        while(j<ls.length && ls[j].trim() && !/^\s*\d+\)/.test(ls[j]) && !/^\s*✅/.test(ls[j])){ ans += '\n'+ls[j].trim(); j++; }
+        qa.push({t:'qa', q:ls[i].replace(/^\s*\d+\)\s*/,'').trim(), a:ans});
+      }
+    }
+  }
+  const words = {ar:[], lat:[]};
+  const isW = w => w.length>=4 && !/[0-9=]/.test(w) && !STOP.has(normText(w));
+  const lessonsLines = [];
+  for(const l of (data.lessons||[])) for(const raw of l.content.split('\n')){
+    const line = raw.replace(/^\s*[•\-\d)]+\s*/,'').trim();
+    if(line.length<28 || line.length>160 || /=/.test(line)) continue;
+    lessonsLines.push(line);
+    for(const w of line.split(/[\s،؛:؟?.!,;()«»"]+/)) if(isW(w)) (/[A-Za-zÀ-ÿ]/.test(w)?words.lat:words.ar).push(w);
+  }
+  for(const line of lessonsLines){
+    const lat = /[A-Za-zÀ-ÿ]/.test(line.replace(/[^\u0600-\u06FFA-Za-zÀ-ÿ]/g,'').charAt(0)||'');
+    const pool = lat ? words.lat : words.ar;
+    const toks = line.split(/[\s،؛:؟?.!,;()«»"]+/).filter(isW).filter(w => (/[A-Za-zÀ-ÿ]/.test(w))===lat);
+    if(toks.length<1) continue;
+    const ans = toks[Math.floor(toks.length/2)];
+    const cand = [...new Set(pool.filter(w=>w!==ans && Math.abs(w.length-ans.length)<=2))];
+    if(cand.length<3) continue;
+    cl.push({t:'cl', q: line.replace(ans,'_____'), a:ans, opts: shuffle([ans, ...shuffle(cand).slice(0,3)])});
+  }
+  const qaPick = shuffle(qa).slice(0, Math.min(qa.length, Math.ceil(n/2)));
+  const clPick = shuffle(cl).slice(0, n-qaPick.length);
+  return shuffle([...qaPick, ...clPick]);
+}
+function openQuiz(key){
+  const subj = findSubject(key);
+  quizState = {key, items: buildQuiz(key, 8), i:0, score:0, done:false};
+  $('quizTitle').textContent = '📝 كويز ' + subj.name + ' — ' + cur;
+  $('quiz').classList.add('show'); renderQuiz();
+}
+function renderQuiz(){
+  const st = quizState, b = $('quizBody');
+  if(st.i >= st.items.length){
+    const pct = Math.round(100*st.score/st.items.length);
+    b.innerHTML = `<div class="qCard"><div class="qScore">نتيجتك: ${st.score} / ${st.items.length} (${pct}%)<br>${pct>=75?'🌟 ممتاز!':pct>=50?'👍 جيد، راجعي الدروس وأعيدي المحاولة':'💪 راجعي الدروس ثم جرّبي من جديد'}</div></div>
+      <button class="qSubmit" onclick="openQuiz('${st.key}')">🔄 كويز جديد</button>`;
+    return;
+  }
+  const it = st.items[st.i];
+  let h = `<div class="qProg">السؤال ${st.i+1} من ${st.items.length}</div><div class="qCard"><div class="qtext">${it.t==='cl'?'أكملي الفراغ: ':''}${escapeHtml(it.q)}</div><div id="qArea">`;
+  if(it.t==='cl') h += it.opts.map((o,k)=>`<button class="qOpt" onclick="quizPick(${k})">${escapeHtml(o)}</button>`).join('');
+  else h += `<button class="qSubmit" onclick="quizReveal()">👁️ أظهري الإجابة</button>`;
+  b.innerHTML = h + `</div></div>`;
+}
+function quizPick(k){
+  const st = quizState, it = st.items[st.i]; if(st.done) return; st.done = true;
+  document.querySelectorAll('.qOpt').forEach((el,j)=>{
+    if(it.opts[j]===it.a) el.classList.add('correct'); else if(j===k) el.classList.add('wrong');
+  });
+  if(it.opts[k]===it.a) st.score++;
+  $('qArea').insertAdjacentHTML('beforeend', `<button class="qSubmit" onclick="quizNext()">التالي ←</button>`);
+}
+function quizReveal(){
+  const it = quizState.items[quizState.i];
+  $('qArea').innerHTML = `<div class="qAns">✅ ${escapeHtml(it.a)}</div><div style="display:flex;gap:8px"><button class="qSubmit" style="background:#bbf7d0" onclick="quizSelf(true)">أجبتُ صحيحاً</button><button class="qSubmit" style="background:#fecaca" onclick="quizSelf(false)">أخطأت</button></div>`;
+}
+function quizSelf(ok){ if(ok) quizState.score++; quizNext(); }
+function quizNext(){ quizState.i++; quizState.done=false; renderQuiz(); }
+
+/* ============================================================
+   الأستاذ المحلي: بحث داخل الدروس والتمارين الحقيقية (بدون مفتاح خارجي)
+   ============================================================ */
+/* مواد مشتركة بين الشعب: نعيد استعمال نفس الدروس بدل تكرارها (توفيراً للحجم) */
+const LESSON_ALIAS = {AS3:{'tm_arabic':'ge_arabic','tm_francais':'ge_francais','tm_english':'ge_english','tm_islamic':'ge_islamic','tm_his-geo':'ge_his-geo','tm_philo':'ge_philo'}};
+function getSubjectData(subjectKey){
+  const lv = LESSONS_DB[cur];
+  if(!lv) return null;
+  const al = LESSON_ALIAS[cur];
+  return lv[subjectKey] || (al && lv[al[subjectKey]]) || null;
+}
+/* ---- بحث مرن: تطبيع عربي/فرنسي + جذوع بسيطة + حذف كلمات الاستفهام ---- */
+const STOP = new Set(('ما ماذا هو هي هذا هذه هذان كيف لماذا اشرح اشرحي شرح لي لنا في من على عن الى الي هل كل ثم او مع قم اعطني اعطيني اريد اريدين ان انا نحن اين متي كم ما\
+ درس دروس تمرين تمارين سؤال اسال علمني ساعدني ممكن لو سمحت اذكر عرف عرفي ما-هو \
+ le la les un une des de du et est que qui quoi comment pourquoi expliquer explique moi mon ma mes ce cette ces au aux en dans sur pour par avec').split(/\s+/));
+function normText(t){
+  return String(t||'').toLowerCase()
+    .replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/ؤ/g,'و').replace(/ئ/g,'ي')
+    .replace(/[\u064B-\u065F\u0670\u0640]/g,'')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^\u0621-\u064Aa-z0-9\s]/g,' ')
+    .replace(/\s+/g,' ').trim();
+}
+function stemWord(w){
+  if(/^[a-z]+$/.test(w)){
+    return w.length>4 ? w.replace(/(ement|ation|es|s|x|e)$/,'') : w;
+  }
+  w = w.replace(/^(وال|بال|كال|فال|لل|ال)/,'');
+  for(const suf of ['ات','ون','ين','ان','ها','ه','ي']){
+    if(w.endsWith(suf) && w.length-suf.length>=3){ w = w.slice(0,-suf.length); break; }
+  }
+  return w;
+}
+function queryTokens(q){
+  const words = normText(q).split(' ').filter(Boolean);
+  let toks = words.filter(w=>!STOP.has(w) && w.length>1).map(stemWord).filter(w=>w.length>1);
+  if(!toks.length) toks = words.map(stemWord).filter(w=>w.length>1);
+  return [...new Set(toks)];
+}
+function localSearch(subjectKey, query, limit){
+  const data = getSubjectData(subjectKey);
+  if(!data) return [];
+  const items = [
+    ...(data.lessons||[]).map(x=>({...x,type:'درس'})),
+    ...(data.exercises||[]).map(x=>({...x,type:'تمرين'}))
+  ];
+  const toks = queryTokens(query);
+  if(!toks.length) return [];
+  const scored = items.map(it=>{
+    const title = normText(it.title), content = normText(it.content + ' ' + (it.more||''));
+    let score = 0, hit = 0;
+    toks.forEach(w=>{
+      let h = false;
+      if(title.includes(w)){ score += 5; h = true; }
+      if(content.includes(w)){ score += 1; h = true; }
+      if(h) hit++;
+    });
+    if(hit===toks.length && toks.length>1) score += 3;   // تطابق كل الكلمات
+    if(it.type==='درس') score += 0.5;
+    return {...it, score};
+  }).filter(x=>x.score>=1).sort((a,b)=>b.score-a.score);
+  return scored.slice(0, limit||3);
+}
+function suggestTitles(subjectKey, n){
+  const data = getSubjectData(subjectKey);
+  return data ? (data.lessons||[]).slice(0, n||6).map(l=>'• '+l.title) : [];
+}
+
+/* ============================================================
+   📚 شاشة الدروس والتمارين (تصفح + بحث محلي)
+   ============================================================ */
+let lsSubjectKey = null, lsMode = 'lessons';
+function openLessons(subjectKey, mode){
+  if(isLocked()){ showActivation(); return; }
+  lsSubjectKey = subjectKey; lsMode = mode || 'lessons';
+  const subject = findSubject(subjectKey);
+  $('lsTitle').textContent = '📚 ' + subject.name + ' — ' + cur;
+  $('lsearch').value = '';
+  lsSwitch(lsMode);
+  $('lessonsScr').classList.add('show');
+}
+function closeLessons(){ $('lessonsScr').classList.remove('show'); }
+function lsSwitch(mode){
+  lsMode = mode;
+  $('lsTabLessons').className = mode==='lessons' ? 'on' : '';
+  $('lsTabEx').className = mode==='exercises' ? 'on' : '';
+  renderLsList();
+}
+function renderLsList(){
+  const data = getSubjectData(lsSubjectKey);
+  const q = $('lsearch').value.trim();
+  if(!data){
+    $('lsBody').innerHTML = '<div class="empty">📦 المحتوى المحلي لهذه المادة في مستوى ' + cur + ' قيد الإعداد حالياً.<br>جرّبي مادة الرياضيات أو مادة أخرى في السنة الأولى متوسط، أو استعملي 💬 اسأل الأستاذ.</div>';
+    return;
+  }
+  let items = lsMode==='lessons' ? (data.lessons||[]) : (data.exercises||[]);
+  if(q){
+    const res = localSearch(lsSubjectKey, q).filter(x => (lsMode==='lessons') === (x.type==='درس'));
+    items = res.length ? res : [];
+  }
+  if(!items.length){
+    $('lsBody').innerHTML = '<div class="empty">لا توجد نتائج مطابقة. جربي كلمة أخرى، أو امسحي البحث لعرض كل ' + (lsMode==='lessons'?'الدروس':'التمارين') + '.</div>';
+    return;
+  }
+  $('lsBody').innerHTML = items.map((it,i) =>
+    `<div class="lsItem" onclick="showLsItem(${i}, '${lsMode}', ${q?('true'):('false')})">${lsMode==='lessons'?'📖':'✏️'} ${escapeHtml(it.title)}</div>`
+  ).join('');
+  window._lsCurrentItems = items;
+}
+$('lsearch').addEventListener('input', renderLsList);
+function showLsItem(i, mode, filtered){
+  const items = window._lsCurrentItems;
+  const it = items[i];
+  $('lsBody').innerHTML = `<button class="lsItem" onclick="renderLsList()" style="background:var(--acc)">→ العودة للقائمة</button>
+    <div class="lsContent"><h4>${mode==='lessons'?'📖':'✏️'} ${escapeHtml(it.title)}</h4>${escapeHtml(it.content)}${it.more?'<h4 style="margin-top:16px">🔍 شرح موسّع</h4>'+escapeHtml(it.more):''}</div>`;
+}
+
+/* ============================================================
+   الدردشة مع "الأستاذ" — بحث محلي أولاً، Gemini اختياري إن توفر مفتاح
+   ============================================================ */
+function openChat(subjectKey){
+  if(isLocked()){ showActivation(); return; }
+  curSubject = findSubject(subjectKey);
+  chatHistory = [];
+  chatSeen = {};
+  $('chatTitle').textContent = '🤖 أستاذ ' + curSubject.name;
+  $('msgs').innerHTML = '';
+  const hasLocal = !!getSubjectData(subjectKey);
+  addMsg('bot', hasLocal
+    ? `أهلاً بك! اكتبي اسم الدرس أو كلمة مفتاحية من مادة ${curSubject.name} (${cur}) وسأبحث لك في الدروس والتمارين فوراً. تجدين كل الدروس والتمارين في الشريط أسفل الشاشة، واكتبي «الفهرس» لعرضها كلها.`
+    : `أهلاً بك! محتوى مادة ${curSubject.name} في مستوى ${cur} لا يزال قيد الإعداد محلياً. جرّبي مادة الرياضيات في السنة الأولى متوسط للتجربة.`);
+  renderTopicBar(subjectKey);
+  $('chat').classList.add('show');
+}
+function chatItems(key){
+  const d = getSubjectData(key); if(!d) return [];
+  return [...(d.lessons||[]).map(x=>({...x,type:'درس'})), ...(d.exercises||[]).map(x=>({...x,type:'تمرين'}))];
+}
+function renderTopicBar(key){
+  const items = chatItems(key);
+  $('topicBar').innerHTML = items.map((it,i)=>`<button class="${it.type==='تمرين'?'ex':''}" onclick="askItem(${i})">${it.type==='درس'?'📖':'✏️'} ${escapeHtml(it.title.length>28?it.title.slice(0,28)+'…':it.title)}</button>`).join('');
+}
+function askItem(i){
+  const it = chatItems(curSubject.key)[i]; if(!it) return;
+  addMsg('user', it.title);
+  answerLocal([it], it.title);
+}
+function showIndex(){
+  const items = chatItems(curSubject.key);
+  const ls = items.filter(x=>x.type==='درس').map((x,i)=>`${i+1}. ${x.title}`), ex = items.filter(x=>x.type==='تمرين').map((x,i)=>`${i+1}. ${x.title}`);
+  addMsg('bot', `📚 فهرس مادة ${curSubject.name}:\n\n📖 الدروس:\n${ls.join('\n')||'—'}\n\n✏️ التمارين:\n${ex.join('\n')||'—'}\n\nاضغطي على أي عنوان في الشريط أسفل الشاشة لأشرحه لك، واضغطي مرة ثانية لشرح أوسع مع تمرين.`);
+}
+function closeChat(){ $('chat').classList.remove('show'); }
+function addMsg(who, text){
+  const d = document.createElement('div'); d.className = 'msg ' + who; d.textContent = text;
+  $('msgs').appendChild(d); $('msgs').scrollTop = $('msgs').scrollHeight;
+}
+async function sendMsg(){
+  const input = $('chatInput'); const text = input.value.trim();
+  if(!text) return;
+  addMsg('user', text); input.value='';
+  chatHistory.push({role:'user', text});
+  if(/^(ال)?(فهرس|قائمة|القائمة|كل الدروس|الدروس|المحتوى)$/.test(text.replace(/[؟?!.\s]+$/,''))){ showIndex(); return; }
+
+  const results = localSearch(curSubject.key, text, 6);
+  if(results.length){
+    answerLocal(results, text);
+    return;
+  }
+
+  if(!CONFIG.GEMINI_API_KEY){
+    const sug = suggestTitles(curSubject.key, 6);
+    addMsg('bot', '🔎 لم أجد درساً مطابقاً لسؤالك. جربي كلمة مفتاحية واحدة (مثل: الكسور، المحيط، الفعل الماضي).' + (sug.length ? '\n\nمن دروس هذه المادة:\n' + sug.join('\n') : '') + '\n\nأو افتحي 📚 الدروس والتمارين لتصفح كل العناوين.');
+    return;
+  }
+  const typing = document.createElement('div'); typing.className='typing'; typing.textContent='الأستاذ يكتب...';
+  $('msgs').appendChild(typing); $('msgs').scrollTop = $('msgs').scrollHeight;
+  try{
+    const reply = await askGemini(curSubject, chatHistory);
+    typing.remove();
+    addMsg('bot', reply);
+    chatHistory.push({role:'model', text:reply});
+  }catch(e){
+    typing.remove();
+    addMsg('bot', '⚠️ تعذّر الاتصال بالإنترنت الآن. (' + e.message + ')');
+  }
+}
+
+/* ============================================================
+   ردود الأستاذ المحلي: شرح مبسط أولاً، ثم أوسع عند تكرار السؤال، دون تكرار الدروس
+   ============================================================ */
+let chatSeen = {};
+function itemKey(it){ return it.type + '|' + it.title; }
+function simpleSummary(content){
+  const lines = content.split('\n').map(l=>l.trim()).filter(l=>l && !l.startsWith('▸'));
+  let out = [], len = 0;
+  for(const l of lines){
+    out.push(l); len += l.length;
+    if(out.length >= 4 || len >= 320) break;
+  }
+  const truncated = out.length < lines.length;
+  return out.join('\n') + (truncated ? '\n…' : '');
+}
+function relatedExercise(best, query){
+  const data = getSubjectData(curSubject.key);
+  if(!data || !data.exercises || !data.exercises.length) return null;
+  const words = (best.title + ' ' + query).toLowerCase().split(/\s+/).filter(w=>w.length>2);
+  let top = null, topScore = 0;
+  data.exercises.forEach(ex=>{
+    const k = 'تمرين|' + ex.title;
+    if(chatSeen[k]) return;
+    const t = (ex.title + ' ' + ex.content).toLowerCase();
+    let sc = 0; words.forEach(w=>{ if(t.includes(w)) sc++; });
+    if(sc > topScore){ topScore = sc; top = ex; }
+  });
+  return top ? {...top, type:'تمرين'} : null;
+}
+function answerLocal(results, query){
+  const icon = r => r.type==='درس' ? '📖' : '✏️';
+  // أول نتيجة لم تُشرح بالتفصيل بعد
+  const best = results.find(r => chatSeen[itemKey(r)] !== 'full');
+  if(!best){
+    addMsg('bot', '✅ سبق أن شرحت لك كل ما وجدته عن هذا الموضوع بالتفصيل. جربي كلمة أخرى، أو افتحي 📚 الدروس والتمارين لتصفح بقية العناوين.');
+    return;
+  }
+  const state = chatSeen[itemKey(best)];
+  if(!state){
+    // الشرح المبسط
+    chatSeen[itemKey(best)] = 'simple';
+    addMsg('bot', `${icon(best)} ${best.title}\n\n${simpleSummary(best.content)}\n\n💡 إن لم يكفِ هذا، اسألي السؤال نفسه مرة أخرى وسأشرحه بتفصيل أوسع مع تمرين.`);
+  } else {
+    // نفس السؤال/الدرس مرة ثانية: شرح أوسع
+    chatSeen[itemKey(best)] = 'full';
+    let msg = `${icon(best)} ${best.title} — شرح أوسع\n\n${best.content}` + (best.more ? `\n\n🔍 شرح موسّع\n${best.more}` : '');
+    const ex = best.type==='درس' ? relatedExercise(best, query) : null;
+    if(ex){ chatSeen[itemKey(ex)] = 'full'; msg += `\n\n✏️ تمرين للتدرّب: ${ex.title}\n${ex.content}`; }
+    const more = results.filter(r => r!==best && !chatSeen[itemKey(r)]).slice(0,3).map(r=>'• '+r.title);
+    if(more.length) msg += `\n\n🔗 مواضيع قريبة (اكتبي عنوان أحدها لشرحه): \n${more.join('\n')}`;
+    addMsg('bot', msg);
+  }
+}
+
+function escapeHtml(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+function closeQuiz(){ $('quiz').classList.remove('show'); }
+
+/* ============================================================
+   Gemini (اختياري — يعمل فقط إن ضُبط مفتاح في CONFIG)
+   ============================================================ */
+async function askGemini(subject, history){
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${CONFIG.GEMINI_MODEL}:generateContent?key=${CONFIG.GEMINI_API_KEY}`;
+  const contents = history.map(h => ({ role: h.role==='user'?'user':'model', parts:[{text:h.text}] }));
+  const body = {
+    system_instruction: { parts:[{ text: subject.prompt }] },
+    contents
+  };
+  const res = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+  if(!res.ok) throw new Error('HTTP ' + res.status);
+  const data = await res.json();
+  return data?.candidates?.[0]?.content?.parts?.[0]?.text || 'لم يصل رد واضح، أعيدي صياغة السؤال من فضلك.';
+}
+
+/* ============================================================
+   بدء التشغيل
+   ============================================================ */
+goStageHome();
+renderTrialBar();
+if(isLocked()) showActivation();
+</script>
+</body>
+</html>
